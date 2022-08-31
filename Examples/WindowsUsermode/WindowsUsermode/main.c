@@ -24,7 +24,7 @@ __declspec(noinline) int HookedTestFunction()
 {
 	printf("hook called\n");
 
-	TestFunction_t original = (TestFunction_t)&testHook.Trampoline;
+	TestFunction_t original = (TestFunction_t)testHook.Trampoline;
 	return original(10, 20);
 	//return 0;
 }
@@ -35,6 +35,8 @@ int main()
 	printf("before hook: %u\n", output);
 
 	testHook = CreateHook((void*)&TestFunction, (void*)&HookedTestFunction);
+	printf("size: %u\n", testHook.BytesToCopy);
+
 	int status = EnableHook(&testHook);
 	printf("status: %u\n", status);
 	printf("trampoline: 0x%p\n", testHook.Trampoline);
