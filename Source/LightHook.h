@@ -7,8 +7,8 @@
  * repo: https://github.com/SamuelTulach/LightHook
  */
 
-#define R (*b >> 4)
-#define C (*b & 0xF)
+#define HOOK_R (*b >> 4)
+#define HOOK_C (*b & 0xF)
 
 static const unsigned char PREFIXES[] = { 0xF0, 0xF2, 0xF3, 0x2E, 0x36, 0x3E, 0x26, 0x64, 0x65, 0x66, 0x67 };
 static const unsigned char OP1_MODRM[] = { 0x62, 0x63, 0x69, 0x6B, 0xC0, 0xC1, 0xC4, 0xC5, 0xC6, 0xC7, 0xD0, 0xD1, 0xD2, 0xD3, 0xF6, 0xF7, 0xFE, 0xFF };
@@ -76,13 +76,13 @@ inline int GetInstructionSize(const void* address)
 	int operandPrefix = 0, addressPrefix = 0, rexW = 0;
 	unsigned char* b = (unsigned char*)address;
 
-	for (int i = 0; i < 14 && FindByte(PREFIXES, sizeof(PREFIXES), *b) || R == 4; i++, b++)
+	for (int i = 0; i < 14 && FindByte(PREFIXES, sizeof(PREFIXES), *b) || HOOK_R == 4; i++, b++)
 	{
 		if (*b == 0x66)
 			operandPrefix = 1;
 		else if (*b == 0x67)
 			addressPrefix = 1;
-		else if (R == 4 && C >= 8)
+		else if (HOOK_R == 4 && HOOK_C >= 8)
 			rexW = 1;
 	}
 
@@ -98,31 +98,31 @@ inline int GetInstructionSize(const void* address)
 		}
 		else
 		{
-			if (R == 8)
+			if (HOOK_R == 8)
 				offset += 4;
-			else if ((R == 7 && C < 4) || *b == 0xA4 || *b == 0xC2 || (*b > 0xC3 && *b <= 0xC6) || *b == 0xBA || *b == 0xAC)
+			else if ((HOOK_R == 7 && HOOK_C < 4) || *b == 0xA4 || *b == 0xC2 || (*b > 0xC3 && *b <= 0xC6) || *b == 0xBA || *b == 0xAC)
 				offset++;
 
-			if (FindByte(OP2_MODRM, sizeof(OP2_MODRM), *b) || (R != 3 && R > 0 && R < 7) || *b >= 0xD0 || (R == 7 && C != 7) || R == 9 || R == 0xB || (R == 0xC && C < 8) || (R == 0 && C < 4))
+			if (FindByte(OP2_MODRM, sizeof(OP2_MODRM), *b) || (HOOK_R != 3 && HOOK_R > 0 && HOOK_R < 7) || *b >= 0xD0 || (HOOK_R == 7 && HOOK_C != 7) || HOOK_R == 9 || HOOK_R == 0xB || (HOOK_R == 0xC && HOOK_C < 8) || (HOOK_R == 0 && HOOK_C < 4))
 				ParseModRM(&b, addressPrefix);
 		}
 	}
 	else
 	{
-		if ((R == 0xE && C < 8) || (R == 0xB && C < 8) || R == 7 || (R < 4 && (C == 4 || C == 0xC)) || (*b == 0xF6 && !(*(b + 1) & 48)) || FindByte(OP1_IMM8, sizeof(OP1_IMM8), *b))
+		if ((HOOK_R == 0xE && HOOK_C < 8) || (HOOK_R == 0xB && HOOK_C < 8) || HOOK_R == 7 || (HOOK_R < 4 && (HOOK_C == 4 || HOOK_C == 0xC)) || (*b == 0xF6 && !(*(b + 1) & 48)) || FindByte(OP1_IMM8, sizeof(OP1_IMM8), *b))
 			offset++;
 		else if (*b == 0xC2 || *b == 0xCA)
 			offset += 2;
 		else if (*b == 0xC8)
 			offset += 3;
-		else if ((R < 4 && (C == 5 || C == 0xD)) || (R == 0xB && C >= 8) || (*b == 0xF7 && !(*(b + 1) & 48)) || FindByte(OP1_IMM32, sizeof(OP1_IMM32), *b))
+		else if ((HOOK_R < 4 && (HOOK_C == 5 || HOOK_C == 0xD)) || (HOOK_R == 0xB && HOOK_C >= 8) || (*b == 0xF7 && !(*(b + 1) & 48)) || FindByte(OP1_IMM32, sizeof(OP1_IMM32), *b))
 			offset += (rexW) ? 8 : (operandPrefix ? 2 : 4);
-		else if (R == 0xA && C < 4)
+		else if (HOOK_R == 0xA && HOOK_C < 4)
 			offset += (rexW) ? 8 : (addressPrefix ? 2 : 4);
 		else if (*b == 0xEA || *b == 0x9A)
 			offset += operandPrefix ? 4 : 6;
 
-		if (FindByte(OP1_MODRM, sizeof(OP1_MODRM), *b) || (R < 4 && (C < 4 || (C >= 8 && C < 0xC))) || R == 8 || (R == 0xD && C >= 8))
+		if (FindByte(OP1_MODRM, sizeof(OP1_MODRM), *b) || (HOOK_R < 4 && (HOOK_C < 4 || (HOOK_C >= 8 && HOOK_C < 0xC))) || HOOK_R == 8 || (HOOK_R == 0xD && HOOK_C >= 8))
 			ParseModRM(&b, addressPrefix);
 	}
 
@@ -180,6 +180,8 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 }
 
 #ifdef _WIN64
+#define WIN32_NO_STATUS
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #undef CopyMemory
 #endif
@@ -188,9 +190,10 @@ inline void* PlatformAllocate(const unsigned long long size)
 {
 #ifdef _WIN64
 	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-#endif
-
+#else
+	(void)size;
 	return 0;
+#endif
 }
 
 inline void PlatformFree(void* address, const unsigned long long size)
@@ -213,29 +216,34 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
 #endif
 }
 
+#define CREATE_JUMP(name, targetAddress) \
+	unsigned char name[sizeof(JUMP_CODE)]; \
+	CopyMemory(name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
+	*(unsigned long long*)((unsigned long long)name + 5) = (unsigned long long)targetAddress
+
 inline int EnableHook(HookInformation* information)
 {
 	if (information->Enabled)
 		return 1;
 
 	const int bufferSize = sizeof(JUMP_CODE) + information->BytesToCopy;
-	void* buffer = PlatformAllocate(bufferSize);
+	unsigned char* buffer = (unsigned char*)PlatformAllocate(bufferSize);
 	if (!buffer)
 		return 0;
 
 	information->Trampoline = buffer;
 	CopyMemory(buffer, information->OriginalBuffer, information->BytesToCopy);
 
-	unsigned char jumpCode[sizeof(JUMP_CODE)];
-	CopyMemory(jumpCode, JUMP_CODE, sizeof(JUMP_CODE));
-	*(unsigned long long*)((unsigned long long)jumpCode + 5) = (unsigned long long)information->OriginalFunction + information->BytesToCopy;
-	CopyMemory((unsigned char*)buffer + information->BytesToCopy, jumpCode, sizeof(JUMP_CODE));
+	CREATE_JUMP(originalJump, information->OriginalFunction + information->BytesToCopy);
+	CopyMemory(buffer + information->BytesToCopy, originalJump, sizeof(JUMP_CODE));
 
+	CREATE_JUMP(targetJump, information->TargetFunction);
 	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
-	CopyMemory(information->OriginalFunction, buffer, bufferSize);
+	CopyMemory(information->OriginalFunction, targetJump, sizeof(JUMP_CODE));
 	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
 	information->Enabled = 1;
+	return 1;
 }
 
 #endif

@@ -1,27 +1,45 @@
 #include "../../../Source/LightHook.h"
 #include <stdio.h>
 
-int TestFunction(int param1, int param2)
+static HookInformation testHook;
+typedef int(*TestFunction_t)(int param1, int param2);
+
+__declspec(noinline) int TestFunction(int param1, int param2)
 {
-	// Do complex math
 	param2 -= param1;
 	param1 += param2;
 	for (int i = 0; i < 10; i++)
 		param1 += param2 * param2;
 
-	printf("param1: %i\n", param1);
+	param2 *= param1;
+	param1 *= param2;
+	for (int i = 0; i < 5; i++)
+		param1 += param2 * param2;
+
+	printf("in func: %i\n", param1);
 	return param1;
 }
 
-int HookedTestFunction()
+__declspec(noinline) int HookedTestFunction()
 {
-	printf("Hook called\n");
-	return 0;
+	printf("hook called\n");
+
+	TestFunction_t original = (TestFunction_t)&testHook.Trampoline;
+	return original(10, 20);
+	//return 0;
 }
 
 int main()
 {
-	HookInformation information = CreateHook((void*)&TestFunction, (void*)&HookedTestFunction);
-	printf("size: %i\n", information.BytesToCopy);
+	int output = TestFunction(0, 1);
+	printf("before hook: %u\n", output);
+
+	testHook = CreateHook((void*)&TestFunction, (void*)&HookedTestFunction);
+	int status = EnableHook(&testHook);
+	printf("status: %u\n", status);
+	printf("trampoline: 0x%p\n", testHook.Trampoline);
+
+	output = TestFunction(0, 1);
+	printf("after hook: %u\n", output);
 	return 0;
 }
