@@ -25,7 +25,7 @@ __declspec(noinline) int HookedTestFunction()
 	printf("hook called\n");
 
 	TestFunction_t original = (TestFunction_t)testHook.Trampoline;
-	return original(10, 20);
+	return original(0, 2);
 	//return 0;
 }
 

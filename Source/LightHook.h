@@ -153,7 +153,7 @@ typedef struct _HookInformation
 	void* Trampoline;
 } HookInformation;
 
-static const unsigned char JUMP_CODE[] = { 0x48, 0x31, 0xc0, 0x48, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xe0 };
+static const unsigned char JUMP_CODE[] = { 0x49, 0xBF, 0xED, 0xFE, 0xED, 0xFE, 0xED, 0xFE, 0xAD, 0xDE, 0x41, 0xFF, 0xE7 };
 
 /**
  * \brief Prepare hook information structure and backup original function bytes that will be used for the trampoline
@@ -219,7 +219,7 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
 #define CREATE_JUMP(name, targetAddress) \
 	unsigned char name[sizeof(JUMP_CODE)]; \
 	CopyMemory(name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
-	*(unsigned long long*)((unsigned long long)name + 5) = (unsigned long long)targetAddress
+	*(unsigned long long*)((unsigned long long)name + 2) = (unsigned long long)targetAddress
 
 inline int EnableHook(HookInformation* information)
 {
