@@ -129,7 +129,6 @@ inline int GetInstructionSize(const void* address)
 	return (int)(++b + offset - (unsigned char*)address);
 }
 
-
 /**
  * \brief Substitute for memcpy function
  * \param destination Target address to copy date into
@@ -166,6 +165,7 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 {
 	HookInformation information;
 	information.Enabled = 0;
+	information.Trampoline = 0;
 	information.OriginalFunction = originalFunction;
 	information.TargetFunction = targetFunction;
 
@@ -179,9 +179,63 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 	return information;
 }
 
+#ifdef _WIN64
+#include <Windows.h>
+#undef CopyMemory
+#endif
+
+inline void* PlatformAllocate(const unsigned long long size)
+{
+#ifdef _WIN64
+	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+#endif
+
+	return 0;
+}
+
+inline void PlatformFree(void* address, const unsigned long long size)
+{
+#ifdef _WIN64
+	VirtualFree(address, size, MEM_RELEASE);
+#endif
+}
+
+#define PROTECTION_READ_WRITE_EXECUTE 0xfffffffffffe
+inline unsigned long long PlatformProtect(void* address, unsigned long long size, unsigned long long protection)
+{
+#ifdef _WIN64
+	if (protection == PROTECTION_READ_WRITE_EXECUTE)
+		protection = PAGE_EXECUTE_READWRITE;
+
+	unsigned long original;
+	VirtualProtect(address, size, (unsigned long)protection, &original);
+	return original;
+#endif
+}
+
 inline int EnableHook(HookInformation* information)
 {
-	
+	if (information->Enabled)
+		return 1;
+
+	const int bufferSize = sizeof(JUMP_CODE) + information->BytesToCopy;
+	void* buffer = PlatformAllocate(bufferSize);
+	if (!buffer)
+		return 0;
+
+	information->Trampoline = buffer;
+	CopyMemory(buffer, information->OriginalBuffer, information->BytesToCopy);
+
+	unsigned char jumpCode[sizeof(JUMP_CODE)];
+	CopyMemory(jumpCode, JUMP_CODE, sizeof(JUMP_CODE));
+	*(unsigned long long*)((unsigned long long)jumpCode + 5) = (unsigned long long)information->OriginalFunction + information->BytesToCopy;
+	CopyMemory((unsigned char*)buffer + information->BytesToCopy, jumpCode, sizeof(JUMP_CODE));
+
+	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
+	CopyMemory(information->OriginalFunction, buffer, bufferSize);
+	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
+
+	information->Enabled = 1;
 }
 
 #endif
