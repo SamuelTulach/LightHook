@@ -61,7 +61,7 @@ inline void ParseModRM(unsigned char** buffer, const int addressPrefix)
 }
 
 /**
- * \brief Get instruction size of basic instructions for x86_64 (AMD64) platform
+ * \brief Get size of basic instructions for x86_64 (AMD64) platform
  * \param address Address of instruction to get length of
  * \return Size in bytes of instruction
  */
@@ -127,6 +127,61 @@ inline int GetInstructionSize(const void* address)
 	}
 
 	return (int)(++b + offset - (unsigned char*)address);
+}
+
+
+/**
+ * \brief Substitute for memcpy function
+ * \param destination Target address to copy date into
+ * \param source Source address to copy data from
+ * \param size Amount of bytes to copy
+ */
+inline void CopyMemory(void* destination, void* source, unsigned long long size)
+{
+	unsigned char* dst = (unsigned char*)destination;
+	unsigned char* src = (unsigned char*)source;
+	for (unsigned long long i = 0; i < size; i++)
+		dst[i] = src[i];
+}
+
+typedef struct _HookInformation
+{
+	int Enabled;
+	int BytesToCopy;
+	unsigned char OriginalBuffer[32];
+	void* OriginalFunction;
+	void* TargetFunction;
+	void* Trampoline;
+} HookInformation;
+
+static const unsigned char JUMP_CODE[] = { 0x48, 0x31, 0xc0, 0x48, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xe0 };
+
+/**
+ * \brief Prepare hook information structure and backup original function bytes that will be used for the trampoline
+ * \param originalFunction Function that will be hooked
+ * \param targetFunction Function that will be called
+ * \return Hook information structure
+ */
+inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
+{
+	HookInformation information;
+	information.Enabled = 0;
+	information.OriginalFunction = originalFunction;
+	information.TargetFunction = targetFunction;
+
+	int size = 0;
+	while (size < sizeof(JUMP_CODE))
+		size += GetInstructionSize((unsigned char*)originalFunction + size);
+
+	information.BytesToCopy = size;
+	CopyMemory(information.OriginalBuffer, originalFunction, size);
+
+	return information;
+}
+
+inline int EnableHook(HookInformation* information)
+{
+	
 }
 
 #endif
