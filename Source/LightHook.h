@@ -180,39 +180,93 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 }
 
 #ifdef _WIN64
+#ifdef _KERNEL_MODE
+#include <ntifs.h>
+#include <intrin.h>
+#else
 #define WIN32_NO_STATUS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #undef CopyMemory
 #endif
 
+#endif
+
+/**
+ * \brief Allocate RWX memory
+ * \param size Size in bytes
+ * \return Pointer to allocated memory region
+ */
 inline void* PlatformAllocate(const unsigned long long size)
 {
 #ifdef _WIN64
+#ifdef _KERNEL_MODE
+	return ExAllocatePool(NonPagedPoolExecute, size);
+#else
 	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+#endif
 #else
 	(void)size;
 	return 0;
 #endif
 }
 
+/**
+ * \brief Free/release memory previously allocated with PlatformAllocate
+ * \param address Pointer to memory region
+ * \param size Size in bytes
+ */
 inline void PlatformFree(void* address, const unsigned long long size)
 {
 #ifdef _WIN64
+#ifdef _KERNEL_MODE
+	(void)size;
+	ExFreePool(address);
+#else
 	VirtualFree(address, size, MEM_RELEASE);
+#endif
 #endif
 }
 
 #define PROTECTION_READ_WRITE_EXECUTE 0xfffffffffffe
+
+/**
+ * \brief Change memory protection flags in usermode, disable write protection bit in cr0 in kernel mode
+ * \param address Memory location
+ * \param size Size in bytes (will likely be rounded to one page)
+ * \param protection Use PROTECTION_READ_WRITE_EXECUTE to make region RWX, otherwise platform specific
+ * \return Original protection value
+ */
 inline unsigned long long PlatformProtect(void* address, unsigned long long size, unsigned long long protection)
 {
 #ifdef _WIN64
+#ifdef _KERNEL_MODE
+	(void)size;
+	(void)address;
+	if (protection == PROTECTION_READ_WRITE_EXECUTE)
+	{
+		_disable();
+
+		unsigned long long cr0 = __readcr0();
+		unsigned long long originalCr0 = cr0;
+		cr0 &= ~(1UL << 16);
+		__writecr0(cr0);
+
+		return originalCr0;
+	} else
+	{
+		__writecr0(protection);
+		_enable();
+		return 0;
+	}
+#else
 	if (protection == PROTECTION_READ_WRITE_EXECUTE)
 		protection = PAGE_EXECUTE_READWRITE;
 
 	unsigned long original;
 	VirtualProtect(address, size, (unsigned long)protection, &original);
 	return original;
+#endif
 #endif
 }
 
@@ -221,6 +275,11 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
 	CopyMemory(name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
 	*(unsigned long long*)((unsigned long long)name + 2) = (unsigned long long)targetAddress
 
+/**
+ * \brief Actually perform the trampoline hook
+ * \param information Information structure created with CreateHook
+ * \return Non-zero when successful, zero when fail
+ */
 inline int EnableHook(HookInformation* information)
 {
 	if (information->Enabled)
