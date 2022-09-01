@@ -23,7 +23,7 @@ static const unsigned char OP2_MODRM[] = { 0x0D, 0xA3, 0xA4, 0xA5, 0xAB, 0xAC, 0
  * \param value Single byte value to search for
  * \return Non-null if found, null of not
  */
-inline int FindByte(const unsigned char* buffer, const unsigned long long maxLength, const unsigned char value)
+static int FindByte(const unsigned char* buffer, const unsigned long long maxLength, const unsigned char value)
 {
 	for (unsigned long long i = 0; i < maxLength; i++)
 	{
@@ -39,7 +39,7 @@ inline int FindByte(const unsigned char* buffer, const unsigned long long maxLen
  * \param buffer Pointer to the current buffer address
  * \param addressPrefix Instruction has legacy address size overwrite prefix
  */
-inline void ParseModRM(unsigned char** buffer, const int addressPrefix)
+static void ParseModRM(unsigned char** buffer, const int addressPrefix)
 {
 	const unsigned char modRm = *++ * buffer;
 
@@ -65,7 +65,7 @@ inline void ParseModRM(unsigned char** buffer, const int addressPrefix)
  * \param address Address of instruction to get length of
  * \return Size in bytes of instruction
  */
-inline int GetInstructionSize(const void* address)
+static int GetInstructionSize(const void* address)
 {
 	/*
 	 * Based on length-disassembler by @Nomade040
@@ -135,7 +135,7 @@ inline int GetInstructionSize(const void* address)
  * \param source Source address to copy data from
  * \param size Amount of bytes to copy
  */
-inline void CopyMemory(void* destination, void* source, unsigned long long size)
+static void CopyMemory(void* destination, void* source, unsigned long long size)
 {
 	unsigned char* dst = (unsigned char*)destination;
 	unsigned char* src = (unsigned char*)source;
@@ -161,7 +161,7 @@ static const unsigned char JUMP_CODE[] = { 0x49, 0xBF, 0xED, 0xFE, 0xED, 0xFE, 0
  * \param targetFunction Function that will be called
  * \return Hook information structure
  */
-inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
+static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 {
 	HookInformation information;
 	information.Enabled = 0;
@@ -190,13 +190,19 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #undef CopyMemory
 #endif
 #endif
+#ifdef __linux__
+#include <stdio.h>
+#include <sys/mman.h>
+#include <assert.h>
+#include <errno.h>
+#endif
 
 /**
  * \brief Allocate RWX memory
  * \param size Size in bytes
  * \return Pointer to allocated memory region
  */
-inline void* PlatformAllocate(const unsigned long long size)
+static void* PlatformAllocate(const unsigned long long size)
 {
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
@@ -205,6 +211,9 @@ inline void* PlatformAllocate(const unsigned long long size)
 	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 #endif
 #else
+#ifdef __linux__
+	return mmap(0, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+#endif
 	(void)size;
 	return 0;
 #endif
@@ -215,7 +224,7 @@ inline void* PlatformAllocate(const unsigned long long size)
  * \param address Pointer to memory region
  * \param size Size in bytes
  */
-inline void PlatformFree(void* address, const unsigned long long size)
+static void PlatformFree(void* address, const unsigned long long size)
 {
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
@@ -223,6 +232,9 @@ inline void PlatformFree(void* address, const unsigned long long size)
 	ExFreePool(address);
 #else
 	VirtualFree(address, size, MEM_RELEASE);
+#endif
+#ifdef __linux__
+	munmap(address, size);
 #endif
 #endif
 }
@@ -236,7 +248,7 @@ inline void PlatformFree(void* address, const unsigned long long size)
  * \param protection Use PROTECTION_READ_WRITE_EXECUTE to make region RWX, otherwise platform specific
  * \return Original protection value
  */
-inline unsigned long long PlatformProtect(void* address, unsigned long long size, unsigned long long protection)
+static unsigned long long PlatformProtect(void* address, unsigned long long size, unsigned long long protection)
 {
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
@@ -268,6 +280,22 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
 	return original;
 #endif
 #endif
+#ifdef __linux__
+	(void)size;
+	if (protection == PROTECTION_READ_WRITE_EXECUTE)
+		protection = PROT_READ | PROT_WRITE | PROT_EXEC;
+	else
+		protection = PROT_READ | PROT_EXEC; // unfortunately no way to read the original without parsing /proc/self/maps
+
+	int pageSize = getpagesize();
+	unsigned long long pageOffset = (unsigned long long)address % pageSize;
+	address -= pageOffset;
+
+	int status = mprotect(address, pageSize, protection);
+	assert(status == 0);
+
+	return protection;
+#endif
 }
 
 #define CREATE_JUMP(name, targetAddress) \
@@ -280,7 +308,7 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
  * \param information Information structure created with CreateHook
  * \return Non-zero when successful, zero when fail
  */
-inline int EnableHook(HookInformation* information)
+static int EnableHook(HookInformation* information)
 {
 	if (information->Enabled)
 		return 1;
