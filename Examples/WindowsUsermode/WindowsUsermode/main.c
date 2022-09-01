@@ -26,7 +26,6 @@ __declspec(noinline) int HookedTestFunction()
 
 	TestFunction_t original = (TestFunction_t)testHook.Trampoline;
 	return original(0, 2);
-	//return 0;
 }
 
 int main()
@@ -43,5 +42,6 @@ int main()
 
 	output = TestFunction(0, 1);
 	printf("after hook: %u\n", output);
+
 	return 0;
 }

@@ -333,4 +333,22 @@ static int EnableHook(HookInformation* information)
 	return 1;
 }
 
+/**
+ * \brief Remove the trampoline hook
+ * \param information Information structure created with CreateHook
+ * \return Non-zero when successful, zero when fail
+ */
+static int DisableHook(HookInformation* information)
+{
+	if (!information->Enabled)
+		return 1;
+
+	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
+	CopyMemory(information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
+	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
+
+	information->Enabled = 0;
+	return 1;
+}
+
 #endif

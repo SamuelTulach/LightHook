@@ -26,7 +26,6 @@ int __attribute__ ((noinline)) HookedTestFunction()
 
 	TestFunction_t original = (TestFunction_t)testHook.Trampoline;
 	return original(0, 2);
-	//return 0;
 }
 
 int main()
