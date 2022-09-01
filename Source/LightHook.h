@@ -189,7 +189,6 @@ inline HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #include <Windows.h>
 #undef CopyMemory
 #endif
-
 #endif
 
 /**
@@ -253,7 +252,8 @@ inline unsigned long long PlatformProtect(void* address, unsigned long long size
 		__writecr0(cr0);
 
 		return originalCr0;
-	} else
+	}
+	else
 	{
 		__writecr0(protection);
 		_enable();
