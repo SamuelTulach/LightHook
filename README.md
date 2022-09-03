@@ -26,14 +26,13 @@ While other well-written libraries that do exactly the same already exist, I wan
 Include the [header file](https://github.com/SamuelTulach/LightHook/blob/main/Source/LightHook.h) in your project. Initialise hook structure by calling `CreateHook`. Perform the actual hook by calling `EnableHook` and optionally revert the hook with a call to `DisableHook`.
 
 ```
-
 HookInformation info = CreateHook((void*)&FunctionToHook, (void*)&FunctionToCall);
 int status = EnableHook(&info);
 if (status != 0)
     return;
 
-...
+// Call the original function with info.Trampoline
+FunctionToHook(10, 20);
 
 DisableHook(&info)
-
 ```
