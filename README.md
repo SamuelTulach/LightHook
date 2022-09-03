@@ -12,5 +12,6 @@ While other well-written libraries that do exactly the same already exist, I wan
 - Works in both kernel-mode/usermode
 - Cross-platform (Windows/Linux/EFI)
 - Easily portable (3 functions to allocate/free/protect memory that are platform specific)
+
 **Cons of this library:**
 - Breaks when a function starts with unsupported instructions (ex. AVX)
