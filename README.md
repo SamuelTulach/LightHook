@@ -15,3 +15,9 @@ While other well-written libraries that do exactly the same already exist, I wan
 
 **Cons of this library:**
 - Breaks when a function starts with unsupported instructions (ex. AVX)
+
+## Showcase
+![linux](Assets/linux_usermode.png)
+![wink](Assets/windows_kernelmode.png)
+![winu](Assets/windows_usermode.png)
+![efi](Assets/efi_application.png)
