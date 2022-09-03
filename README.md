@@ -36,3 +36,6 @@ FunctionToHook(10, 20);
 
 DisableHook(&info)
 ```
+
+## License
+This repository is licensed under MIT if not stated otherwise in subfolders.
