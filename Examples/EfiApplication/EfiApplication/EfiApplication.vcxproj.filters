@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source\gnu-efi">
+      <UniqueIdentifier>{d921721d-69c0-47cb-8168-81f92d8d4401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\lib">
+      <UniqueIdentifier>{a90bd462-f24f-4d41-a4fa-1ea45e773109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\inc">
+      <UniqueIdentifier>{92decda3-4fc0-4e72-a72f-96c09987854b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\lib\runtime">
+      <UniqueIdentifier>{e2957407-60cd-4eb2-ad55-86b2e5f53b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\inc\ia64">
+      <UniqueIdentifier>{784358ef-41c6-4554-be2a-d1278ad99109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\inc\x86_64">
+      <UniqueIdentifier>{ab0f4bc0-9137-429b-97d5-8caff74822b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\gnu-efi\lib\x86_64">
+      <UniqueIdentifier>{02dc9ad2-536f-4e62-bc7e-43f09ad79149}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gnu-efi\lib\boxdraw.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\cmdline.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\console.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\crc.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\data.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\debug.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\dpath.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\error.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\event.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\exit.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\guid.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\hand.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\hw.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\init.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\lock.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\misc.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\pause.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\print.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\smbios.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\sread.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\str.c">
+      <Filter>Source\gnu-efi\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\runtime\efirtlib.c">
+      <Filter>Source\gnu-efi\lib\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\runtime\rtdata.c">
+      <Filter>Source\gnu-efi\lib\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\runtime\rtlock.c">
+      <Filter>Source\gnu-efi\lib\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\runtime\rtstr.c">
+      <Filter>Source\gnu-efi\lib\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\runtime\vm.c">
+      <Filter>Source\gnu-efi\lib\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\x86_64\callwrap.c">
+      <Filter>Source\gnu-efi\lib\x86_64</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\x86_64\initplat.c">
+      <Filter>Source\gnu-efi\lib\x86_64</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\lib\x86_64\math.c">
+      <Filter>Source\gnu-efi\lib\x86_64</Filter>
+    </ClCompile>
+    <ClCompile Include="gnu-efi\msvc.c">
+      <Filter>Source\gnu-efi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gnu-efi\inc\efi.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efi_nii.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efi_pxe.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiapi.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\eficompiler.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\eficon.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\eficonex.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efidebug.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efidef.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efidevp.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efierr.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efifs.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efigpt.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiip.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efilib.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efilink.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efinet.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efipart.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efipciio.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efipoint.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiprot.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efipxebc.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efirtlib.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiser.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efisetjmp.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efishell.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efishellintf.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efistdarg.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efitcp.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiudp.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\efiui.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\lib.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\libsmbios.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\pci22.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\romload.h">
+      <Filter>Source\gnu-efi\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\ia64\efibind.h">
+      <Filter>Source\gnu-efi\inc\ia64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\ia64\efilibplat.h">
+      <Filter>Source\gnu-efi\inc\ia64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\ia64\efisetjmp_arch.h">
+      <Filter>Source\gnu-efi\inc\ia64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\ia64\pe.h">
+      <Filter>Source\gnu-efi\inc\ia64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\ia64\salproc.h">
+      <Filter>Source\gnu-efi\inc\ia64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\x86_64\efibind.h">
+      <Filter>Source\gnu-efi\inc\x86_64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\x86_64\efilibplat.h">
+      <Filter>Source\gnu-efi\inc\x86_64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\x86_64\efisetjmp_arch.h">
+      <Filter>Source\gnu-efi\inc\x86_64</Filter>
+    </ClInclude>
+    <ClInclude Include="gnu-efi\inc\x86_64\pe.h">
+      <Filter>Source\gnu-efi\inc\x86_64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\LightHook.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

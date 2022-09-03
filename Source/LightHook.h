@@ -181,8 +181,10 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
+#ifndef _EFI
 #include <ntifs.h>
 #include <intrin.h>
+#endif
 #else
 #define WIN32_NO_STATUS
 #define WIN32_LEAN_AND_MEAN
@@ -196,6 +198,10 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #include <assert.h>
 #include <errno.h>
 #endif
+#ifdef _EFI
+#include <efi.h>
+#include <efilib.h>
+#endif
 
 /**
  * \brief Allocate RWX memory
@@ -204,9 +210,17 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
  */
 static void* PlatformAllocate(const unsigned long long size)
 {
+#ifdef _EFI
+	const unsigned long long numberOfPages = 1 + size / 1024;
+	EFI_PHYSICAL_ADDRESS physicalAddress;
+	gBS->AllocatePages(AllocateAnyPages, EfiRuntimeServicesCode, numberOfPages, &physicalAddress);
+	return (void*)physicalAddress;
+#endif
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
+#ifndef _EFI
 	return ExAllocatePool(NonPagedPoolExecute, size);
+#endif
 #else
 	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 #endif
@@ -226,10 +240,17 @@ static void* PlatformAllocate(const unsigned long long size)
  */
 static void PlatformFree(void* address, const unsigned long long size)
 {
+#ifdef _EFI
+	const unsigned long long numberOfPages = 1 + size / 1024;
+	gBS->FreePages((EFI_PHYSICAL_ADDRESS)address, numberOfPages);
+	return;
+#endif
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
+#ifndef _EFI
 	(void)size;
 	ExFreePool(address);
+#endif
 #else
 	VirtualFree(address, size, MEM_RELEASE);
 #endif
