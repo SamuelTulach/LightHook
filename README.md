@@ -28,7 +28,7 @@ Include the [header file](https://github.com/SamuelTulach/LightHook/blob/main/So
 ```
 HookInformation info = CreateHook((void*)&FunctionToHook, (void*)&FunctionToCall);
 int status = EnableHook(&info);
-if (status != 0)
+if (!status)
     return;
 
 // Call the original function with info.Trampoline
