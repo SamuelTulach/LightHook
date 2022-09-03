@@ -1,6 +1,6 @@
 ![logo](Assets/logo_small.png)
 
-this is test text
+Single-header, minimalistic, cross-platform hook library written in pure C.
 
 ## Test
 Lorem impusmdsklfm
