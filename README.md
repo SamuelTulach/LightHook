@@ -9,7 +9,7 @@ While other well-written libraries that do exactly the same already exist, I wan
 - Written in pure C
 - No dependencies (no full disassembler engine)
 - Single header
-- Works in both kernel-mode/usermode
+- Works in both kernelmode/usermode
 - Cross-platform (Windows/Linux/EFI)
 - Easily portable (3 functions to allocate/free/protect memory that are platform specific)
 
