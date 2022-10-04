@@ -21,7 +21,7 @@ static const unsigned char OP2_MODRM[] = { 0x0D, 0xA3, 0xA4, 0xA5, 0xAB, 0xAC, 0
  * \param buffer Input buffer to search in
  * \param maxLength Buffer size in bytes
  * \param value Single byte value to search for
- * \return Non-null if found, null of not
+ * \return Non-null if found, null if not
  */
 static int FindByte(const unsigned char* buffer, const unsigned long long maxLength, const unsigned char value)
 {
