@@ -43,5 +43,18 @@ int main()
 	output = TestFunction(0, 1);
 	printf("after hook: %u\n", output);
 
+	status = DisableHook(&testHook);
+	printf("status: %u\n", status);
+
+	output = TestFunction(0, 1);
+	printf("disabled hook: %u\n", output);
+
+	status = EnableHook(&testHook);
+	printf("status: %u\n", status);
+	printf("trampoline: 0x%p\n", testHook.Trampoline);
+
+	output = TestFunction(0, 1);
+	printf("after hook: %u\n", output);
+
 	return 0;
 }
