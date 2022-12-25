@@ -368,6 +368,8 @@ static int DisableHook(HookInformation* information)
 	CopyMemory(information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
 	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
+	PlatformFree(information->Trampoline, sizeof(JUMP_CODE) + information->BytesToCopy);
+
 	information->Enabled = 0;
 	return 1;
 }
