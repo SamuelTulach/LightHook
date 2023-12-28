@@ -135,7 +135,7 @@ static int GetInstructionSize(const void* address)
  * \param source Source address to copy data from
  * \param size Amount of bytes to copy
  */
-static void CopyMemory(void* destination, void* source, unsigned long long size)
+static void LHCopyMemory (void* destination, void* source, unsigned long long size)
 {
 	unsigned char* dst = (unsigned char*)destination;
 	unsigned char* src = (unsigned char*)source;
@@ -174,7 +174,7 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 		size += GetInstructionSize((unsigned char*)originalFunction + size);
 
 	information.BytesToCopy = size;
-	CopyMemory(information.OriginalBuffer, originalFunction, size);
+	LHCopyMemory (information.OriginalBuffer, originalFunction, size);
 
 	return information;
 }
@@ -189,7 +189,7 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #define WIN32_NO_STATUS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#undef CopyMemory
+#undef LHCopyMemory 
 #endif
 #endif
 #ifdef __linux__
@@ -321,7 +321,7 @@ static unsigned long long PlatformProtect(void* address, unsigned long long size
 
 #define CREATE_JUMP(name, targetAddress) \
 	unsigned char name[sizeof(JUMP_CODE)]; \
-	CopyMemory(name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
+	LHCopyMemory (name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
 	*(unsigned long long*)((unsigned long long)name + 2) = (unsigned long long)targetAddress
 
 /**
@@ -340,14 +340,14 @@ static int EnableHook(HookInformation* information)
 		return 0;
 
 	information->Trampoline = buffer;
-	CopyMemory(buffer, information->OriginalBuffer, information->BytesToCopy);
+	LHCopyMemory (buffer, information->OriginalBuffer, information->BytesToCopy);
 
 	CREATE_JUMP(originalJump, information->OriginalFunction + information->BytesToCopy);
-	CopyMemory(buffer + information->BytesToCopy, originalJump, sizeof(JUMP_CODE));
+	LHCopyMemory (buffer + information->BytesToCopy, originalJump, sizeof(JUMP_CODE));
 
 	CREATE_JUMP(targetJump, information->TargetFunction);
 	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
-	CopyMemory(information->OriginalFunction, targetJump, sizeof(JUMP_CODE));
+	LHCopyMemory (information->OriginalFunction, targetJump, sizeof(JUMP_CODE));
 	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
 	information->Enabled = 1;
@@ -365,7 +365,7 @@ static int DisableHook(HookInformation* information)
 		return 1;
 
 	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
-	CopyMemory(information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
+	LHCopyMemory (information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
 	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
 	PlatformFree(information->Trampoline, sizeof(JUMP_CODE) + information->BytesToCopy);
