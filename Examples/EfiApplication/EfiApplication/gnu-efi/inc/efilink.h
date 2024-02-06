@@ -13,8 +13,6 @@ Abstract:
 
     EFI link list macro's
 
-
-
 Revision History
 
 --*/
@@ -25,13 +23,13 @@ Revision History
 // List entry - doubly linked list
 //
 
-typedef struct _LIST_ENTRY {
-    struct _LIST_ENTRY  *Flink;
-    struct _LIST_ENTRY  *Blink;
+typedef struct _LIST_ENTRY
+{
+    struct _LIST_ENTRY* Flink;
+    struct _LIST_ENTRY* Blink;
 } LIST_ENTRY, EFI_LIST_ENTRY;
 
-#endif 
-
+#endif
 
 //
 //  VOID
@@ -70,12 +68,12 @@ typedef struct _LIST_ENTRY {
         }
 
 #if EFI_DEBUG
-    #define RemoveEntryList(Entry)                      \
+#define RemoveEntryList(Entry)                      \
         _RemoveEntryList(Entry);                        \
         (Entry)->Flink = (LIST_ENTRY *) BAD_POINTER;    \
-        (Entry)->Blink = (LIST_ENTRY *) BAD_POINTER; 
+        (Entry)->Blink = (LIST_ENTRY *) BAD_POINTER;
 #else
-    #define RemoveEntryList(Entry)      \
+#define RemoveEntryList(Entry)      \
         _RemoveEntryList(Entry);
 #endif
 
@@ -158,25 +156,24 @@ typedef struct _LIST_ENTRY {
 #define BASE_CR _CR
 
 #if EFI_DEBUG
-    #define CR(Record, TYPE, Field, Sig)     \
+#define CR(Record, TYPE, Field, Sig)     \
         _CR(Record, TYPE, Field)->Signature != Sig ?        \
             (TYPE *) ASSERT_STRUCT(_CR(Record, TYPE, Field), Record) : \
             _CR(Record, TYPE, Field)
 #else
-    #define CR(Record, TYPE, Field, Signature)   \
-        _CR(Record, TYPE, Field)                           
+#define CR(Record, TYPE, Field, Signature)   \
+        _CR(Record, TYPE, Field)
 #endif
-
 
 //
 // A lock structure
 //
 
-typedef struct _FLOCK {
+typedef struct _FLOCK
+{
     EFI_TPL     Tpl;
     EFI_TPL     OwnerTpl;
     UINTN       Lock;
 } FLOCK;
 
 #endif
-

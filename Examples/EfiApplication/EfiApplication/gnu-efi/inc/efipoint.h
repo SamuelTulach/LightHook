@@ -27,41 +27,44 @@
 
 INTERFACE_DECL(_EFI_SIMPLE_POINTER);
 
-typedef struct {
-	INT32 RelativeMovementX;
-	INT32 RelativeMovementY;
-	INT32 RelativeMovementZ;
-	BOOLEAN LeftButton;
-	BOOLEAN RightButton;
+typedef struct
+{
+    INT32 RelativeMovementX;
+    INT32 RelativeMovementY;
+    INT32 RelativeMovementZ;
+    BOOLEAN LeftButton;
+    BOOLEAN RightButton;
 } EFI_SIMPLE_POINTER_STATE;
 
-typedef struct {
-	UINT64 ResolutionX;
-	UINT64 ResolutionY;
-	UINT64 ResolutionZ;
-	BOOLEAN LeftButton;
-	BOOLEAN RightButton;
+typedef struct
+{
+    UINT64 ResolutionX;
+    UINT64 ResolutionY;
+    UINT64 ResolutionZ;
+    BOOLEAN LeftButton;
+    BOOLEAN RightButton;
 } EFI_SIMPLE_POINTER_MODE;
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SIMPLE_POINTER_RESET) (
-	IN struct _EFI_SIMPLE_POINTER *This,
-	IN BOOLEAN ExtendedVerification
-);
+(EFIAPI* EFI_SIMPLE_POINTER_RESET) (
+    IN struct _EFI_SIMPLE_POINTER* This,
+    IN BOOLEAN ExtendedVerification
+    );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SIMPLE_POINTER_GET_STATE) (
-	IN struct _EFI_SIMPLE_POINTER *This,
-	IN OUT EFI_SIMPLE_POINTER_STATE *State
-);
+(EFIAPI* EFI_SIMPLE_POINTER_GET_STATE) (
+    IN struct _EFI_SIMPLE_POINTER* This,
+    IN OUT EFI_SIMPLE_POINTER_STATE* State
+    );
 
-typedef struct _EFI_SIMPLE_POINTER {
-	EFI_SIMPLE_POINTER_RESET Reset;
-	EFI_SIMPLE_POINTER_GET_STATE GetState;
-	EFI_EVENT WaitForInput;
-	EFI_SIMPLE_POINTER_MODE *Mode;
+typedef struct _EFI_SIMPLE_POINTER
+{
+    EFI_SIMPLE_POINTER_RESET Reset;
+    EFI_SIMPLE_POINTER_GET_STATE GetState;
+    EFI_EVENT WaitForInput;
+    EFI_SIMPLE_POINTER_MODE* Mode;
 } EFI_SIMPLE_POINTER_PROTOCOL;
 
 #define EFI_ABSOLUTE_POINTER_PROTOCOL_GUID \
@@ -69,21 +72,23 @@ typedef struct _EFI_SIMPLE_POINTER {
 
 INTERFACE_DECL(_EFI_ABSOLUTE_POINTER_PROTOCOL);
 
-typedef struct {
-	UINT64 AbsoluteMinX;
-	UINT64 AbsoluteMinY;
-	UINT64 AbsoluteMinZ;
-	UINT64 AbsoluteMaxX;
-	UINT64 AbsoluteMaxY;
-	UINT64 AbsoluteMaxZ;
-	UINT32 Attributes;
+typedef struct
+{
+    UINT64 AbsoluteMinX;
+    UINT64 AbsoluteMinY;
+    UINT64 AbsoluteMinZ;
+    UINT64 AbsoluteMaxX;
+    UINT64 AbsoluteMaxY;
+    UINT64 AbsoluteMaxZ;
+    UINT32 Attributes;
 } EFI_ABSOLUTE_POINTER_MODE;
 
-typedef struct {
-	UINT64 CurrentX;
-	UINT64 CurrentY;
-	UINT64 CurrentZ;
-	UINT32 ActiveButtons;
+typedef struct
+{
+    UINT64 CurrentX;
+    UINT64 CurrentY;
+    UINT64 CurrentZ;
+    UINT32 ActiveButtons;
 } EFI_ABSOLUTE_POINTER_STATE;
 
 #define EFI_ABSP_SupportsAltActive 0x00000001
@@ -93,23 +98,24 @@ typedef struct {
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_ABSOLUTE_POINTER_RESET) (
-	IN struct _EFI_ABSOLUTE_POINTER_PROTOCOL *This,
-	IN BOOLEAN ExtendedVerification
-);
+(EFIAPI* EFI_ABSOLUTE_POINTER_RESET) (
+    IN struct _EFI_ABSOLUTE_POINTER_PROTOCOL* This,
+    IN BOOLEAN ExtendedVerification
+    );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_ABSOLUTE_POINTER_GET_STATE) (
-	IN struct _EFI_ABSOLUTE_POINTER_PROTOCOL *This,
-	IN OUT EFI_ABSOLUTE_POINTER_STATE *State
-);
+(EFIAPI* EFI_ABSOLUTE_POINTER_GET_STATE) (
+    IN struct _EFI_ABSOLUTE_POINTER_PROTOCOL* This,
+    IN OUT EFI_ABSOLUTE_POINTER_STATE* State
+    );
 
-typedef struct _EFI_ABSOLUTE_POINTER_PROTOCOL {
-	EFI_ABSOLUTE_POINTER_RESET Reset;
-	EFI_ABSOLUTE_POINTER_GET_STATE GetState;
-	EFI_EVENT WaitForInput;
-	EFI_ABSOLUTE_POINTER_MODE *Mode;
+typedef struct _EFI_ABSOLUTE_POINTER_PROTOCOL
+{
+    EFI_ABSOLUTE_POINTER_RESET Reset;
+    EFI_ABSOLUTE_POINTER_GET_STATE GetState;
+    EFI_EVENT WaitForInput;
+    EFI_ABSOLUTE_POINTER_MODE* Mode;
 } EFI_ABSOLUTE_POINTER_PROTOCOL;
 
 #endif

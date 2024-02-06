@@ -1,7 +1,7 @@
 /*++
 
 Copyright (c) 1998  Intel Corporation
-    
+
 Module Name:
 
     crc.c
@@ -10,14 +10,11 @@ Abstract:
 
     CRC32 functions
 
-
-
 Revision History
 
 --*/
 
 #include "lib.h"
-
 
 UINT32 CRCTable[256] = {
     0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F,
@@ -62,15 +59,13 @@ UINT32 CRCTable[256] = {
     0x40DF0B66, 0x37D83BF0, 0xA9BCAE53, 0xDEBB9EC5, 0x47B2CF7F, 0x30B5FFE9,
     0xBDBDF21C, 0xCABAC28A, 0x53B39330, 0x24B4A3A6, 0xBAD03605, 0xCDD70693,
     0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
-    0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D 
-    };
-    
-
+    0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
+};
 
 VOID
-SetCrc (
-    IN OUT EFI_TABLE_HEADER *Hdr
-    )
+SetCrc(
+    IN OUT EFI_TABLE_HEADER* Hdr
+)
 /*++
 
 Routine Description:
@@ -87,14 +82,14 @@ Returns:
 
 --*/
 {
-    SetCrcAltSize (Hdr->HeaderSize, Hdr);
+    SetCrcAltSize(Hdr->HeaderSize, Hdr);
 }
 
 VOID
-SetCrcAltSize (
+SetCrcAltSize(
     IN UINTN                 Size,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    )
+    IN OUT EFI_TABLE_HEADER* Hdr
+)
 /*++
 
 Routine Description:
@@ -112,15 +107,14 @@ Returns:
 --*/
 {
     Hdr->CRC32 = 0;
-    Hdr->CRC32 = CalculateCrc((UINT8 *)Hdr, Size);
+    Hdr->CRC32 = CalculateCrc((UINT8*)Hdr, Size);
 }
 
-
 BOOLEAN
-CheckCrc (
+CheckCrc(
     IN UINTN                 MaxSize,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    )
+    IN OUT EFI_TABLE_HEADER* Hdr
+)
 /*++
 
 Routine Description:
@@ -137,18 +131,15 @@ Returns:
 
 --*/
 {
-    return CheckCrcAltSize (MaxSize, Hdr->HeaderSize, Hdr);
+    return CheckCrcAltSize(MaxSize, Hdr->HeaderSize, Hdr);
 }
 
-
-
-
 BOOLEAN
-CheckCrcAltSize (
+CheckCrcAltSize(
     IN UINTN                 MaxSize,
     IN UINTN                 Size,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    )
+    IN OUT EFI_TABLE_HEADER* Hdr
+)
 /*++
 
 Routine Description:
@@ -169,13 +160,15 @@ Returns:
     UINT32      OrgCrc;
     BOOLEAN     f;
 
-    if (Size == 0) {
+    if (Size == 0)
+    {
         //
         // If header size is 0 CRC will pass so return FALSE here
         //
         return FALSE;
     }
-    if (MaxSize && Size > MaxSize) {
+    if (MaxSize && Size > MaxSize)
+    {
         DEBUG((D_ERROR, "CheckCrc32: Size > MaxSize\n"));
         return FALSE;
     }
@@ -183,33 +176,34 @@ Returns:
     // clear old crc from header
     OrgCrc = Hdr->CRC32;
     Hdr->CRC32 = 0;
-    Crc = CalculateCrc((UINT8 *)Hdr, Size);
+    Crc = CalculateCrc((UINT8*)Hdr, Size);
 
     // set restults
     Hdr->CRC32 = OrgCrc;
 
     // return status
-    f = OrgCrc == (UINT32) Crc;
-    if (!f) {
+    f = OrgCrc == (UINT32)Crc;
+    if (!f)
+    {
         DEBUG((D_ERROR, "CheckCrc32: Crc check failed\n"));
     }
 
     return f;
 }
 
-
 UINT32
-CalculateCrc (
-    UINT8 *pt,
+CalculateCrc(
+    UINT8* pt,
     UINTN Size
-    )
+)
 {
     UINTN Crc;
 
     // compute crc
     Crc = 0xffffffff;
-    while (Size) {
-        Crc = (Crc >> 8) ^ CRCTable[(UINT8) Crc ^ *pt];
+    while (Size)
+    {
+        Crc = (Crc >> 8) ^ CRCTable[(UINT8)Crc ^ *pt];
         pt += 1;
         Size -= 1;
     }

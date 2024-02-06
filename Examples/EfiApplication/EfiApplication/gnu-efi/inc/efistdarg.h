@@ -13,8 +13,6 @@ Abstract:
 
     Defines for parsing the EFI Device Path structures
 
-
-
 Revision History
 
 --*/

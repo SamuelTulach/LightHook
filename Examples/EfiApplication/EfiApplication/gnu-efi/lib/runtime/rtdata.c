@@ -10,14 +10,11 @@ Abstract:
 
     EFI library global data
 
-
-
 Revision History
 
 --*/
 
 #include "lib.h"
-
 
 //
 // These globals are runtime globals
@@ -34,7 +31,7 @@ Revision History
 // RT - pointer to the runtime table
 //
 
-EFI_RUNTIME_SERVICES    *RT;
+EFI_RUNTIME_SERVICES* RT;
 
 //
 // LibStandalone - TRUE if lib is linked in as part of the firmware.
@@ -47,19 +44,18 @@ BOOLEAN  LibFwInstance;
 // EFIDebug - Debug mask
 //
 
-UINTN    EFIDebug    = EFI_DBUG_MASK;
+UINTN    EFIDebug = EFI_DBUG_MASK;
 
 //
 // LibRuntimeDebugOut - Runtime Debug Output device
 //
 
-SIMPLE_TEXT_OUTPUT_INTERFACE    *LibRuntimeDebugOut;
+SIMPLE_TEXT_OUTPUT_INTERFACE* LibRuntimeDebugOut;
 
 //
-// LibRuntimeRaiseTPL, LibRuntimeRestoreTPL - pointers to Runtime functions from the 
+// LibRuntimeRaiseTPL, LibRuntimeRestoreTPL - pointers to Runtime functions from the
 //                                            Boot Services Table
 //
 
-EFI_RAISE_TPL   LibRuntimeRaiseTPL   = NULL;
+EFI_RAISE_TPL   LibRuntimeRaiseTPL = NULL;
 EFI_RESTORE_TPL LibRuntimeRestoreTPL = NULL;
-

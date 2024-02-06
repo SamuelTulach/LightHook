@@ -5,7 +5,7 @@
 #define PCIDS_SIGNATURE "PCIR"
 #pragma pack(push)
 #pragma pack(1)
-typedef struct 
+typedef struct
 {
     UINT8    Pcids_Sig[4];
     UINT16  VendId;
@@ -29,7 +29,7 @@ typedef struct
     UINT8  Resvd[10];
     UINT16 EfiOffset;
 }ArchData;
-typedef struct 
+typedef struct
 {
     UINT16 Rom_Sig;
     ArchData Arch_Data;

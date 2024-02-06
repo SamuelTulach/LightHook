@@ -10,8 +10,6 @@ Abstract:
 
     EFI Runtime library functions
 
-
-
 Revision History
 
 --*/
@@ -25,15 +23,16 @@ Revision History
 #endif
 VOID
 RUNTIMEFUNCTION
-RtZeroMem (
-    IN VOID     *Buffer,
+RtZeroMem(
+    IN VOID* Buffer,
     IN UINTN     Size
-    )
+)
 {
-    INT8        *pt;
+    INT8* pt;
 
     pt = Buffer;
-    while (Size--) {
+    while (Size--)
+    {
         *(pt++) = 0;
     }
 }
@@ -43,16 +42,17 @@ RtZeroMem (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtSetMem (
-    IN VOID     *Buffer,
+RtSetMem(
+    IN VOID* Buffer,
     IN UINTN    Size,
     IN UINT8    Value
-    )
+)
 {
-    INT8        *pt;
+    INT8* pt;
 
     pt = Buffer;
-    while (Size--) {
+    while (Size--)
+    {
         *(pt++) = Value;
     }
 }
@@ -62,14 +62,14 @@ RtSetMem (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtCopyMem (
-    IN VOID        *Dest,
-    IN CONST VOID  *Src,
+RtCopyMem(
+    IN VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN       len
-    )
+)
 {
-    CHAR8 *d = (CHAR8*)Dest;
-    CHAR8 *s = (CHAR8*)Src;
+    CHAR8* d = (CHAR8*)Dest;
+    CHAR8* s = (CHAR8*)Src;
 
     if (d == NULL || s == NULL || s == d)
         return;
@@ -77,10 +77,13 @@ RtCopyMem (
     // If the beginning of the destination range overlaps with the end of
     // the source range, make sure to start the copy from the end so that
     // we don't end up overwriting source data that we need for the copy.
-    if ((d > s) && (d < s + len)) {
+    if ((d > s) && (d < s + len))
+    {
         for (d += len, s += len; len--; )
             *--d = *--s;
-    } else {
+    }
+    else
+    {
         while (len--)
             *d++ = *s++;
     }
@@ -91,15 +94,17 @@ RtCopyMem (
 #endif
 INTN
 RUNTIMEFUNCTION
-RtCompareMem (
-    IN CONST VOID     *Dest,
-    IN CONST VOID     *Src,
+RtCompareMem(
+    IN CONST VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN    len
-    )
+)
 {
-    CONST CHAR8    *d = Dest, *s = Src;
-    while (len--) {
-        if (*d != *s) {
+    CONST CHAR8* d = Dest, * s = Src;
+    while (len--)
+    {
+        if (*d != *s)
+        {
             return *d - *s;
         }
 
@@ -115,10 +120,10 @@ RtCompareMem (
 #endif
 INTN
 RUNTIMEFUNCTION
-RtCompareGuid (
-    IN EFI_GUID     *Guid1,
-    IN EFI_GUID     *Guid2
-    )
+RtCompareGuid(
+    IN EFI_GUID* Guid1,
+    IN EFI_GUID* Guid2
+)
 /*++
 
 Routine Description:
@@ -135,21 +140,19 @@ Returns:
 
 --*/
 {
-    INT32       *g1, *g2, r;
+    INT32* g1, * g2, r;
 
     //
     // Compare 32 bits at a time
     //
 
-    g1 = (INT32 *) Guid1;
-    g2 = (INT32 *) Guid2;
+    g1 = (INT32*)Guid1;
+    g2 = (INT32*)Guid2;
 
-    r  = g1[0] - g2[0];
+    r = g1[0] - g2[0];
     r |= g1[1] - g2[1];
     r |= g1[2] - g2[2];
     r |= g1[3] - g2[3];
 
     return r;
 }
-
-

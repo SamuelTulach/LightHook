@@ -8,9 +8,6 @@ Module Name:
 
 Abstract:
 
-
-
-
 Revision History
 
 --*/
@@ -18,10 +15,9 @@ Revision History
 #include "lib.h"
 
 VOID
-InitializeLibPlatform (
+InitializeLibPlatform(
     IN EFI_HANDLE           ImageHandle EFI_UNUSED,
-    IN EFI_SYSTEM_TABLE     *SystemTable EFI_UNUSED
-    )
+    IN EFI_SYSTEM_TABLE* SystemTable EFI_UNUSED
+)
 {
 }
-

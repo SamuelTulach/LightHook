@@ -8,14 +8,14 @@ Module Name:
 
 Abstract:
 
-    EFI Hell to remap runtime address into the new virual address space 
+    EFI Hell to remap runtime address into the new virual address space
     that was registered by the OS for RT calls.
 
-    So the code image needs to be relocated. All pointers need to be 
-    manually fixed up since the address map changes. 
+    So the code image needs to be relocated. All pointers need to be
+    manually fixed up since the address map changes.
 
     GOOD LUCK NOT HAVING BUGS IN YOUR CODE! PLEASE TEST A LOT. MAKE SURE
-    EXIT BOOTSERVICES OVER WRITES ALL BOOTSERVICE MEMORY & DATA SPACES WHEN 
+    EXIT BOOTSERVICES OVER WRITES ALL BOOTSERVICE MEMORY & DATA SPACES WHEN
     YOU TEST.
 
 Revision History
@@ -29,9 +29,9 @@ Revision History
 #endif
 VOID
 RUNTIMEFUNCTION
-RtLibEnableVirtualMappings (
+RtLibEnableVirtualMappings(
     VOID
-    )
+)
 {
     EFI_CONVERT_POINTER     ConvertPointer;
 
@@ -40,8 +40,8 @@ RtLibEnableVirtualMappings (
     // do not update the pointers yet.
     //
 
-    if (!LibFwInstance) {
-
+    if (!LibFwInstance)
+    {
         //
         // Different components are updating to the new virtual
         // mappings at differnt times.  The only function that
@@ -55,29 +55,28 @@ RtLibEnableVirtualMappings (
         // during runtime.
         //
 
-        ConvertPointer (EFI_INTERNAL_PTR, (VOID **)&RT);
-        ConvertPointer (EFI_OPTIONAL_PTR, (VOID **)&LibRuntimeDebugOut);
+        ConvertPointer(EFI_INTERNAL_PTR, (VOID**)&RT);
+        ConvertPointer(EFI_OPTIONAL_PTR, (VOID**)&LibRuntimeDebugOut);
 
-        ConvertPointer (EFI_INTERNAL_PTR, (VOID **)&LibRuntimeRaiseTPL);
-        ConvertPointer (EFI_INTERNAL_PTR, (VOID **)&LibRuntimeRestoreTPL);
+        ConvertPointer(EFI_INTERNAL_PTR, (VOID**)&LibRuntimeRaiseTPL);
+        ConvertPointer(EFI_INTERNAL_PTR, (VOID**)&LibRuntimeRestoreTPL);
 
         // that was it :^)
     }
 }
-
 
 #ifndef __GNUC__
 #pragma RUNTIME_CODE(RtConvertList)
 #endif
 VOID
 RUNTIMEFUNCTION
-RtConvertList (
+RtConvertList(
     IN UINTN                DebugDisposition,
-    IN OUT LIST_ENTRY       *ListHead
-    )
+    IN OUT LIST_ENTRY* ListHead
+)
 {
-    LIST_ENTRY              *Link;
-    LIST_ENTRY              *NextLink;
+    LIST_ENTRY* Link;
+    LIST_ENTRY* NextLink;
     EFI_CONVERT_POINTER     ConvertPointer;
 
     ConvertPointer = RT->ConvertPointer;
@@ -87,18 +86,19 @@ RtConvertList (
     //
 
     Link = ListHead;
-    do {
+    do
+    {
         NextLink = Link->Flink;
 
-        ConvertPointer (
-            Link->Flink == ListHead ? DebugDisposition : 0, 
-            (VOID **)&Link->Flink
-            );
+        ConvertPointer(
+            Link->Flink == ListHead ? DebugDisposition : 0,
+            (VOID**)&Link->Flink
+        );
 
-        ConvertPointer (
-            Link->Blink == ListHead ? DebugDisposition : 0, 
-            (VOID **)&Link->Blink
-            );
+        ConvertPointer(
+            Link->Blink == ListHead ? DebugDisposition : 0,
+            (VOID**)&Link->Blink
+        );
 
         Link = NextLink;
     } while (Link != ListHead);

@@ -37,4 +37,4 @@
  *  SUCH DAMAGE.
  */
 
-/* uefi_call_wrapper() is a macro in efibind.h */
+ /* uefi_call_wrapper() is a macro in efibind.h */

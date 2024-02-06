@@ -10,12 +10,9 @@ Abstract:
 
     Public EFI header files
 
-
-
 Revision History
 
 --*/
-
 
 // Add a predefined macro to detect usage of the library
 #ifndef _GNU_EFI
@@ -28,7 +25,6 @@ Revision History
 //  EFI_DEBUG               - Enable debugging code
 //  EFI_NT_EMULATOR         - Building for running under NT
 //
-
 
 #ifndef _EFI_INCLUDE_
 #define _EFI_INCLUDE_

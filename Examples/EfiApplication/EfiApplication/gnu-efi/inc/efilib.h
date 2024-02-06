@@ -13,8 +13,6 @@ Abstract:
 
     EFI library functions
 
-
-
 Revision History
 
 --*/
@@ -46,11 +44,11 @@ Revision History
 // Public read-only data in the EFI library
 //
 
-extern EFI_SYSTEM_TABLE         *ST;
+extern EFI_SYSTEM_TABLE* ST;
 #define gST                      ST
-extern EFI_BOOT_SERVICES        *BS;
+extern EFI_BOOT_SERVICES* BS;
 #define gBS                      BS
-extern EFI_RUNTIME_SERVICES     *RT;
+extern EFI_RUNTIME_SERVICES* RT;
 #define gRT                      RT
 
 extern EFI_GUID gEfiDevicePathProtocolGuid;
@@ -217,400 +215,399 @@ extern EFI_MEMORY_TYPE PoolAllocationType;
 //
 
 VOID
-InitializeLib (
+InitializeLib(
     IN EFI_HANDLE           ImageHandle,
-    IN EFI_SYSTEM_TABLE     *SystemTable
-    );
+    IN EFI_SYSTEM_TABLE* SystemTable
+);
 
 VOID
-InitializeUnicodeSupport (
-    CHAR8 *LangCode
-    );
+InitializeUnicodeSupport(
+    CHAR8* LangCode
+);
 
 VOID
-EFIDebugVariable (
+EFIDebugVariable(
     VOID
-    );
+);
 
 VOID
 Exit(
     IN EFI_STATUS   ExitStatus,
     IN UINTN        ExitDataSize,
-    IN CHAR16       *ExitData OPTIONAL
-    );
+    IN CHAR16* ExitData OPTIONAL
+);
 
 INTN
 GetShellArgcArgv(
     EFI_HANDLE ImageHandle,
-    CHAR16 **Argv[]  /* Statically allocated */
-    );
+    CHAR16** Argv[]  /* Statically allocated */
+);
 
 VOID
-SetCrc (
-    IN OUT EFI_TABLE_HEADER *Hdr
-    );
+SetCrc(
+    IN OUT EFI_TABLE_HEADER* Hdr
+);
 
 VOID
-SetCrcAltSize (
+SetCrcAltSize(
     IN UINTN                 Size,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    );
+    IN OUT EFI_TABLE_HEADER* Hdr
+);
 
 BOOLEAN
-CheckCrc (
+CheckCrc(
     IN UINTN                 MaxSize,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    );
+    IN OUT EFI_TABLE_HEADER* Hdr
+);
 
 BOOLEAN
-CheckCrcAltSize (
+CheckCrcAltSize(
     IN UINTN                 MaxSize,
     IN UINTN                 Size,
-    IN OUT EFI_TABLE_HEADER *Hdr
-    );
+    IN OUT EFI_TABLE_HEADER* Hdr
+);
 
 UINT32
-CalculateCrc (
-    UINT8 *pt,
+CalculateCrc(
+    UINT8* pt,
     UINTN Size
-    );
+);
 
 VOID
-ZeroMem (
-    IN VOID     *Buffer,
+ZeroMem(
+    IN VOID* Buffer,
     IN UINTN     Size
-    );
+);
 
 VOID
-SetMem (
-    IN VOID     *Buffer,
+SetMem(
+    IN VOID* Buffer,
     IN UINTN    Size,
     IN UINT8    Value
-    );
+);
 
 VOID
-CopyMem (
-    IN VOID     *Dest,
-    IN CONST VOID     *Src,
+CopyMem(
+    IN VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN    len
-    );
+);
 
 INTN
-CompareMem (
-    IN CONST VOID     *Dest,
-    IN CONST VOID     *Src,
+CompareMem(
+    IN CONST VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN    len
-    );
+);
 
 INTN
-StrCmp (
-    IN CONST CHAR16   *s1,
-    IN CONST CHAR16   *s2
-    );
+StrCmp(
+    IN CONST CHAR16* s1,
+    IN CONST CHAR16* s2
+);
 
 INTN
-StrnCmp (
-    IN CONST CHAR16   *s1,
-    IN CONST CHAR16   *s2,
+StrnCmp(
+    IN CONST CHAR16* s1,
+    IN CONST CHAR16* s2,
     IN UINTN    len
-    );
+);
 
 INTN
-StriCmp (
-    IN CONST CHAR16   *s1,
-    IN CONST CHAR16   *s2
-    );
+StriCmp(
+    IN CONST CHAR16* s1,
+    IN CONST CHAR16* s2
+);
 
 VOID
-StrLwr (
-    IN CHAR16   *Str
-    );
+StrLwr(
+    IN CHAR16* Str
+);
 
 VOID
-StrUpr (
-    IN CHAR16   *Str
-    );
+StrUpr(
+    IN CHAR16* Str
+);
 
 VOID
-StrCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src
-    );
+StrCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
 
 VOID
-StrnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src,
+StrnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
-CHAR16 *
-StpCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src
-    );
+CHAR16*
+StpCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
 
-CHAR16 *
-StpnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src,
+CHAR16*
+StpnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
 VOID
-StrCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src
-    );
+StrCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
 
 VOID
-StrnCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src,
+StrnCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
 UINTN
-StrLen (
-    IN CONST CHAR16   *s1
-    );
+StrLen(
+    IN CONST CHAR16* s1
+);
 
 UINTN
-StrnLen (
-    IN CONST CHAR16   *s1,
+StrnLen(
+    IN CONST CHAR16* s1,
     IN UINTN           Len
-    );
+);
 
 UINTN
-StrSize (
-    IN CONST CHAR16   *s1
-    );
+StrSize(
+    IN CONST CHAR16* s1
+);
 
-CHAR16 *
-StrDuplicate (
-    IN CONST CHAR16   *Src
-    );
-
-UINTN
-strlena (
-    IN CONST CHAR8    *s1
-    );
+CHAR16*
+StrDuplicate(
+    IN CONST CHAR16* Src
+);
 
 UINTN
-strcmpa (
-    IN CONST CHAR8    *s1,
-    IN CONST CHAR8    *s2
-    );
+strlena(
+    IN CONST CHAR8* s1
+);
 
 UINTN
-strncmpa (
-    IN CONST CHAR8    *s1,
-    IN CONST CHAR8    *s2,
+strcmpa(
+    IN CONST CHAR8* s1,
+    IN CONST CHAR8* s2
+);
+
+UINTN
+strncmpa(
+    IN CONST CHAR8* s1,
+    IN CONST CHAR8* s2,
     IN UINTN    len
-    );
+);
 
 UINTN
-xtoi (
-    CONST CHAR16      *str
-    );
+xtoi(
+    CONST CHAR16* str
+);
 
 UINTN
-Atoi (
-    CONST CHAR16  *str
-    );
+Atoi(
+    CONST CHAR16* str
+);
 
 BOOLEAN
-MetaMatch (
-    IN CHAR16   *String,
-    IN CHAR16   *Pattern
-    );
+MetaMatch(
+    IN CHAR16* String,
+    IN CHAR16* Pattern
+);
 
 BOOLEAN
-MetaiMatch (
-    IN CHAR16   *String,
-    IN CHAR16   *Pattern
-    );
+MetaiMatch(
+    IN CHAR16* String,
+    IN CHAR16* Pattern
+);
 
 UINT64
-LShiftU64 (
+LShiftU64(
     IN UINT64   Operand,
     IN UINTN    Count
-    );
+);
 
 UINT64
-RShiftU64 (
+RShiftU64(
     IN UINT64   Operand,
     IN UINTN    Count
-    );
+);
 
 UINT64
-MultU64x32 (
+MultU64x32(
     IN UINT64   Multiplicand,
     IN UINTN    Multiplier
-    );
+);
 
 UINT64
-DivU64x32 (
+DivU64x32(
     IN UINT64   Dividend,
     IN UINTN    Divisor,
-    OUT UINTN   *Remainder OPTIONAL
-    );
+    OUT UINTN* Remainder OPTIONAL
+);
 
 VOID
-InitializeLock (
-    IN OUT FLOCK    *Lock,
+InitializeLock(
+    IN OUT FLOCK* Lock,
     IN EFI_TPL  Priority
-    );
+);
 
 VOID
-AcquireLock (
-    IN FLOCK    *Lock
-    );
+AcquireLock(
+    IN FLOCK* Lock
+);
 
 VOID
-ReleaseLock (
-    IN FLOCK    *Lock
-    );
-
+ReleaseLock(
+    IN FLOCK* Lock
+);
 
 INTN
 CompareGuid(
-    IN EFI_GUID     *Guid1,
-    IN EFI_GUID     *Guid2
-    );
+    IN EFI_GUID* Guid1,
+    IN EFI_GUID* Guid2
+);
 
-VOID *
-AllocatePool (
+VOID*
+AllocatePool(
     IN UINTN     Size
-    );
+);
 
-VOID *
-AllocateZeroPool (
+VOID*
+AllocateZeroPool(
     IN UINTN     Size
-    );
+);
 
-VOID *
-ReallocatePool (
-    IN VOID                 *OldPool,
+VOID*
+ReallocatePool(
+    IN VOID* OldPool,
     IN UINTN                OldSize,
     IN UINTN                NewSize
-    );
+);
 
 VOID
-FreePool (
-    IN VOID     *p
-    );
-
-
-VOID
-Output (
-    IN CHAR16   *Str
-    );
+FreePool(
+    IN VOID* p
+);
 
 VOID
-Input (
-    IN CHAR16   *Prompt OPTIONAL,
-    OUT CHAR16  *InStr,
+Output(
+    IN CHAR16* Str
+);
+
+VOID
+Input(
+    IN CHAR16* Prompt OPTIONAL,
+    OUT CHAR16* InStr,
     IN UINTN    StrLen
-    );
+);
 
 VOID
-IInput (
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE     *ConOut,
-    IN SIMPLE_INPUT_INTERFACE           *ConIn,
-    IN CHAR16                           *Prompt OPTIONAL,
-    OUT CHAR16                          *InStr,
+IInput(
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* ConOut,
+    IN SIMPLE_INPUT_INTERFACE* ConIn,
+    IN CHAR16* Prompt OPTIONAL,
+    OUT CHAR16* InStr,
     IN UINTN                            StrLen
-    );
+);
 
 UINTN
-Print (
-    IN CONST CHAR16   *fmt,
+Print(
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-VPrint (
-    IN CONST CHAR16   *fmt,
+VPrint(
+    IN CONST CHAR16* fmt,
     va_list           args
-    );
+);
 
 UINTN
-UnicodeSPrint (
-    OUT CHAR16        *Str,
+UnicodeSPrint(
+    OUT CHAR16* Str,
     IN UINTN          StrSize,
-    IN CONST CHAR16   *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-UnicodeVSPrint (
-    OUT CHAR16        *Str,
+UnicodeVSPrint(
+    OUT CHAR16* Str,
     IN UINTN          StrSize,
-    IN CONST CHAR16   *fmt,
+    IN CONST CHAR16* fmt,
     va_list           args
-    );
+);
 
-CHAR16 *
-VPoolPrint (
-    IN CONST CHAR16     *fmt,
+CHAR16*
+VPoolPrint(
+    IN CONST CHAR16* fmt,
     va_list             args
-    );
+);
 
-CHAR16 *
-PoolPrint (
-    IN CONST CHAR16     *fmt,
+CHAR16*
+PoolPrint(
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
-typedef struct {
-    CHAR16      *str;
+typedef struct
+{
+    CHAR16* str;
     UINTN       len;
     UINTN       maxlen;
 } POOL_PRINT;
 
-CHAR16 *
-CatPrint (
-    IN OUT POOL_PRINT   *Str,
-    IN CONST CHAR16     *fmt,
+CHAR16*
+CatPrint(
+    IN OUT POOL_PRINT* Str,
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-PrintAt (
+PrintAt(
     IN UINTN         Column,
     IN UINTN         Row,
-    IN CONST CHAR16  *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-IPrint (
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE    *Out,
-    IN CONST CHAR16                    *fmt,
+IPrint(
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-IPrintAt (
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE     *Out,
+IPrintAt(
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
     IN UINTN                            Column,
     IN UINTN                            Row,
-    IN CONST CHAR16                     *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    );
+);
 
 UINTN
-AsciiPrint (
-    IN CONST CHAR8    *fmt,
+AsciiPrint(
+    IN CONST CHAR8* fmt,
     ...
-    );
+);
 
 UINTN
 AsciiVSPrint(
-    OUT CHAR8         *Str,
+    OUT CHAR8* Str,
     IN  UINTN         StrSize,
-    IN  CONST CHAR8   *fmt,
+    IN  CONST CHAR8* fmt,
     va_list           args
 );
 
@@ -622,282 +619,283 @@ AsciiVSPrint(
 #define APrint      AsciiPrint
 
 VOID
-ValueToHex (
-    IN CHAR16   *Buffer,
+ValueToHex(
+    IN CHAR16* Buffer,
     IN UINT64   v
-    );
+);
 
 VOID
-ValueToString (
-    IN CHAR16   *Buffer,
+ValueToString(
+    IN CHAR16* Buffer,
     IN BOOLEAN  Comma,
     IN INT64    v
-    );
+);
 
 VOID
-FloatToString (
-    IN CHAR16   *Buffer,
+FloatToString(
+    IN CHAR16* Buffer,
     IN BOOLEAN  Comma,
     IN double    v
-    );
+);
 
 VOID
-TimeToString (
-    OUT CHAR16      *Buffer,
-    IN EFI_TIME     *Time
-    );
+TimeToString(
+    OUT CHAR16* Buffer,
+    IN EFI_TIME* Time
+);
 
 VOID
-GuidToString (
-    OUT CHAR16      *Buffer,
-    IN EFI_GUID     *Guid
-    );
+GuidToString(
+    OUT CHAR16* Buffer,
+    IN EFI_GUID* Guid
+);
 
 VOID
-StatusToString (
-    OUT CHAR16      *Buffer,
+StatusToString(
+    OUT CHAR16* Buffer,
     EFI_STATUS      Status
-    );
+);
 
 VOID
-DumpHex (
+DumpHex(
     IN UINTN        Indent,
     IN UINTN        Offset,
     IN UINTN        DataSize,
-    IN VOID         *UserData
-    );
+    IN VOID* UserData
+);
 
 BOOLEAN
 GrowBuffer(
-    IN OUT EFI_STATUS   *Status,
-    IN OUT VOID         **Buffer,
+    IN OUT EFI_STATUS* Status,
+    IN OUT VOID** Buffer,
     IN UINTN            BufferSize
-    );
+);
 
-EFI_MEMORY_DESCRIPTOR *
-LibMemoryMap (
-    OUT UINTN               *NoEntries,
-    OUT UINTN               *MapKey,
-    OUT UINTN               *DescriptorSize,
-    OUT UINT32              *DescriptorVersion
-    );
+EFI_MEMORY_DESCRIPTOR*
+LibMemoryMap(
+    OUT UINTN* NoEntries,
+    OUT UINTN* MapKey,
+    OUT UINTN* DescriptorSize,
+    OUT UINT32* DescriptorVersion
+);
 
-VOID *
-LibGetVariable (
-    IN CHAR16               *Name,
-    IN EFI_GUID             *VendorGuid
-    );
+VOID*
+LibGetVariable(
+    IN CHAR16* Name,
+    IN EFI_GUID* VendorGuid
+);
 
-VOID *
-LibGetVariableAndSize (
-    IN CHAR16               *Name,
-    IN EFI_GUID             *VendorGuid,
-    OUT UINTN               *VarSize
-    );
-
-EFI_STATUS
-LibDeleteVariable (
-    IN CHAR16   *VarName,
-    IN EFI_GUID *VarGuid
-    );
+VOID*
+LibGetVariableAndSize(
+    IN CHAR16* Name,
+    IN EFI_GUID* VendorGuid,
+    OUT UINTN* VarSize
+);
 
 EFI_STATUS
-LibSetNVVariable (
-    IN CHAR16   *VarName,
-    IN EFI_GUID *VarGuid,
+LibDeleteVariable(
+    IN CHAR16* VarName,
+    IN EFI_GUID* VarGuid
+);
+
+EFI_STATUS
+LibSetNVVariable(
+    IN CHAR16* VarName,
+    IN EFI_GUID* VarGuid,
     IN UINTN	 DataSize,
-    IN VOID     *Data
-    );
+    IN VOID* Data
+);
 
 EFI_STATUS
-LibSetVariable (
-    IN CHAR16   *VarName,
-    IN EFI_GUID *VarGuid,
+LibSetVariable(
+    IN CHAR16* VarName,
+    IN EFI_GUID* VarGuid,
     IN UINTN	 DataSize,
-    IN VOID     *Data
-    );
+    IN VOID* Data
+);
 EFI_STATUS
-LibInsertToTailOfBootOrder (
+LibInsertToTailOfBootOrder(
     IN  UINT16  BootOption,
     IN  BOOLEAN OnlyInsertIfEmpty
-    );
+);
 
 EFI_STATUS
-LibLocateProtocol (
-    IN  EFI_GUID    *ProtocolGuid,
-    OUT VOID        **Interface
-    );
+LibLocateProtocol(
+    IN  EFI_GUID* ProtocolGuid,
+    OUT VOID** Interface
+);
 
 EFI_STATUS
-LibLocateHandle (
+LibLocateHandle(
     IN EFI_LOCATE_SEARCH_TYPE   SearchType,
-    IN EFI_GUID                 *Protocol OPTIONAL,
-    IN VOID                     *SearchKey OPTIONAL,
-    IN OUT UINTN                *NoHandles,
-    OUT EFI_HANDLE              **Buffer
-    );
+    IN EFI_GUID* Protocol OPTIONAL,
+    IN VOID* SearchKey OPTIONAL,
+    IN OUT UINTN* NoHandles,
+    OUT EFI_HANDLE** Buffer
+);
 
 EFI_STATUS
-LibLocateHandleByDiskSignature (
+LibLocateHandleByDiskSignature(
     IN UINT8                        MBRType,
     IN UINT8                        SignatureType,
-    IN VOID                         *Signature,
-    IN OUT UINTN                    *NoHandles,
-    OUT EFI_HANDLE                  **Buffer
-    );
+    IN VOID* Signature,
+    IN OUT UINTN* NoHandles,
+    OUT EFI_HANDLE** Buffer
+);
 
 EFI_STATUS
-LibInstallProtocolInterfaces (
-    IN OUT EFI_HANDLE       *Handle,
+LibInstallProtocolInterfaces(
+    IN OUT EFI_HANDLE* Handle,
     ...
-    );
+);
 
 VOID
-LibUninstallProtocolInterfaces (
+LibUninstallProtocolInterfaces(
     IN EFI_HANDLE           Handle,
     ...
-    );
+);
 
 EFI_STATUS
-LibReinstallProtocolInterfaces (
-    IN OUT EFI_HANDLE           *Handle,
+LibReinstallProtocolInterfaces(
+    IN OUT EFI_HANDLE* Handle,
     ...
-    );
+);
 
 EFI_EVENT
-LibCreateProtocolNotifyEvent (
-    IN EFI_GUID             *ProtocolGuid,
+LibCreateProtocolNotifyEvent(
+    IN EFI_GUID* ProtocolGuid,
     IN EFI_TPL              NotifyTpl,
     IN EFI_EVENT_NOTIFY     NotifyFunction,
-    IN VOID                 *NotifyContext,
-    OUT VOID                *Registration
-    );
+    IN VOID* NotifyContext,
+    OUT VOID* Registration
+);
 
 EFI_STATUS
-WaitForSingleEvent (
+WaitForSingleEvent(
     IN EFI_EVENT        Event,
     IN UINT64           Timeout OPTIONAL
-    );
+);
 
 VOID
-WaitForEventWithTimeout (
+WaitForEventWithTimeout(
     IN  EFI_EVENT       Event,
     IN  UINTN           Timeout,
     IN  UINTN           Row,
     IN  UINTN           Column,
-    IN  CHAR16          *String,
+    IN  CHAR16* String,
     IN  EFI_INPUT_KEY   TimeoutKey,
-    OUT EFI_INPUT_KEY   *Key
-    );
+    OUT EFI_INPUT_KEY* Key
+);
 
 EFI_FILE_HANDLE
-LibOpenRoot (
+LibOpenRoot(
     IN EFI_HANDLE           DeviceHandle
-    );
+);
 
-EFI_FILE_INFO *
-LibFileInfo (
+EFI_FILE_INFO*
+LibFileInfo(
     IN EFI_FILE_HANDLE      FHand
-    );
+);
 
-EFI_FILE_SYSTEM_INFO *
-LibFileSystemInfo (
+EFI_FILE_SYSTEM_INFO*
+LibFileSystemInfo(
     IN EFI_FILE_HANDLE      FHand
-    );
+);
 
-EFI_FILE_SYSTEM_VOLUME_LABEL_INFO *
-LibFileSystemVolumeLabelInfo (
+EFI_FILE_SYSTEM_VOLUME_LABEL_INFO*
+LibFileSystemVolumeLabelInfo(
     IN EFI_FILE_HANDLE      FHand
-    );
+);
 
 BOOLEAN
 ValidMBR(
-    IN  MASTER_BOOT_RECORD  *Mbr,
-    IN  EFI_BLOCK_IO        *BlkIo
-    );
+    IN  MASTER_BOOT_RECORD* Mbr,
+    IN  EFI_BLOCK_IO* BlkIo
+);
 
 BOOLEAN
-LibMatchDevicePaths (
-    IN  EFI_DEVICE_PATH *Multi,
-    IN  EFI_DEVICE_PATH *Single
-    );
-
-EFI_DEVICE_PATH *
-LibDuplicateDevicePathInstance (
-    IN EFI_DEVICE_PATH  *DevPath
-    );
-
-EFI_DEVICE_PATH *
-DevicePathFromHandle (
-    IN EFI_HANDLE           Handle
-    );
-
-EFI_DEVICE_PATH *
-DevicePathInstance (
-    IN OUT EFI_DEVICE_PATH  **DevicePath,
-    OUT UINTN               *Size
-    );
-
-UINTN
-DevicePathInstanceCount (
-    IN EFI_DEVICE_PATH      *DevicePath
-    );
-
-EFI_DEVICE_PATH *
-AppendDevicePath (
-    IN EFI_DEVICE_PATH      *Src1,
-    IN EFI_DEVICE_PATH      *Src2
-    );
-
-EFI_DEVICE_PATH *
-AppendDevicePathNode (
-    IN EFI_DEVICE_PATH      *Src1,
-    IN EFI_DEVICE_PATH      *Src2
-    );
+LibMatchDevicePaths(
+    IN  EFI_DEVICE_PATH* Multi,
+    IN  EFI_DEVICE_PATH* Single
+);
 
 EFI_DEVICE_PATH*
-AppendDevicePathInstance (
-    IN EFI_DEVICE_PATH  *Src,
-    IN EFI_DEVICE_PATH  *Instance
-    );
+LibDuplicateDevicePathInstance(
+    IN EFI_DEVICE_PATH* DevPath
+);
 
-EFI_DEVICE_PATH *
-FileDevicePath (
-    IN EFI_HANDLE           Device  OPTIONAL,
-    IN CHAR16               *FileName
-    );
+EFI_DEVICE_PATH*
+DevicePathFromHandle(
+    IN EFI_HANDLE           Handle
+);
+
+EFI_DEVICE_PATH*
+DevicePathInstance(
+    IN OUT EFI_DEVICE_PATH** DevicePath,
+    OUT UINTN* Size
+);
 
 UINTN
-DevicePathSize (
-    IN EFI_DEVICE_PATH      *DevPath
-    );
+DevicePathInstanceCount(
+    IN EFI_DEVICE_PATH* DevicePath
+);
 
-EFI_DEVICE_PATH *
-DuplicateDevicePath (
-    IN EFI_DEVICE_PATH      *DevPath
-    );
+EFI_DEVICE_PATH*
+AppendDevicePath(
+    IN EFI_DEVICE_PATH* Src1,
+    IN EFI_DEVICE_PATH* Src2
+);
 
-EFI_DEVICE_PATH *
-UnpackDevicePath (
-    IN EFI_DEVICE_PATH      *DevPath
-    );
+EFI_DEVICE_PATH*
+AppendDevicePathNode(
+    IN EFI_DEVICE_PATH* Src1,
+    IN EFI_DEVICE_PATH* Src2
+);
+
+EFI_DEVICE_PATH*
+AppendDevicePathInstance(
+    IN EFI_DEVICE_PATH* Src,
+    IN EFI_DEVICE_PATH* Instance
+);
+
+EFI_DEVICE_PATH*
+FileDevicePath(
+    IN EFI_HANDLE           Device  OPTIONAL,
+    IN CHAR16* FileName
+);
+
+UINTN
+DevicePathSize(
+    IN EFI_DEVICE_PATH* DevPath
+);
+
+EFI_DEVICE_PATH*
+DuplicateDevicePath(
+    IN EFI_DEVICE_PATH* DevPath
+);
+
+EFI_DEVICE_PATH*
+UnpackDevicePath(
+    IN EFI_DEVICE_PATH* DevPath
+);
 
 EFI_STATUS
-LibDevicePathToInterface (
-    IN EFI_GUID             *Protocol,
-    IN EFI_DEVICE_PATH      *FilePath,
-    OUT VOID                **Interface
-    );
+LibDevicePathToInterface(
+    IN EFI_GUID* Protocol,
+    IN EFI_DEVICE_PATH* FilePath,
+    OUT VOID** Interface
+);
 
-CHAR16 *
-DevicePathToStr (
-    EFI_DEVICE_PATH         *DevPath
-    );
+CHAR16*
+DevicePathToStr(
+    EFI_DEVICE_PATH* DevPath
+);
 
 //
 // BugBug: I need my own include files
 //
-typedef struct {
+typedef struct
+{
     UINT8   Register;
     UINT8   Function;
     UINT8   Device;
@@ -905,160 +903,158 @@ typedef struct {
     UINT32  Reserved;
 } EFI_ADDRESS;
 
-typedef union {
+typedef union
+{
     UINT64          Address;
     EFI_ADDRESS     EfiAddress;
 } EFI_PCI_ADDRESS_UNION;
 
-
 EFI_STATUS
-PciFindDeviceClass (
-    IN  OUT EFI_PCI_ADDRESS_UNION   *Address,
+PciFindDeviceClass(
+    IN  OUT EFI_PCI_ADDRESS_UNION* Address,
     IN      UINT8                   BaseClass,
     IN      UINT8                   SubClass
-    );
+);
 
 EFI_STATUS
-PciFindDevice (
-    IN  OUT EFI_PCI_ADDRESS_UNION   *DeviceAddress,
+PciFindDevice(
+    IN  OUT EFI_PCI_ADDRESS_UNION* DeviceAddress,
     IN      UINT16                  VendorId,
     IN      UINT16                  DeviceId,
-    IN OUT  PCI_TYPE00              *Pci
-    );
+    IN OUT  PCI_TYPE00* Pci
+);
 
 //
 // SIMPLE_READ_FILE object used to access files
 //
 
-typedef VOID        *SIMPLE_READ_FILE;
+typedef VOID* SIMPLE_READ_FILE;
 
 EFI_STATUS
-OpenSimpleReadFile (
+OpenSimpleReadFile(
     IN BOOLEAN                  BootPolicy,
-    IN VOID                     *SourceBuffer   OPTIONAL,
+    IN VOID* SourceBuffer   OPTIONAL,
     IN UINTN                    SourceSize,
-    IN OUT EFI_DEVICE_PATH      **FilePath,
-    OUT EFI_HANDLE              *DeviceHandle,
-    OUT SIMPLE_READ_FILE        *SimpleReadHandle
-    );
+    IN OUT EFI_DEVICE_PATH** FilePath,
+    OUT EFI_HANDLE* DeviceHandle,
+    OUT SIMPLE_READ_FILE* SimpleReadHandle
+);
 
 EFI_STATUS
-ReadSimpleReadFile (
+ReadSimpleReadFile(
     IN SIMPLE_READ_FILE     SimpleReadHandle,
     IN UINTN                Offset,
-    IN OUT UINTN            *ReadSize,
-    OUT VOID                *Buffer
-    );
-
+    IN OUT UINTN* ReadSize,
+    OUT VOID* Buffer
+);
 
 VOID
-CloseSimpleReadFile (
+CloseSimpleReadFile(
     IN SIMPLE_READ_FILE     SimpleReadHandle
-    );
+);
 
 VOID
-InitializeGuid (
+InitializeGuid(
     VOID
-    );
+);
 
 UINT8
 DecimaltoBCD(
     IN  UINT8 DecValue
-    );
+);
 
 UINT8
 BCDtoDecimal(
     IN  UINT8 BcdValue
-    );
+);
 
 EFI_STATUS
 LibGetSystemConfigurationTable(
-    IN EFI_GUID *TableGuid,
-    IN OUT VOID **Table
-    );
+    IN EFI_GUID* TableGuid,
+    IN OUT VOID** Table
+);
 
 BOOLEAN
-LibIsValidTextGraphics (
+LibIsValidTextGraphics(
     IN  CHAR16  Graphic,
-    OUT CHAR8   *PcAnsi,    OPTIONAL
-    OUT CHAR8   *Ascii      OPTIONAL
-    );
+    OUT CHAR8* PcAnsi, OPTIONAL
+    OUT CHAR8* Ascii      OPTIONAL
+);
 
 BOOLEAN
-IsValidAscii (
+IsValidAscii(
     IN  CHAR16  Ascii
-    );
+);
 
 BOOLEAN
-IsValidEfiCntlChar (
+IsValidEfiCntlChar(
     IN  CHAR16  c
-    );
+);
 
-CHAR16 *
-LibGetUiString (
+CHAR16*
+LibGetUiString(
     IN  EFI_HANDLE      Handle,
     IN  UI_STRING_TYPE  StringType,
-    IN  ISO_639_2       *LangCode,
+    IN  ISO_639_2* LangCode,
     IN  BOOLEAN         ReturnDevicePathStrOnMismatch
-    );
+);
 
 CHAR8*
-LibGetSmbiosString (
-    IN  SMBIOS_STRUCTURE_POINTER    *Smbios,
+LibGetSmbiosString(
+    IN  SMBIOS_STRUCTURE_POINTER* Smbios,
     IN  UINT16                      StringNumber
-    );
+);
 
 EFI_STATUS
-LibGetSmbiosSystemGuidAndSerialNumber (
-    IN  EFI_GUID    *SystemGuid,
-    OUT CHAR8       **SystemSerialNumber
-    );
-
+LibGetSmbiosSystemGuidAndSerialNumber(
+    IN  EFI_GUID* SystemGuid,
+    OUT CHAR8** SystemSerialNumber
+);
 
 EFI_STATUS
-InitializeGlobalIoDevice (
-        IN  EFI_DEVICE_PATH             *DevicePath,
-        IN  EFI_GUID                    *Protocol,
-        IN  CHAR8                       *ErrorStr,
-        OUT EFI_DEVICE_IO_INTERFACE     **GlobalIoFncs
-        );
+InitializeGlobalIoDevice(
+    IN  EFI_DEVICE_PATH* DevicePath,
+    IN  EFI_GUID* Protocol,
+    IN  CHAR8* ErrorStr,
+    OUT EFI_DEVICE_IO_INTERFACE** GlobalIoFncs
+);
 
 UINT32
-ReadPort (
-        IN  EFI_DEVICE_IO_INTERFACE     *GlobalIoFncs,
-        IN  EFI_IO_WIDTH                Width,
-        IN  UINTN                       Port
-        );
+ReadPort(
+    IN  EFI_DEVICE_IO_INTERFACE* GlobalIoFncs,
+    IN  EFI_IO_WIDTH                Width,
+    IN  UINTN                       Port
+);
 
 UINT32
-WritePort (
-        IN  EFI_DEVICE_IO_INTERFACE     *GlobalIoFncs,
-        IN  EFI_IO_WIDTH                Width,
-        IN  UINTN                       Port,
-        IN  UINTN                       Data
-        );
+WritePort(
+    IN  EFI_DEVICE_IO_INTERFACE* GlobalIoFncs,
+    IN  EFI_IO_WIDTH                Width,
+    IN  UINTN                       Port,
+    IN  UINTN                       Data
+);
 
 UINT32
-ReadPciConfig (
-        IN  EFI_DEVICE_IO_INTERFACE     *GlobalIoFncs,
-        IN  EFI_IO_WIDTH                Width,
-        IN  UINTN                       Port
-        );
+ReadPciConfig(
+    IN  EFI_DEVICE_IO_INTERFACE* GlobalIoFncs,
+    IN  EFI_IO_WIDTH                Width,
+    IN  UINTN                       Port
+);
 
 UINT32
-WritePciConfig (
-        IN  EFI_DEVICE_IO_INTERFACE     *GlobalIoFncs,
-        IN  EFI_IO_WIDTH                Width,
-        IN  UINTN                       Port,
-        IN  UINTN                       Data
-        );
+WritePciConfig(
+    IN  EFI_DEVICE_IO_INTERFACE* GlobalIoFncs,
+    IN  EFI_IO_WIDTH                Width,
+    IN  UINTN                       Port,
+    IN  UINTN                       Data
+);
 
 VOID
-Pause (
+Pause(
     VOID
 );
 
-extern EFI_DEVICE_IO_INTERFACE  *GlobalIoFncs;
+extern EFI_DEVICE_IO_INTERFACE* GlobalIoFncs;
 
 #define outp(_Port, _DataByte)  (UINT8)WritePort(GlobalIoFncs,  IO_UINT8,  (UINTN)_Port, (UINTN)_DataByte)
 #define inp(_Port)              (UINT8)ReadPort(GlobalIoFncs,   IO_UINT8,  (UINTN)_Port)

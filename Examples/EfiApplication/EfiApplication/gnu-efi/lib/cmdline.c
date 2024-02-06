@@ -27,93 +27,95 @@ static
 INTN
 GetShellArgcArgvFromLoadedImage(
     EFI_HANDLE ImageHandle,
-    CHAR16 **ResultArgv[]
-    )
+    CHAR16** ResultArgv[]
+)
 {
-  EFI_STATUS Status;
-  void *LoadedImage = NULL;
-  static CHAR16 ArgvContents[MAX_CMDLINE_SIZE];
-  static CHAR16 *Argv[MAX_CMDLINE_ARGC], *ArgStart, *c;
-  UINTN Argc = 0, BufLen;
+    EFI_STATUS Status;
+    void* LoadedImage = NULL;
+    static CHAR16 ArgvContents[MAX_CMDLINE_SIZE];
+    static CHAR16* Argv[MAX_CMDLINE_ARGC], * ArgStart, * c;
+    UINTN Argc = 0, BufLen;
 
-  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
-                             ImageHandle,
-                             &LoadedImageProtocol,
-                             &LoadedImage,
-                             ImageHandle,
-                             NULL,
-                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
-                             );
-  if (EFI_ERROR(Status))
-    return -1;
+    Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+        ImageHandle,
+        &LoadedImageProtocol,
+        &LoadedImage,
+        ImageHandle,
+        NULL,
+        EFI_OPEN_PROTOCOL_GET_PROTOCOL
+    );
+    if (EFI_ERROR(Status))
+        return -1;
 
-  BufLen = ((EFI_LOADED_IMAGE *)LoadedImage)->LoadOptionsSize;
-  if (BufLen < 2)  /* We are expecting at least a \0 */
-    return -1;
-  else if (BufLen > sizeof(ArgvContents))
-    BufLen = sizeof(ArgvContents);
+    BufLen = ((EFI_LOADED_IMAGE*)LoadedImage)->LoadOptionsSize;
+    if (BufLen < 2)  /* We are expecting at least a \0 */
+        return -1;
+    else if (BufLen > sizeof(ArgvContents))
+        BufLen = sizeof(ArgvContents);
 
-  CopyMem(ArgvContents, ((EFI_LOADED_IMAGE *)LoadedImage)->LoadOptions, BufLen);
-  ArgvContents[MAX_CMDLINE_SIZE - 1] = L'\0';
+    CopyMem(ArgvContents, ((EFI_LOADED_IMAGE*)LoadedImage)->LoadOptions, BufLen);
+    ArgvContents[MAX_CMDLINE_SIZE - 1] = L'\0';
 
-  for (c = ArgStart = ArgvContents ; *c != L'\0' ; ++c) {
-    if (*c == L' ') {
-      *c = L'\0';
-      if (Argc < MAX_CMDLINE_ARGC) Argv[Argc++] = ArgStart;
-      ArgStart = c + 1;
+    for (c = ArgStart = ArgvContents; *c != L'\0'; ++c)
+    {
+        if (*c == L' ')
+        {
+            *c = L'\0';
+            if (Argc < MAX_CMDLINE_ARGC) Argv[Argc++] = ArgStart;
+            ArgStart = c + 1;
+        }
     }
-  }
 
-  if ((*ArgStart != L'\0') && (Argc < MAX_CMDLINE_ARGC))
-    Argv[Argc++] = ArgStart;
+    if ((*ArgStart != L'\0') && (Argc < MAX_CMDLINE_ARGC))
+        Argv[Argc++] = ArgStart;
 
-  // Print(L"Got argc/argv from loaded image proto\n");
-  *ResultArgv = Argv;
-  return Argc;
+    // Print(L"Got argc/argv from loaded image proto\n");
+    *ResultArgv = Argv;
+    return Argc;
 }
 
-INTN GetShellArgcArgv(EFI_HANDLE ImageHandle, CHAR16 **Argv[])
+INTN GetShellArgcArgv(EFI_HANDLE ImageHandle, CHAR16** Argv[])
 {
-  // Code inspired from EDK2's
-  // ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.c (BSD)
-  EFI_STATUS Status;
-  static const EFI_GUID ShellInterfaceProtocolGuid
-      = SHELL_INTERFACE_PROTOCOL_GUID;
-  EFI_SHELL_PARAMETERS_PROTOCOL *EfiShellParametersProtocol = NULL;
-  EFI_SHELL_INTERFACE *EfiShellInterfaceProtocol = NULL;
+    // Code inspired from EDK2's
+    // ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.c (BSD)
+    EFI_STATUS Status;
+    static const EFI_GUID ShellInterfaceProtocolGuid
+        = SHELL_INTERFACE_PROTOCOL_GUID;
+    EFI_SHELL_PARAMETERS_PROTOCOL* EfiShellParametersProtocol = NULL;
+    EFI_SHELL_INTERFACE* EfiShellInterfaceProtocol = NULL;
 
-  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
-                             ImageHandle,
-                             (EFI_GUID*)&ShellParametersProtocolGuid,
-                             (VOID **)&EfiShellParametersProtocol,
-                             ImageHandle,
-                             NULL,
-                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
-                             );
-  if (!EFI_ERROR(Status))
-  {
-    // use shell 2.0 interface
-    // Print(L"Got argc/argv from shell intf proto\n");
-    *Argv = EfiShellParametersProtocol->Argv;
-    return EfiShellParametersProtocol->Argc;
-  }
+    Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+        ImageHandle,
+        (EFI_GUID*)&ShellParametersProtocolGuid,
+        (VOID**)&EfiShellParametersProtocol,
+        ImageHandle,
+        NULL,
+        EFI_OPEN_PROTOCOL_GET_PROTOCOL
+    );
+    if (!EFI_ERROR(Status))
+    {
+        // use shell 2.0 interface
+        // Print(L"Got argc/argv from shell intf proto\n");
+        *Argv = EfiShellParametersProtocol->Argv;
+        return EfiShellParametersProtocol->Argc;
+    }
 
-  // try to get shell 1.0 interface instead.
-  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
-                             ImageHandle,
-                             (EFI_GUID*)&ShellInterfaceProtocolGuid,
-                             (VOID **)&EfiShellInterfaceProtocol,
-                             ImageHandle,
-                             NULL,
-                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
-                             );
-  if (!EFI_ERROR(Status))
-  {
-    // Print(L"Got argc/argv from shell params proto\n");
-    *Argv = EfiShellInterfaceProtocol->Argv;
-    return EfiShellInterfaceProtocol->Argc;
-  }
+    // try to get shell 1.0 interface instead.
+    Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+        ImageHandle,
+        (EFI_GUID*)&ShellInterfaceProtocolGuid,
+        (VOID**)&EfiShellInterfaceProtocol,
+        ImageHandle,
+        NULL,
+        EFI_OPEN_PROTOCOL_GET_PROTOCOL
+    );
+    if (!EFI_ERROR(Status))
+    {
+        // Print(L"Got argc/argv from shell params proto\n");
+        *Argv = EfiShellInterfaceProtocol->Argv;
+        return EfiShellInterfaceProtocol->Argc;
+    }
 
-  // shell 1.0 and 2.0 interfaces failed
-  return GetShellArgcArgvFromLoadedImage(ImageHandle, Argv);
+    // shell 1.0 and 2.0 interfaces failed
+    return GetShellArgcArgvFromLoadedImage(ImageHandle, Argv);
 }

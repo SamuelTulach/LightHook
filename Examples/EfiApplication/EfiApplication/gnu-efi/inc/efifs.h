@@ -13,12 +13,9 @@ Abstract:
 
     EFI File System structures
 
-
-
 Revision History
 
 --*/
-
 
 //
 // EFI Partition header (normaly starts in LBA 1)
@@ -29,7 +26,8 @@ Revision History
 #define MIN_EFI_PARTITION_BLOCK_SIZE    512
 #define EFI_PARTITION_LBA               1
 
-typedef struct _EFI_PARTITION_HEADER {
+typedef struct _EFI_PARTITION_HEADER
+{
     EFI_TABLE_HEADER    Hdr;
     UINT32              DirectoryAllocationNumber;
     UINT32              BlockSize;
@@ -41,7 +39,6 @@ typedef struct _EFI_PARTITION_HEADER {
     EFI_LBA             SecutiryFile;
 } EFI_PARTITION_HEADER;
 
-
 //
 // File header
 //
@@ -50,7 +47,8 @@ typedef struct _EFI_PARTITION_HEADER {
 #define EFI_FILE_HEADER_REVISION    0x00010000
 #define EFI_FILE_STRING_SIZE        260
 
-typedef struct _EFI_FILE_HEADER {
+typedef struct _EFI_FILE_HEADER
+{
     EFI_TABLE_HEADER    Hdr;
     UINT32              Class;
     UINT32              LBALOffset;
@@ -63,7 +61,6 @@ typedef struct _EFI_FILE_HEADER {
     CHAR16              FileString[EFI_FILE_STRING_SIZE];
 } EFI_FILE_HEADER;
 
-
 //
 // Return the file's first LBAL which is in the same
 // logical block as the file header
@@ -75,7 +72,6 @@ typedef struct _EFI_FILE_HEADER {
 #define EFI_FILE_CLASS_EMPTY        2
 #define EFI_FILE_CLASS_NORMAL       3
 
-
 //
 // Logical Block Address List - the fundemental block
 // description structure
@@ -84,7 +80,8 @@ typedef struct _EFI_FILE_HEADER {
 #define EFI_LBAL_SIGNATURE      0x4c41424c20494249
 #define EFI_LBAL_REVISION       0x00010000
 
-typedef struct _EFI_LBAL {
+typedef struct _EFI_LBAL
+{
     EFI_TABLE_HEADER    Hdr;
     UINT32              Class;
     EFI_LBA             Parent;
@@ -93,7 +90,7 @@ typedef struct _EFI_LBAL {
     UINT32              ArrayCount;
 } EFI_LBAL;
 
-// Array size 
+// Array size
 #define EFI_LBAL_ARRAY_SIZE(lbal,offs,blks)  \
         (((blks) - (offs) - (lbal)->Hdr.HeaderSize) / sizeof(EFI_RL))
 
@@ -101,7 +98,8 @@ typedef struct _EFI_LBAL {
 // Logical Block run-length
 //
 
-typedef struct {
+typedef struct
+{
     EFI_LBA     Start;
     UINT64      Length;
 } EFI_RL;
@@ -113,4 +111,3 @@ typedef struct {
 #define EFI_LBAL_RL(a)      ((EFI_RL*) (((CHAR8 *) (a)) + (a)->Hdr.HeaderSize))
 
 #endif
-

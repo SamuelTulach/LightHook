@@ -27,68 +27,70 @@
 #ifndef _SHELLINTERFACE_H_
 #define _SHELLINTERFACE_H_
 
-
 #define SHELL_INTERFACE_PROTOCOL_GUID \
   { \
     0x47c7b223, 0xc42a, 0x11d2, {0x8e, 0x57, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x3b} \
   }
 
-///
-/// Bit definitions for EFI_SHELL_ARG_INFO
-///
-typedef enum {
-  ARG_NO_ATTRIB         = 0x0,
-  ARG_IS_QUOTED         = 1<<0,
-  ARG_PARTIALLY_QUOTED  = 1<<1,
-  ARG_FIRST_HALF_QUOTED = 1<<2,
-  ARG_FIRST_CHAR_IS_ESC = 1<<3
+ ///
+ /// Bit definitions for EFI_SHELL_ARG_INFO
+ ///
+typedef enum
+{
+    ARG_NO_ATTRIB = 0x0,
+    ARG_IS_QUOTED = 1 << 0,
+    ARG_PARTIALLY_QUOTED = 1 << 1,
+    ARG_FIRST_HALF_QUOTED = 1 << 2,
+    ARG_FIRST_CHAR_IS_ESC = 1 << 3
 } EFI_SHELL_ARG_INFO_TYPES;
 
 ///
 /// Attributes for an argument.
 ///
-typedef struct _EFI_SHELL_ARG_INFO {
-  UINT32  Attributes;
+typedef struct _EFI_SHELL_ARG_INFO
+{
+    UINT32  Attributes;
 } EFI_SHELL_ARG_INFO;
 
 ///
 /// This protocol provides access to additional information about a shell application.
 ///
-typedef struct {
-  ///
-  /// Handle back to original image handle & image information.
-  ///
-  EFI_HANDLE                ImageHandle;
-  EFI_LOADED_IMAGE *Info;
+typedef struct
+{
+    ///
+    /// Handle back to original image handle & image information.
+    ///
+    EFI_HANDLE                ImageHandle;
+    EFI_LOADED_IMAGE* Info;
 
-  ///
-  /// Parsed arg list converted more C-like format.
-  ///
-  CHAR16                    **Argv;
-  UINTN                     Argc;
+    ///
+    /// Parsed arg list converted more C-like format.
+    ///
+    CHAR16** Argv;
+    UINTN                     Argc;
 
-  ///
-  /// Storage for file redirection args after parsing.
-  ///
-  CHAR16                    **RedirArgv;
-  UINTN                     RedirArgc;
+    ///
+    /// Storage for file redirection args after parsing.
+    ///
+    CHAR16** RedirArgv;
+    UINTN                     RedirArgc;
 
-  ///
-  /// A file style handle for console io.
-  ///
-  EFI_FILE         *StdIn;
-  EFI_FILE         *StdOut;
-  EFI_FILE         *StdErr;
+    ///
+    /// A file style handle for console io.
+    ///
+    EFI_FILE* StdIn;
+    EFI_FILE* StdOut;
+    EFI_FILE* StdErr;
 
-  ///
-  /// List of attributes for each argument.
-  ///
-  EFI_SHELL_ARG_INFO        *ArgInfo;
+    ///
+    /// List of attributes for each argument.
+    ///
+    EFI_SHELL_ARG_INFO* ArgInfo;
 
-  ///
-  /// Whether we are echoing.
-  ///
-  BOOLEAN                   EchoOn;
+    ///
+    /// Whether we are echoing.
+    ///
+    BOOLEAN                   EchoOn;
 } EFI_SHELL_INTERFACE;
 
 #endif

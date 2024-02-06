@@ -6,55 +6,55 @@ typedef int(*TestFunction_t)(int param1, int param2);
 
 __declspec(noinline) int TestFunction(int param1, int param2)
 {
-	param2 -= param1;
-	param1 += param2;
-	for (int i = 0; i < 10; i++)
-		param1 += param2 * param2;
+    param2 -= param1;
+    param1 += param2;
+    for (int i = 0; i < 10; i++)
+        param1 += param2 * param2;
 
-	param2 *= param1;
-	param1 *= param2;
-	for (int i = 0; i < 5; i++)
-		param1 += param2 * param2;
+    param2 *= param1;
+    param1 *= param2;
+    for (int i = 0; i < 5; i++)
+        param1 += param2 * param2;
 
-	printf("in func: %i\n", param1);
-	return param1;
+    printf("in func: %i\n", param1);
+    return param1;
 }
 
 __declspec(noinline) int HookedTestFunction()
 {
-	printf("hook called\n");
+    printf("hook called\n");
 
-	TestFunction_t original = (TestFunction_t)testHook.Trampoline;
-	return original(0, 2);
+    TestFunction_t original = (TestFunction_t)testHook.Trampoline;
+    return original(0, 2);
 }
 
 int main()
 {
-	int output = TestFunction(0, 1);
-	printf("before hook: %u\n", output);
+    int output = TestFunction(0, 1);
+    printf("before hook: %u\n", output);
 
-	testHook = CreateHook((void*)&TestFunction, (void*)&HookedTestFunction);
-	printf("size: %u\n", testHook.BytesToCopy);
+    testHook = CreateHook((void*)&TestFunction, (void*)&HookedTestFunction);
+    printf("size: %u\n", testHook.BytesToCopy);
 
-	int status = EnableHook(&testHook);
-	printf("status: %u\n", status);
-	printf("trampoline: 0x%p\n", testHook.Trampoline);
+    int status = EnableHook(&testHook);
+    printf("status: %u\n", status);
+    printf("trampoline: 0x%p\n", testHook.Trampoline);
 
-	output = TestFunction(0, 1);
-	printf("after hook: %u\n", output);
+    output = TestFunction(0, 1);
+    printf("after hook: %u\n", output);
 
-	status = DisableHook(&testHook);
-	printf("status: %u\n", status);
+    status = DisableHook(&testHook);
+    printf("status: %u\n", status);
 
-	output = TestFunction(0, 1);
-	printf("disabled hook: %u\n", output);
+    output = TestFunction(0, 1);
+    printf("disabled hook: %u\n", output);
 
-	status = EnableHook(&testHook);
-	printf("status: %u\n", status);
-	printf("trampoline: 0x%p\n", testHook.Trampoline);
+    status = EnableHook(&testHook);
+    printf("status: %u\n", status);
+    printf("trampoline: 0x%p\n", testHook.Trampoline);
 
-	output = TestFunction(0, 1);
-	printf("after hook: %u\n", output);
+    output = TestFunction(0, 1);
+    printf("after hook: %u\n", output);
 
-	return 0;
+    return 0;
 }

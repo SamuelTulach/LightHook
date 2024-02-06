@@ -13,8 +13,6 @@ Abstract:
 
     EFI PXE Base Code Protocol
 
-
-
 Revision History
 
 --*/
@@ -34,7 +32,8 @@ INTERFACE_DECL(_EFI_PXE_BASE_CODE_PROTOCOL);
 // Address definitions
 //
 
-typedef union {
+typedef union
+{
     UINT32      Addr[4];
     EFI_IPv4_ADDRESS    v4;
     EFI_IPv6_ADDRESS    v6;
@@ -46,7 +45,8 @@ typedef UINT16 EFI_PXE_BASE_CODE_UDP_PORT;
 // Packet definitions
 //
 
-typedef struct {
+typedef struct
+{
     UINT8                           BootpOpcode;
     UINT8                           BootpHwType;
     UINT8                           BootpHwAddrLen;
@@ -65,27 +65,32 @@ typedef struct {
     UINT8                           DhcpOptions[56];
 } EFI_PXE_BASE_CODE_DHCPV4_PACKET;
 
-typedef struct {
-    UINT32                          MessageType:8;
-    UINT32                          TransactionId:24;
+typedef struct
+{
+    UINT32                          MessageType : 8;
+    UINT32                          TransactionId : 24;
     UINT8                           DhcpOptions[1024];
 } EFI_PXE_BASE_CODE_DHCPV6_PACKET;
 
-typedef union {
+typedef union
+{
     UINT8                               Raw[1472];
     EFI_PXE_BASE_CODE_DHCPV4_PACKET     Dhcpv4;
     EFI_PXE_BASE_CODE_DHCPV6_PACKET     Dhcpv6;
 } EFI_PXE_BASE_CODE_PACKET;
 
-typedef struct {
+typedef struct
+{
     UINT8                   Type;
     UINT8                   Code;
     UINT16                  Checksum;
-    union {
+    union
+    {
         UINT32              reserved;
         UINT32              Mtu;
         UINT32              Pointer;
-        struct {
+        struct
+        {
             UINT16          Identifier;
             UINT16          Sequence;
         } Echo;
@@ -93,7 +98,8 @@ typedef struct {
     UINT8                   Data[494];
 } EFI_PXE_BASE_CODE_ICMP_ERROR;
 
-typedef struct {
+typedef struct
+{
     UINT8                   ErrorCode;
     CHAR8                   ErrorString[127];
 } EFI_PXE_BASE_CODE_TFTP_ERROR;
@@ -102,7 +108,8 @@ typedef struct {
 // IP Receive Filter definitions
 //
 #define EFI_PXE_BASE_CODE_MAX_IPCNT             8
-typedef struct {
+typedef struct
+{
     UINT8                       Filters;
     UINT8                       IpCnt;
     UINT16                      reserved;
@@ -118,12 +125,14 @@ typedef struct {
 // ARP Cache definitions
 //
 
-typedef struct {
+typedef struct
+{
     EFI_IP_ADDRESS       IpAddr;
     EFI_MAC_ADDRESS      MacAddr;
 } EFI_PXE_BASE_CODE_ARP_ENTRY;
 
-typedef struct {
+typedef struct
+{
     EFI_IP_ADDRESS       IpAddr;
     EFI_IP_ADDRESS       SubnetMask;
     EFI_IP_ADDRESS       GwAddr;
@@ -171,15 +180,16 @@ typedef struct {
 #define EFI_PXE_BASE_CODE_BOOT_LAYER_MASK               0x7FFF
 #define EFI_PXE_BASE_CODE_BOOT_LAYER_INITIAL            0x0000
 
-
-typedef struct {
+typedef struct
+{
     UINT16                      Type;
     BOOLEAN                     AcceptAnyResponse;
     UINT8                       Reserved;
     EFI_IP_ADDRESS              IpAddr;
 } EFI_PXE_BASE_CODE_SRVLIST;
 
-typedef struct {
+typedef struct
+{
     BOOLEAN                     UseMCast;
     BOOLEAN                     UseBCast;
     BOOLEAN                     UseUCast;
@@ -193,7 +203,8 @@ typedef struct {
 // Mtftp() definitions
 //
 
-typedef enum {
+typedef enum
+{
     EFI_PXE_BASE_CODE_TFTP_FIRST,
     EFI_PXE_BASE_CODE_TFTP_GET_FILE_SIZE,
     EFI_PXE_BASE_CODE_TFTP_READ_FILE,
@@ -205,7 +216,8 @@ typedef enum {
     EFI_PXE_BASE_CODE_MTFTP_LAST
 } EFI_PXE_BASE_CODE_TFTP_OPCODE;
 
-typedef struct {
+typedef struct
+{
     EFI_IP_ADDRESS   MCastIp;
     EFI_PXE_BASE_CODE_UDP_PORT  CPort;
     EFI_PXE_BASE_CODE_UDP_PORT  SPort;
@@ -220,7 +232,8 @@ typedef struct {
 #define EFI_PXE_BASE_CODE_MAX_ARP_ENTRIES       8
 #define EFI_PXE_BASE_CODE_MAX_ROUTE_ENTRIES     8
 
-typedef struct {
+typedef struct
+{
     BOOLEAN                         Started;
     BOOLEAN                         Ipv6Available;
     BOOLEAN                         Ipv6Supported;
@@ -263,130 +276,130 @@ typedef struct {
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_START) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_BASE_CODE_START) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN BOOLEAN                             UseIpv6
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_STOP) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This
+(EFIAPI* EFI_PXE_BASE_CODE_STOP) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_DHCP) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_BASE_CODE_DHCP) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN BOOLEAN                             SortOffers
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_DISCOVER) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL   *This,
+(EFIAPI* EFI_PXE_BASE_CODE_DISCOVER) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN UINT16                               Type,
-    IN UINT16                               *Layer,
+    IN UINT16* Layer,
     IN BOOLEAN                              UseBis,
-    IN OUT EFI_PXE_BASE_CODE_DISCOVER_INFO  *Info   OPTIONAL
+    IN OUT EFI_PXE_BASE_CODE_DISCOVER_INFO* Info   OPTIONAL
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_MTFTP) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_BASE_CODE_MTFTP) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN EFI_PXE_BASE_CODE_TFTP_OPCODE       Operation,
-    IN OUT VOID                            *BufferPtr  OPTIONAL,
+    IN OUT VOID* BufferPtr  OPTIONAL,
     IN BOOLEAN                             Overwrite,
-    IN OUT UINT64                          *BufferSize,
-    IN UINTN                               *BlockSize  OPTIONAL,
-    IN EFI_IP_ADDRESS                      *ServerIp,
-    IN UINT8                               *Filename,
-    IN EFI_PXE_BASE_CODE_MTFTP_INFO        *Info       OPTIONAL,
+    IN OUT UINT64* BufferSize,
+    IN UINTN* BlockSize  OPTIONAL,
+    IN EFI_IP_ADDRESS* ServerIp,
+    IN UINT8* Filename,
+    IN EFI_PXE_BASE_CODE_MTFTP_INFO* Info       OPTIONAL,
     IN BOOLEAN                             DontUseBuffer
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_UDP_WRITE) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_BASE_CODE_UDP_WRITE) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN UINT16                              OpFlags,
-    IN EFI_IP_ADDRESS                      *DestIp,
-    IN EFI_PXE_BASE_CODE_UDP_PORT          *DestPort,
-    IN EFI_IP_ADDRESS                      *GatewayIp,  OPTIONAL
-    IN EFI_IP_ADDRESS                      *SrcIp,      OPTIONAL
-    IN OUT EFI_PXE_BASE_CODE_UDP_PORT      *SrcPort,    OPTIONAL
-    IN UINTN                               *HeaderSize, OPTIONAL
-    IN VOID                                *HeaderPtr,  OPTIONAL
-    IN UINTN                               *BufferSize,
-    IN VOID                                *BufferPtr
+    IN EFI_IP_ADDRESS* DestIp,
+    IN EFI_PXE_BASE_CODE_UDP_PORT* DestPort,
+    IN EFI_IP_ADDRESS* GatewayIp, OPTIONAL
+    IN EFI_IP_ADDRESS* SrcIp, OPTIONAL
+    IN OUT EFI_PXE_BASE_CODE_UDP_PORT* SrcPort, OPTIONAL
+    IN UINTN* HeaderSize, OPTIONAL
+    IN VOID* HeaderPtr, OPTIONAL
+    IN UINTN* BufferSize,
+    IN VOID* BufferPtr
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_UDP_READ) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_BASE_CODE_UDP_READ) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
     IN UINT16                              OpFlags,
-    IN OUT EFI_IP_ADDRESS                  *DestIp,      OPTIONAL
-    IN OUT EFI_PXE_BASE_CODE_UDP_PORT      *DestPort,    OPTIONAL
-    IN OUT EFI_IP_ADDRESS                  *SrcIp,       OPTIONAL
-    IN OUT EFI_PXE_BASE_CODE_UDP_PORT      *SrcPort,     OPTIONAL
-    IN UINTN                               *HeaderSize,  OPTIONAL
-    IN VOID                                *HeaderPtr,   OPTIONAL
-    IN OUT UINTN                           *BufferSize,
-    IN VOID                                *BufferPtr
+    IN OUT EFI_IP_ADDRESS* DestIp, OPTIONAL
+    IN OUT EFI_PXE_BASE_CODE_UDP_PORT* DestPort, OPTIONAL
+    IN OUT EFI_IP_ADDRESS* SrcIp, OPTIONAL
+    IN OUT EFI_PXE_BASE_CODE_UDP_PORT* SrcPort, OPTIONAL
+    IN UINTN* HeaderSize, OPTIONAL
+    IN VOID* HeaderPtr, OPTIONAL
+    IN OUT UINTN* BufferSize,
+    IN VOID* BufferPtr
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_SET_IP_FILTER) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
-    IN EFI_PXE_BASE_CODE_IP_FILTER         *NewFilter
+(EFIAPI* EFI_PXE_BASE_CODE_SET_IP_FILTER) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
+    IN EFI_PXE_BASE_CODE_IP_FILTER* NewFilter
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_ARP) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
-    IN EFI_IP_ADDRESS                      *IpAddr,
-    IN EFI_MAC_ADDRESS                     *MacAddr      OPTIONAL
+(EFIAPI* EFI_PXE_BASE_CODE_ARP) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
+    IN EFI_IP_ADDRESS* IpAddr,
+    IN EFI_MAC_ADDRESS* MacAddr      OPTIONAL
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_SET_PARAMETERS) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
-    IN BOOLEAN                             *NewAutoArp,    OPTIONAL
-    IN BOOLEAN                             *NewSendGUID,   OPTIONAL
-    IN UINT8                               *NewTTL,        OPTIONAL
-    IN UINT8                               *NewToS,        OPTIONAL
-    IN BOOLEAN                             *NewMakeCallback    OPTIONAL
+(EFIAPI* EFI_PXE_BASE_CODE_SET_PARAMETERS) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
+    IN BOOLEAN* NewAutoArp, OPTIONAL
+    IN BOOLEAN* NewSendGUID, OPTIONAL
+    IN UINT8* NewTTL, OPTIONAL
+    IN UINT8* NewToS, OPTIONAL
+    IN BOOLEAN* NewMakeCallback    OPTIONAL
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_SET_STATION_IP) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
-    IN EFI_IP_ADDRESS                      *NewStationIp,  OPTIONAL
-    IN EFI_IP_ADDRESS                      *NewSubnetMask  OPTIONAL
+(EFIAPI* EFI_PXE_BASE_CODE_SET_STATION_IP) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
+    IN EFI_IP_ADDRESS* NewStationIp, OPTIONAL
+    IN EFI_IP_ADDRESS* NewSubnetMask  OPTIONAL
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_PXE_BASE_CODE_SET_PACKETS) (
-    IN struct _EFI_PXE_BASE_CODE_PROTOCOL  *This,
-    BOOLEAN                                *NewDhcpDiscoverValid,  OPTIONAL
-    BOOLEAN                                *NewDhcpAckReceived,    OPTIONAL
-    BOOLEAN                                *NewProxyOfferReceived, OPTIONAL
-    BOOLEAN                                *NewPxeDiscoverValid,   OPTIONAL
-    BOOLEAN                                *NewPxeReplyReceived,   OPTIONAL
-    BOOLEAN                                *NewPxeBisReplyReceived,OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewDhcpDiscover, OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewDhcpAck,      OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewProxyOffer,   OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewPxeDiscover,  OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewPxeReply,     OPTIONAL
-    IN EFI_PXE_BASE_CODE_PACKET            *NewPxeBisReply   OPTIONAL
+(EFIAPI* EFI_PXE_BASE_CODE_SET_PACKETS) (
+    IN struct _EFI_PXE_BASE_CODE_PROTOCOL* This,
+    BOOLEAN* NewDhcpDiscoverValid, OPTIONAL
+    BOOLEAN* NewDhcpAckReceived, OPTIONAL
+    BOOLEAN* NewProxyOfferReceived, OPTIONAL
+    BOOLEAN* NewPxeDiscoverValid, OPTIONAL
+    BOOLEAN* NewPxeReplyReceived, OPTIONAL
+    BOOLEAN* NewPxeBisReplyReceived, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewDhcpDiscover, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewDhcpAck, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewProxyOffer, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewPxeDiscover, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewPxeReply, OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* NewPxeBisReply   OPTIONAL
     );
 
 //
@@ -396,7 +409,8 @@ EFI_STATUS
 #define EFI_PXE_BASE_CODE_PROTOCOL_REVISION  0x00010000
 #define EFI_PXE_BASE_CODE_INTERFACE_REVISION EFI_PXE_BASE_CODE_PROTOCOL_REVISION
 
-typedef struct _EFI_PXE_BASE_CODE_PROTOCOL {
+typedef struct _EFI_PXE_BASE_CODE_PROTOCOL
+{
     UINT64                              Revision;
     EFI_PXE_BASE_CODE_START             Start;
     EFI_PXE_BASE_CODE_STOP              Stop;
@@ -410,7 +424,7 @@ typedef struct _EFI_PXE_BASE_CODE_PROTOCOL {
     EFI_PXE_BASE_CODE_SET_PARAMETERS    SetParameters;
     EFI_PXE_BASE_CODE_SET_STATION_IP    SetStationIp;
     EFI_PXE_BASE_CODE_SET_PACKETS       SetPackets;
-    EFI_PXE_BASE_CODE_MODE              *Mode;
+    EFI_PXE_BASE_CODE_MODE* Mode;
 } EFI_PXE_BASE_CODE_PROTOCOL;
 
 // Note: Because it conflicted with the EDK2 struct name, the
@@ -437,7 +451,8 @@ typedef struct _EFI_PXE_BASE_CODE_PROTOCOL EFI_PXE_BASE_CODE;
 
 INTERFACE_DECL(_EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL);
 
-typedef enum {
+typedef enum
+{
     EFI_PXE_BASE_CODE_FUNCTION_FIRST,
     EFI_PXE_BASE_CODE_FUNCTION_DHCP,
     EFI_PXE_BASE_CODE_FUNCTION_DISCOVER,
@@ -449,7 +464,8 @@ typedef enum {
     EFI_PXE_BASE_CODE_PXE_FUNCTION_LAST
 } EFI_PXE_BASE_CODE_FUNCTION;
 
-typedef enum {
+typedef enum
+{
     EFI_PXE_BASE_CODE_CALLBACK_STATUS_FIRST,
     EFI_PXE_BASE_CODE_CALLBACK_STATUS_CONTINUE,
     EFI_PXE_BASE_CODE_CALLBACK_STATUS_ABORT,
@@ -458,15 +474,16 @@ typedef enum {
 
 typedef
 EFI_PXE_BASE_CODE_CALLBACK_STATUS
-(EFIAPI *EFI_PXE_CALLBACK) (
-    IN struct _EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL  *This,
+(EFIAPI* EFI_PXE_CALLBACK) (
+    IN struct _EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL* This,
     IN EFI_PXE_BASE_CODE_FUNCTION                   Function,
     IN BOOLEAN                                      Received,
     IN UINT32                                       PacketLen,
-    IN EFI_PXE_BASE_CODE_PACKET                     *Packet     OPTIONAL
+    IN EFI_PXE_BASE_CODE_PACKET* Packet     OPTIONAL
     );
 
-typedef struct _EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL {
+typedef struct _EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL
+{
     UINT64                      Revision;
     EFI_PXE_CALLBACK            Callback;
 } EFI_PXE_BASE_CODE_CALLBACK_PROTOCOL;

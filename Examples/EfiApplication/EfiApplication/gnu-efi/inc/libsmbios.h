@@ -20,7 +20,8 @@ Revision History
 // Define SMBIOS tables.
 //
 #pragma pack(1)
-typedef struct {
+typedef struct
+{
     UINT8   AnchorString[4];
     UINT8   EntryPointStructureChecksum;
     UINT8   EntryPointLength;
@@ -37,7 +38,8 @@ typedef struct {
     UINT8   SmbiosBcdRevision;
 } SMBIOS_STRUCTURE_TABLE;
 
-typedef struct {
+typedef struct
+{
     UINT8   AnchorString[5];
     UINT8   EntryPointStructureChecksum;
     UINT8   EntryPointLength;
@@ -55,7 +57,8 @@ typedef struct {
 //  unformated section of each record is a set of arbitrary size strings.
 //
 
-typedef struct {
+typedef struct
+{
     UINT8   Type;
     UINT8   Length;
     UINT8   Handle[2];
@@ -63,7 +66,8 @@ typedef struct {
 
 typedef UINT8   SMBIOS_STRING;
 
-typedef struct {
+typedef struct
+{
     SMBIOS_HEADER   Hdr;
     SMBIOS_STRING   Vendor;
     SMBIOS_STRING   BiosVersion;
@@ -73,7 +77,8 @@ typedef struct {
     UINT8           BiosCharacteristics[8];
 } SMBIOS_TYPE0;
 
-typedef struct {
+typedef struct
+{
     SMBIOS_HEADER   Hdr;
     SMBIOS_STRING   Manufacturer;
     SMBIOS_STRING   ProductName;
@@ -88,7 +93,8 @@ typedef struct {
     UINT8           WakeUpType;
 } SMBIOS_TYPE1;
 
-typedef struct {
+typedef struct
+{
     SMBIOS_HEADER   Hdr;
     SMBIOS_STRING   Manufacturer;
     SMBIOS_STRING   ProductName;
@@ -96,7 +102,8 @@ typedef struct {
     SMBIOS_STRING   SerialNumber;
 } SMBIOS_TYPE2;
 
-typedef struct {
+typedef struct
+{
     SMBIOS_HEADER   Hdr;
     SMBIOS_STRING   Manufacturer;
     UINT8           Type;
@@ -110,7 +117,8 @@ typedef struct {
     UINT8           OemDefined[4];
 } SMBIOS_TYPE3;
 
-typedef struct {
+typedef struct
+{
     SMBIOS_HEADER   Hdr;
     UINT8           Socket;
     UINT8           ProcessorType;
@@ -129,14 +137,15 @@ typedef struct {
     UINT8           L3CacheHandle[2];
 } SMBIOS_TYPE4;
 
-typedef union {
-    SMBIOS_HEADER   *Hdr;
-    SMBIOS_TYPE0    *Type0;
-    SMBIOS_TYPE1    *Type1;
-    SMBIOS_TYPE2    *Type2;
-    SMBIOS_TYPE3    *Type3;
-    SMBIOS_TYPE4    *Type4;
-    UINT8           *Raw;
+typedef union
+{
+    SMBIOS_HEADER* Hdr;
+    SMBIOS_TYPE0* Type0;
+    SMBIOS_TYPE1* Type1;
+    SMBIOS_TYPE2* Type2;
+    SMBIOS_TYPE3* Type3;
+    SMBIOS_TYPE4* Type4;
+    UINT8* Raw;
 } SMBIOS_STRUCTURE_POINTER;
 #pragma pack()
 

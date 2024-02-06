@@ -27,7 +27,8 @@ Revision History
 
 INTERFACE_DECL(_EFI_SERIAL_IO_PROTOCOL);
 
-typedef enum {
+typedef enum
+{
     DefaultParity,
     NoParity,
     EvenParity,
@@ -36,7 +37,8 @@ typedef enum {
     SpaceParity
 } EFI_PARITY_TYPE;
 
-typedef enum {
+typedef enum
+{
     DefaultStopBits,
     OneStopBit,         // 1 stop bit
     OneFiveStopBits,    // 1.5 stop bits
@@ -57,14 +59,14 @@ typedef enum {
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_RESET) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This
+(EFIAPI* EFI_SERIAL_RESET) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_SET_ATTRIBUTES) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This,
+(EFIAPI* EFI_SERIAL_SET_ATTRIBUTES) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This,
     IN UINT64                          BaudRate,
     IN UINT32                          ReceiveFifoDepth,
     IN UINT32                          Timeout,
@@ -75,35 +77,36 @@ EFI_STATUS
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_SET_CONTROL_BITS) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This,
+(EFIAPI* EFI_SERIAL_SET_CONTROL_BITS) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This,
     IN UINT32                          Control
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_GET_CONTROL_BITS) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This,
-    OUT UINT32                         *Control
+(EFIAPI* EFI_SERIAL_GET_CONTROL_BITS) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This,
+    OUT UINT32* Control
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_WRITE) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This,
-    IN OUT UINTN                       *BufferSize,
-    IN VOID                            *Buffer
+(EFIAPI* EFI_SERIAL_WRITE) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This,
+    IN OUT UINTN* BufferSize,
+    IN VOID* Buffer
     );
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_SERIAL_READ) (
-    IN struct _EFI_SERIAL_IO_PROTOCOL  *This,
-    IN OUT UINTN                       *BufferSize,
-    OUT VOID                           *Buffer
+(EFIAPI* EFI_SERIAL_READ) (
+    IN struct _EFI_SERIAL_IO_PROTOCOL* This,
+    IN OUT UINTN* BufferSize,
+    OUT VOID* Buffer
     );
 
-typedef struct {
+typedef struct
+{
     UINT32                  ControlMask;
 
     // current Attributes
@@ -117,7 +120,8 @@ typedef struct {
 
 #define SERIAL_IO_INTERFACE_REVISION    0x00010000
 
-typedef struct _EFI_SERIAL_IO_PROTOCOL {
+typedef struct _EFI_SERIAL_IO_PROTOCOL
+{
     UINT32                       Revision;
     EFI_SERIAL_RESET             Reset;
     EFI_SERIAL_SET_ATTRIBUTES    SetAttributes;
@@ -126,11 +130,10 @@ typedef struct _EFI_SERIAL_IO_PROTOCOL {
     EFI_SERIAL_WRITE             Write;
     EFI_SERIAL_READ              Read;
 
-    SERIAL_IO_MODE               *Mode;
+    SERIAL_IO_MODE* Mode;
 } EFI_SERIAL_IO_PROTOCOL;
 
 typedef struct _EFI_SERIAL_IO_PROTOCOL _SERIAL_IO_INTERFACE;
 typedef EFI_SERIAL_IO_PROTOCOL SERIAL_IO_INTERFACE;
 
 #endif
-

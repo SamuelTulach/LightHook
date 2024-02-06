@@ -13,9 +13,6 @@ Abstract:
 
     EFI definitions
 
-
-
-
 Revision History
 
 --*/
@@ -24,23 +21,22 @@ typedef UINT16          CHAR16;
 typedef UINT8           CHAR8;
 typedef UINT8           BOOLEAN;
 #ifndef CONST
-   #define CONST const
+#define CONST const
 #endif
 #ifndef TRUE
-    #define TRUE    ((BOOLEAN) 1)
-    #define FALSE   ((BOOLEAN) 0)
+#define TRUE    ((BOOLEAN) 1)
+#define FALSE   ((BOOLEAN) 0)
 #endif
 
 #ifndef NULL
-    #define NULL    ((VOID *) 0)
+#define NULL    ((VOID *) 0)
 #endif
 
 typedef UINTN           EFI_STATUS;
 typedef UINT64          EFI_LBA;
 typedef UINTN           EFI_TPL;
-typedef VOID            *EFI_HANDLE;
-typedef VOID            *EFI_EVENT;
-
+typedef VOID* EFI_HANDLE;
+typedef VOID* EFI_EVENT;
 
 //
 // Prototype argument decoration for EFI parameters to indicate
@@ -52,29 +48,29 @@ typedef VOID            *EFI_EVENT;
 //
 
 #ifndef IN
-    #define IN
-    #define OUT
-    #define OPTIONAL
+#define IN
+#define OUT
+#define OPTIONAL
 #endif
-
 
 //
 // A GUID
 //
 
-typedef struct {          
+typedef struct
+{
     UINT32  Data1;
     UINT16  Data2;
     UINT16  Data3;
-    UINT8   Data4[8]; 
+    UINT8   Data4[8];
 } EFI_GUID;
-
 
 //
 // Time
 //
 
-typedef struct {          
+typedef struct
+{
     UINT16      Year;       // 1998 - 20XX
     UINT8       Month;      // 1 - 12
     UINT8       Day;        // 1 - 31
@@ -95,25 +91,27 @@ typedef struct {
 // Value definition for EFI_TIME.TimeZone
 #define EFI_UNSPECIFIED_TIMEZONE    0x07FF
 
-
-
 //
 // Networking
 //
 
-typedef struct {
+typedef struct
+{
     UINT8                   Addr[4];
 } EFI_IPv4_ADDRESS;
 
-typedef struct {
+typedef struct
+{
     UINT8                   Addr[16];
 } EFI_IPv6_ADDRESS;
 
-typedef struct {
+typedef struct
+{
     UINT8                   Addr[32];
 } EFI_MAC_ADDRESS;
 
-typedef struct {
+typedef struct
+{
     UINT32 ReceivedQueueTimeoutValue;
     UINT32 TransmitQueueTimeoutValue;
     UINT16 ProtocolTypeFilter;
@@ -133,7 +131,8 @@ typedef struct {
 typedef UINT64          EFI_PHYSICAL_ADDRESS;
 typedef UINT64          EFI_VIRTUAL_ADDRESS;
 
-typedef enum {
+typedef enum
+{
     AllocateAnyPages,
     AllocateMaxAddress,
     AllocateAddress,
@@ -146,8 +145,8 @@ typedef enum {
 //When returning to ConventialMemory always make it WB,SR,SW
 //When getting the memory map, or on RT for runtime types
 
-
-typedef enum {
+typedef enum
+{
     EfiReservedMemoryType,
     EfiLoaderCode,
     EfiLoaderData,
@@ -170,9 +169,9 @@ typedef enum {
 #define EFI_MEMORY_WC           0x0000000000000002
 #define EFI_MEMORY_WT           0x0000000000000004
 #define EFI_MEMORY_WB           0x0000000000000008
-#define EFI_MEMORY_UCE          0x0000000000000010  
+#define EFI_MEMORY_UCE          0x0000000000000010
 
-// physical memory protection on range 
+// physical memory protection on range
 #define EFI_MEMORY_WP           0x0000000000001000
 #define EFI_MEMORY_RP           0x0000000000002000
 #define EFI_MEMORY_XP           0x0000000000004000
@@ -181,7 +180,8 @@ typedef enum {
 #define EFI_MEMORY_RUNTIME      0x8000000000000000
 
 #define EFI_MEMORY_DESCRIPTOR_VERSION  1
-typedef struct {
+typedef struct
+{
     UINT32                          Type;           // Field size is 32 bits followed by 32 bit pad
     UINT32                          Pad;
     EFI_PHYSICAL_ADDRESS            PhysicalStart;  // Field size is 64 bits

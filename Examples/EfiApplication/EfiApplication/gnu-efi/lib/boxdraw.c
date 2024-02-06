@@ -9,20 +9,18 @@ Module Name:
 Abstract:
     Lib functions to support Box Draw Unicode code pages.
 
-
-
 Revision History
 
 --*/
 
 #include "lib.h"
 
-typedef struct {
+typedef struct
+{
     CHAR16  Unicode;
     CHAR8   PcAnsi;
     CHAR8   Ascii;
 } UNICODE_TO_CHAR;
-
 
 //
 // This list is used to define the valid extend chars.
@@ -32,7 +30,7 @@ typedef struct {
 //
 
 STATIC UNICODE_TO_CHAR UnicodeToPcAnsiOrAscii[] = {
-    { BOXDRAW_HORIZONTAL,                 0xc4, L'-'}, 
+    { BOXDRAW_HORIZONTAL,                 0xc4, L'-'},
     { BOXDRAW_VERTICAL,                   0xb3, L'|'},
     { BOXDRAW_DOWN_RIGHT,                 0xda, L'/'},
     { BOXDRAW_DOWN_LEFT,                  0xbf, L'\\'},
@@ -82,29 +80,28 @@ STATIC UNICODE_TO_CHAR UnicodeToPcAnsiOrAscii[] = {
     { GEOMETRICSHAPE_LEFT_TRIANGLE,       0x11, L'<'},
 
     /* BugBug: Left Arrow is an ESC. We can not make it print
-                on a PCANSI terminal. If we can make left arrow 
+                on a PCANSI terminal. If we can make left arrow
                 come out on PC ANSI we can add it back.
 
     { ARROW_LEFT,                         0x1b, L'<'},
     */
 
     { ARROW_UP,                           0x18, L'^'},
-    
+
     /* BugBut: Took out left arrow so right has to go too.
        { ARROW_RIGHT,                        0x1a, L'>'},
-    */      
+    */
     { ARROW_DOWN,                         0x19, L'v'},
-    
+
     { 0x0000, 0x00, L'\0' }
 };
 
-
 BOOLEAN
-LibIsValidTextGraphics (
+LibIsValidTextGraphics(
     IN  CHAR16  Graphic,
-    OUT CHAR8   *PcAnsi,    OPTIONAL
-    OUT CHAR8   *Ascii      OPTIONAL
-    )
+    OUT CHAR8* PcAnsi, OPTIONAL
+    OUT CHAR8* Ascii      OPTIONAL
+)
 /*++
 
 Routine Description:
@@ -123,24 +120,29 @@ Returns:
 
     TRUE if Gpaphic is a supported Unicode Box Drawing character.
 
---*/{
-    UNICODE_TO_CHAR     *Table;
+--*/
+{
+    UNICODE_TO_CHAR* Table;
 
-    if ((((Graphic & 0xff00) != 0x2500) && ((Graphic & 0xff00) != 0x2100))) {
-     
+    if ((((Graphic & 0xff00) != 0x2500) && ((Graphic & 0xff00) != 0x2100)))
+    {
         //
-        // Unicode drawing code charts are all in the 0x25xx range, 
+        // Unicode drawing code charts are all in the 0x25xx range,
         //  arrows are 0x21xx
         //
         return FALSE;
     }
 
-    for (Table = UnicodeToPcAnsiOrAscii; Table->Unicode != 0x0000; Table++) {
-        if (Graphic == Table->Unicode) {
-            if (PcAnsi) {
-                *PcAnsi = Table->PcAnsi; 
+    for (Table = UnicodeToPcAnsiOrAscii; Table->Unicode != 0x0000; Table++)
+    {
+        if (Graphic == Table->Unicode)
+        {
+            if (PcAnsi)
+            {
+                *PcAnsi = Table->PcAnsi;
             }
-            if (Ascii) {
+            if (Ascii)
+            {
                 *Ascii = Table->Ascii;
             }
             return TRUE;
@@ -150,24 +152,25 @@ Returns:
 }
 
 BOOLEAN
-IsValidAscii (
+IsValidAscii(
     IN  CHAR16  Ascii
-    )
+)
 {
-    if ((Ascii >= 0x20) && (Ascii <= 0x7f)) {
+    if ((Ascii >= 0x20) && (Ascii <= 0x7f))
+    {
         return TRUE;
-    }              
+    }
     return FALSE;
 }
 
 BOOLEAN
-IsValidEfiCntlChar (
+IsValidEfiCntlChar(
     IN  CHAR16  c
-    )
+)
 {
-    if (c == CHAR_NULL || c == CHAR_BACKSPACE || c == CHAR_LINEFEED || c == CHAR_CARRIAGE_RETURN) {
+    if (c == CHAR_NULL || c == CHAR_BACKSPACE || c == CHAR_LINEFEED || c == CHAR_CARRIAGE_RETURN)
+    {
         return TRUE;
-    }              
+    }
     return FALSE;
 }
-

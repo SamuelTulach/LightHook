@@ -10,21 +10,17 @@ Abstract:
 
     Implements FLOCK
 
-
-
 Revision History
 
 --*/
 
-
 #include "lib.h"
 
-
 VOID
-InitializeLock (
-    IN OUT FLOCK    *Lock,
+InitializeLock(
+    IN OUT FLOCK* Lock,
     IN EFI_TPL      Priority
-    )
+)
 /*++
 
 Routine Description:
@@ -37,14 +33,13 @@ Routine Description:
 
     Note on a debug build the lock is acquired and released
     to help ensure proper usage.
-    
+
 Arguments:
 
     Lock        - The FLOCK structure to initialize
 
     Priority    - The task priority level of the lock
 
-    
 Returns:
 
     An initialized F Lock structure.
@@ -56,52 +51,50 @@ Returns:
     Lock->Lock = 0;
 }
 
-
 VOID
-AcquireLock (
-    IN FLOCK    *Lock
-    )
+AcquireLock(
+    IN FLOCK* Lock
+)
 /*++
 
 Routine Description:
 
     Raising to the task priority level of the mutual exclusion
     lock, and then acquires ownership of the lock.
-    
+
 Arguments:
 
     Lock        - The lock to acquire
-    
+
 Returns:
 
     Lock owned
 
 --*/
 {
-    RtAcquireLock (Lock);
+    RtAcquireLock(Lock);
 }
 
-
 VOID
-ReleaseLock (
-    IN FLOCK    *Lock
-    )
+ReleaseLock(
+    IN FLOCK* Lock
+)
 /*++
 
 Routine Description:
 
     Releases ownership of the mutual exclusion lock, and
     restores the previous task priority level.
-    
+
 Arguments:
 
     Lock        - The lock to release
-    
+
 Returns:
 
     Lock unowned
 
 --*/
 {
-    RtReleaseLock (Lock);
+    RtReleaseLock(Lock);
 }

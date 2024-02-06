@@ -10,9 +10,6 @@ Abstract:
 
     EFI to compile bindings
 
-
-
-
 Revision History
 
 --*/
@@ -23,13 +20,13 @@ Revision History
 #endif
 
 #if defined(_MSC_VER)
-    #define HAVE_USE_MS_ABI 1
+#define HAVE_USE_MS_ABI 1
 #elif defined(GNU_EFI_USE_MS_ABI)
-    #if (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))||(defined(__clang__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2)))
-        #define HAVE_USE_MS_ABI 1
-    #else
-        #error Compiler is too old for GNU_EFI_USE_MS_ABI
-    #endif
+#if (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))||(defined(__clang__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2)))
+#define HAVE_USE_MS_ABI 1
+#else
+#error Compiler is too old for GNU_EFI_USE_MS_ABI
+#endif
 #endif
 
 //
@@ -38,58 +35,58 @@ Revision History
 
 #if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L ) && !defined(__cplusplus)
 
-    // No ANSI C 1999/2000 stdint.h integer width declarations 
+    // No ANSI C 1999/2000 stdint.h integer width declarations
 
-    #if defined(_MSC_EXTENSIONS)
+#if defined(_MSC_EXTENSIONS)
 
-        // Use Microsoft C compiler integer width declarations 
+    // Use Microsoft C compiler integer width declarations
 
-        typedef unsigned __int64    uint64_t;
-        typedef __int64             int64_t;
-        typedef unsigned __int32    uint32_t;
-        typedef __int32             int32_t;
-        typedef unsigned short      uint16_t;
-        typedef short               int16_t;
-        typedef unsigned char       uint8_t;
-        typedef char                int8_t;
-    #elif defined(__GNUC__)
-        typedef int __attribute__((__mode__(__DI__)))           int64_t;
-        typedef unsigned int __attribute__((__mode__(__DI__)))  uint64_t;
-        typedef unsigned int        uint32_t;
-        typedef int                 int32_t;
-        typedef unsigned short      uint16_t;
-        typedef short               int16_t;
-        typedef unsigned char       uint8_t;
-        typedef signed char         int8_t;
-    #elif defined(UNIX_LP64)
+typedef unsigned __int64    uint64_t;
+typedef __int64             int64_t;
+typedef unsigned __int32    uint32_t;
+typedef __int32             int32_t;
+typedef unsigned short      uint16_t;
+typedef short               int16_t;
+typedef unsigned char       uint8_t;
+typedef char                int8_t;
+#elif defined(__GNUC__)
+typedef int __attribute__((__mode__(__DI__)))           int64_t;
+typedef unsigned int __attribute__((__mode__(__DI__)))  uint64_t;
+typedef unsigned int        uint32_t;
+typedef int                 int32_t;
+typedef unsigned short      uint16_t;
+typedef short               int16_t;
+typedef unsigned char       uint8_t;
+typedef signed char         int8_t;
+#elif defined(UNIX_LP64)
 
-        /*  Use LP64 programming model from C_FLAGS for integer width declarations */
+    /*  Use LP64 programming model from C_FLAGS for integer width declarations */
 
-       typedef unsigned long       uint64_t;
-       typedef long                int64_t;
-       typedef unsigned int        uint32_t;
-       typedef int                 int32_t;
-       typedef unsigned short      uint16_t;
-       typedef short               int16_t;
-       typedef unsigned char       uint8_t;
-       typedef char                int8_t;
-    #else
-
-       /*  Assume P64 programming model from C_FLAGS for integer width declarations */
-
-       typedef unsigned long long  uint64_t __attribute__((aligned (8)));
-       typedef long long           int64_t __attribute__((aligned (8)));
-       typedef unsigned int        uint32_t;
-       typedef int                 int32_t;
-       typedef unsigned short      uint16_t;
-       typedef short               int16_t;
-       typedef unsigned char       uint8_t;
-       typedef char                int8_t;
-    #endif
-    typedef uint64_t            uintptr_t;
-    typedef int64_t             intptr_t;
+typedef unsigned long       uint64_t;
+typedef long                int64_t;
+typedef unsigned int        uint32_t;
+typedef int                 int32_t;
+typedef unsigned short      uint16_t;
+typedef short               int16_t;
+typedef unsigned char       uint8_t;
+typedef char                int8_t;
 #else
-    #include <stdint.h>
+
+   /*  Assume P64 programming model from C_FLAGS for integer width declarations */
+
+typedef unsigned long long  uint64_t __attribute__((aligned(8)));
+typedef long long           int64_t __attribute__((aligned(8)));
+typedef unsigned int        uint32_t;
+typedef int                 int32_t;
+typedef unsigned short      uint16_t;
+typedef short               int16_t;
+typedef unsigned char       uint8_t;
+typedef char                int8_t;
+#endif
+typedef uint64_t            uintptr_t;
+typedef int64_t             intptr_t;
+#else
+#include <stdint.h>
 #endif
 
 //
@@ -104,8 +101,8 @@ typedef uint64_t   UINT64;
 typedef int64_t    INT64;
 
 #ifndef _BASETSD_H_
-    typedef uint32_t   UINT32;
-    typedef int32_t    INT32;
+typedef uint32_t   UINT32;
+typedef int32_t    INT32;
 #endif
 
 typedef uint16_t   UINT16;
@@ -117,32 +114,30 @@ typedef __WCHAR_TYPE__ WCHAR;
 #undef VOID
 #define VOID    void
 
-
 typedef int64_t    INTN;
 typedef uint64_t   UINTN;
 
 #ifdef EFI_NT_EMULATOR
-    #define POST_CODE(_Data)
-#else    
-    #ifdef EFI_DEBUG
+#define POST_CODE(_Data)
+#else
+#ifdef EFI_DEBUG
 #define POST_CODE(_Data)    __asm mov eax,(_Data) __asm out 0x80,al
-    #else
-        #define POST_CODE(_Data)
-    #endif  
+#else
+#define POST_CODE(_Data)
+#endif
 #endif
 
 #define EFIERR(a)           (0x8000000000000000 | a)
 #define EFI_ERROR_MASK      0x8000000000000000
-#define EFIERR_OEM(a)       (0xc000000000000000 | a)      
-
+#define EFIERR_OEM(a)       (0xc000000000000000 | a)
 
 #define BAD_POINTER         0xFBFBFBFBFBFBFBFB
 #define MAX_ADDRESS         0xFFFFFFFFFFFFFFFF
 
 #ifdef EFI_NT_EMULATOR
-    #define BREAKPOINT()        __asm { int 3 }
+#define BREAKPOINT()        __asm { int 3 }
 #else
-    #define BREAKPOINT()        while (TRUE);    // Make it hang on Bios[Dbg]32
+#define BREAKPOINT()        while (TRUE);    // Make it hang on Bios[Dbg]32
 #endif
 
 //
@@ -157,7 +152,6 @@ typedef uint64_t   UINTN;
                 (UINTN)Adjustment = MIN_ALIGNMENT_SIZE - ((UINTN)Value % MIN_ALIGNMENT_SIZE); \
             Value = (UINTN)Value + (UINTN)Adjustment
 
-
 //
 // Define macros to build data structure signatures from characters.
 //
@@ -170,29 +164,28 @@ typedef uint64_t   UINTN;
 //
 
 #ifdef EFI_NT_EMULATOR
-    #define EXPORTAPI           __declspec( dllexport )
+#define EXPORTAPI           __declspec( dllexport )
 #else
-    #define EXPORTAPI
+#define EXPORTAPI
 #endif
-
 
 //
 // EFIAPI - prototype calling convention for EFI function pointers
 // BOOTSERVICE - prototype for implementation of a boot service interface
 // RUNTIMESERVICE - prototype for implementation of a runtime service interface
 // RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service
-// RUNTIME_CODE - pragma macro for declaring runtime code    
+// RUNTIME_CODE - pragma macro for declaring runtime code
 //
 
-#ifndef EFIAPI                  // Forces EFI calling conventions reguardless of compiler options 
-    #ifdef _MSC_EXTENSIONS
-        #define EFIAPI __cdecl  // Force C calling convention for Microsoft C compiler 
-    #elif defined(HAVE_USE_MS_ABI)
-        // Force amd64/ms calling conventions.
-        #define EFIAPI __attribute__((ms_abi))
-    #else
-        #define EFIAPI          // Substitute expresion to force C calling convention 
-    #endif
+#ifndef EFIAPI                  // Forces EFI calling conventions reguardless of compiler options
+#ifdef _MSC_EXTENSIONS
+#define EFIAPI __cdecl  // Force C calling convention for Microsoft C compiler
+#elif defined(HAVE_USE_MS_ABI)
+    // Force amd64/ms calling conventions.
+#define EFIAPI __attribute__((ms_abi))
+#else
+#define EFIAPI          // Substitute expresion to force C calling convention
+#endif
 #endif
 
 #define BOOTSERVICE
@@ -201,14 +194,13 @@ typedef uint64_t   UINTN;
 #define RUNTIMESERVICE
 #define RUNTIMEFUNCTION
 
-
 #define RUNTIME_CODE(a)         alloc_text("rtcode", a)
 #define BEGIN_RUNTIME_DATA()    data_seg("rtdata")
 #define END_RUNTIME_DATA()      data_seg("")
 
 #define VOLATILE    volatile
 
-#define MEMORY_FENCE()    
+#define MEMORY_FENCE()
 
 #ifdef EFI_NT_EMULATOR
 
@@ -241,11 +233,10 @@ typedef uint64_t   UINTN;
         return InitFunction(ImageHandle, SystemTable);       \
     }
 
+#define LOAD_INTERNAL_DRIVER(_if, type, name, entry)      \
+        (_if)->LoadInternal(type, name, NULL)
 
-    #define LOAD_INTERNAL_DRIVER(_if, type, name, entry)      \
-        (_if)->LoadInternal(type, name, NULL)             
-
-#else // EFI_NT_EMULATOR 
+#else // EFI_NT_EMULATOR
 
 //
 // When build similiar to FW, then link everything together as
@@ -253,10 +244,10 @@ typedef uint64_t   UINTN;
 // linker what our driver init function is using /ENTRY.
 //
 #if defined(_MSC_EXTENSIONS)
-    #define EFI_DRIVER_ENTRY_POINT(InitFunction) \
+#define EFI_DRIVER_ENTRY_POINT(InitFunction) \
         __pragma(comment(linker, "/ENTRY:" # InitFunction))
 #else
-    #define EFI_DRIVER_ENTRY_POINT(InitFunction)    \
+#define EFI_DRIVER_ENTRY_POINT(InitFunction)    \
         UINTN                                       \
         InitializeDriver (                          \
             VOID    *ImageHandle,                   \
@@ -274,7 +265,7 @@ typedef uint64_t   UINTN;
                     alias ("InitializeDriver")));
 #endif
 
-    #define LOAD_INTERNAL_DRIVER(_if, type, name, entry)    \
+#define LOAD_INTERNAL_DRIVER(_if, type, name, entry)    \
             (_if)->LoadInternal(type, name, entry)
 
 #endif // EFI_NT_EMULATOR
@@ -321,27 +312,27 @@ typedef uint64_t   UINTN;
   prefix ## nargs
 
 /* Prototypes of EFI cdecl -> stdcall trampolines */
-UINT64 efi_call0(void *func);
-UINT64 efi_call1(void *func, UINT64 arg1);
-UINT64 efi_call2(void *func, UINT64 arg1, UINT64 arg2);
-UINT64 efi_call3(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3);
-UINT64 efi_call4(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4);
-UINT64 efi_call5(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4, UINT64 arg5);
-UINT64 efi_call6(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4, UINT64 arg5, UINT64 arg6);
-UINT64 efi_call7(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7);
-UINT64 efi_call8(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
-                 UINT64 arg8);
-UINT64 efi_call9(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
-                 UINT64 arg8, UINT64 arg9);
-UINT64 efi_call10(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
-                  UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
-                  UINT64 arg8, UINT64 arg9, UINT64 arg10);
+UINT64 efi_call0(void* func);
+UINT64 efi_call1(void* func, UINT64 arg1);
+UINT64 efi_call2(void* func, UINT64 arg1, UINT64 arg2);
+UINT64 efi_call3(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3);
+UINT64 efi_call4(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4);
+UINT64 efi_call5(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5);
+UINT64 efi_call6(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5, UINT64 arg6);
+UINT64 efi_call7(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7);
+UINT64 efi_call8(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+    UINT64 arg8);
+UINT64 efi_call9(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+    UINT64 arg8, UINT64 arg9);
+UINT64 efi_call10(void* func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+    UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+    UINT64 arg8, UINT64 arg9, UINT64 arg10);
 
 /* Front-ends to efi_callX to avoid compiler warnings */
 #define _cast64_efi_call0(f) \
@@ -382,9 +373,9 @@ UINT64 efi_call10(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
 #endif
 
 #if defined(HAVE_USE_MS_ABI) && !defined(_MSC_EXTENSIONS)
-    #define EFI_FUNCTION __attribute__((ms_abi))
+#define EFI_FUNCTION __attribute__((ms_abi))
 #else
-    #define EFI_FUNCTION
+#define EFI_FUNCTION
 #endif
 
 #ifdef _MSC_EXTENSIONS

@@ -3,14 +3,12 @@
 Copyright (c) 1998  Intel Corporation
 
 Module Name:
-    
+
     sread.c
 
 Abstract:
 
     Simple read file access
-
-
 
 Revision History
 
@@ -19,32 +17,31 @@ Revision History
 #include "lib.h"
 
 #define SIMPLE_READ_SIGNATURE       EFI_SIGNATURE_32('s','r','d','r')
-typedef struct _SIMPLE_READ_FILE {
+typedef struct _SIMPLE_READ_FILE
+{
     UINTN               Signature;
     BOOLEAN             FreeBuffer;
-    VOID                *Source;
+    VOID* Source;
     UINTN               SourceSize;
     EFI_FILE_HANDLE     FileHandle;
 } SIMPLE_READ_HANDLE;
 
-       
-
 EFI_STATUS
-OpenSimpleReadFile (
+OpenSimpleReadFile(
     IN BOOLEAN                  BootPolicy,
-    IN VOID                     *SourceBuffer   OPTIONAL,
+    IN VOID* SourceBuffer   OPTIONAL,
     IN UINTN                    SourceSize,
-    IN OUT EFI_DEVICE_PATH      **FilePath,
-    OUT EFI_HANDLE              *DeviceHandle,
-    OUT SIMPLE_READ_FILE        *SimpleReadHandle
-    )
+    IN OUT EFI_DEVICE_PATH** FilePath,
+    OUT EFI_HANDLE* DeviceHandle,
+    OUT SIMPLE_READ_FILE* SimpleReadHandle
+)
 /*++
 
 Routine Description:
 
     Opens a file for (simple) reading.  The simple read abstraction
     will access the file either from a memory copy, from a file
-    system interface, or from the load file interface. 
+    system interface, or from the load file interface.
 
 Arguments:
 
@@ -54,15 +51,15 @@ Returns:
 
 --*/
 {
-    SIMPLE_READ_HANDLE          *FHand;
-    EFI_DEVICE_PATH             *UserFilePath;
-    EFI_DEVICE_PATH             *TempFilePath;
-    EFI_DEVICE_PATH             *TempFilePathPtr;
-    FILEPATH_DEVICE_PATH        *FilePathNode;
+    SIMPLE_READ_HANDLE* FHand;
+    EFI_DEVICE_PATH* UserFilePath;
+    EFI_DEVICE_PATH* TempFilePath;
+    EFI_DEVICE_PATH* TempFilePathPtr;
+    FILEPATH_DEVICE_PATH* FilePathNode;
     EFI_FILE_HANDLE             FileHandle, LastHandle;
     EFI_STATUS                  Status;
-    EFI_LOAD_FILE_INTERFACE     *LoadFile;
-  
+    EFI_LOAD_FILE_INTERFACE* LoadFile;
+
     FHand = NULL;
     UserFilePath = *FilePath;
 
@@ -70,26 +67,28 @@ Returns:
     // Allocate a new simple read handle structure
     //
 
-    FHand = AllocateZeroPool (sizeof(SIMPLE_READ_HANDLE));
-    if (!FHand) {
+    FHand = AllocateZeroPool(sizeof(SIMPLE_READ_HANDLE));
+    if (!FHand)
+    {
         Status = EFI_OUT_OF_RESOURCES;
         goto Done;
     }
 
-    *SimpleReadHandle = (SIMPLE_READ_FILE) FHand;
+    *SimpleReadHandle = (SIMPLE_READ_FILE)FHand;
     FHand->Signature = SIMPLE_READ_SIGNATURE;
 
     //
     // If the caller passed a copy of the file, then just use it
     //
 
-    if (SourceBuffer) {
+    if (SourceBuffer)
+    {
         FHand->Source = SourceBuffer;
         FHand->SourceSize = SourceSize;
         *DeviceHandle = NULL;
         Status = EFI_SUCCESS;
         goto Done;
-    } 
+    }
 
     //
     // Attempt to access the file via a file system interface
@@ -97,8 +96,9 @@ Returns:
 
     FileHandle = NULL;
     Status = uefi_call_wrapper(BS->LocateDevicePath, 3, &FileSystemProtocol, FilePath, DeviceHandle);
-    if (!EFI_ERROR(Status)) {
-        FileHandle = LibOpenRoot (*DeviceHandle);
+    if (!EFI_ERROR(Status))
+    {
+        FileHandle = LibOpenRoot(*DeviceHandle);
     }
 
     Status = FileHandle ? EFI_SUCCESS : EFI_UNSUPPORTED;
@@ -109,15 +109,16 @@ Returns:
     // and find the target file
     //
 
-    FilePathNode = (FILEPATH_DEVICE_PATH *) *FilePath;
-    while (!IsDevicePathEnd(&FilePathNode->Header)) {
-
+    FilePathNode = (FILEPATH_DEVICE_PATH*)*FilePath;
+    while (!IsDevicePathEnd(&FilePathNode->Header))
+    {
         //
         // For filesystem access each node should be a filepath component
         //
 
         if (DevicePathType(&FilePathNode->Header) != MEDIA_DEVICE_PATH ||
-            DevicePathSubType(&FilePathNode->Header) != MEDIA_FILEPATH_DP) {
+            DevicePathSubType(&FilePathNode->Header) != MEDIA_FILEPATH_DP)
+        {
             Status = EFI_UNSUPPORTED;
         }
 
@@ -125,10 +126,11 @@ Returns:
         // If there's been an error, stop
         //
 
-        if (EFI_ERROR(Status)) {
+        if (EFI_ERROR(Status))
+        {
             break;
         }
-        
+
         //
         // Open this file path node
         //
@@ -137,33 +139,34 @@ Returns:
         FileHandle = NULL;
 
         Status = uefi_call_wrapper(
-			LastHandle->Open,
-			5, 
-                        LastHandle,
-                        &FileHandle,
-                        FilePathNode->PathName,
-                        EFI_FILE_MODE_READ,
-                        0
-                        );
-        
+            LastHandle->Open,
+            5,
+            LastHandle,
+            &FileHandle,
+            FilePathNode->PathName,
+            EFI_FILE_MODE_READ,
+            0
+        );
+
         //
         // Close the last node
         //
-        
+
         uefi_call_wrapper(LastHandle->Close, 1, LastHandle);
 
         //
         // Get the next node
         //
 
-        FilePathNode = (FILEPATH_DEVICE_PATH *) NextDevicePathNode(&FilePathNode->Header);
+        FilePathNode = (FILEPATH_DEVICE_PATH*)NextDevicePathNode(&FilePathNode->Header);
     }
 
     //
     // If success, return the FHand
     //
 
-    if (!EFI_ERROR(Status)) {
+    if (!EFI_ERROR(Status))
+    {
         ASSERT(FileHandle);
         FHand->FileHandle = FileHandle;
         goto Done;
@@ -173,7 +176,8 @@ Returns:
     // Cleanup from filesystem access
     //
 
-    if (FileHandle) {
+    if (FileHandle)
+    {
         uefi_call_wrapper(FileHandle->Close, 1, FileHandle);
         FileHandle = NULL;
         *FilePath = UserFilePath;
@@ -183,7 +187,8 @@ Returns:
     // If the error is something other then unsupported, return it
     //
 
-    if (Status != EFI_UNSUPPORTED) {
+    if (Status != EFI_UNSUPPORTED)
+    {
         goto Done;
     }
 
@@ -191,16 +196,16 @@ Returns:
     // Attempt to access the file via the load file protocol
     //
 
-    Status = LibDevicePathToInterface (&LoadFileProtocol, *FilePath, (VOID*)&LoadFile);
-    if (!EFI_ERROR(Status)) {
-
-        TempFilePath = DuplicateDevicePath (*FilePath);
+    Status = LibDevicePathToInterface(&LoadFileProtocol, *FilePath, (VOID*)&LoadFile);
+    if (!EFI_ERROR(Status))
+    {
+        TempFilePath = DuplicateDevicePath(*FilePath);
 
         TempFilePathPtr = TempFilePath;
 
         Status = uefi_call_wrapper(BS->LocateDevicePath, 3, &LoadFileProtocol, &TempFilePath, DeviceHandle);
 
-        FreePool (TempFilePathPtr);
+        FreePool(TempFilePathPtr);
 
         //
         // Determine the size of buffer needed to hold the file
@@ -208,37 +213,39 @@ Returns:
 
         SourceSize = 0;
         Status = uefi_call_wrapper(
-		    LoadFile->LoadFile,
-			5,
-                    LoadFile,
-                    *FilePath,
-                    BootPolicy,
-                    &SourceSize,
-                    NULL
-                    );
+            LoadFile->LoadFile,
+            5,
+            LoadFile,
+            *FilePath,
+            BootPolicy,
+            &SourceSize,
+            NULL
+        );
 
         //
-        // We expect a buffer too small error to inform us 
+        // We expect a buffer too small error to inform us
         // of the buffer size needed
         //
 
-        if (Status == EFI_BUFFER_TOO_SMALL) {
-            SourceBuffer = AllocatePool (SourceSize);
-            
-            if (SourceBuffer) {
+        if (Status == EFI_BUFFER_TOO_SMALL)
+        {
+            SourceBuffer = AllocatePool(SourceSize);
+
+            if (SourceBuffer)
+            {
                 FHand->FreeBuffer = TRUE;
                 FHand->Source = SourceBuffer;
                 FHand->SourceSize = SourceSize;
 
                 Status = uefi_call_wrapper(
-			    LoadFile->LoadFile,
-				5,
-                            LoadFile,
-                            *FilePath,
-                            BootPolicy,
-                            &SourceSize,
-                            SourceBuffer
-                            );  
+                    LoadFile->LoadFile,
+                    5,
+                    LoadFile,
+                    *FilePath,
+                    BootPolicy,
+                    &SourceSize,
+                    SourceBuffer
+                );
             }
         }
 
@@ -246,7 +253,8 @@ Returns:
         // If success, return FHand
         //
 
-        if (!EFI_ERROR(Status) || Status == EFI_ALREADY_STARTED) {
+        if (!EFI_ERROR(Status) || Status == EFI_ALREADY_STARTED)
+        {
             goto Done;
         }
     }
@@ -255,7 +263,7 @@ Returns:
     // Nothing else to try
     //
 
-    DEBUG ((D_LOAD|D_WARN, "OpenSimpleReadFile: Device did not support a known load protocol\n"));
+    DEBUG((D_LOAD | D_WARN, "OpenSimpleReadFile: Device did not support a known load protocol\n"));
     Status = EFI_UNSUPPORTED;
 
 Done:
@@ -263,13 +271,16 @@ Done:
     //
     // If the file was not accessed, clean up
     //
-    if (EFI_ERROR(Status) && (Status != EFI_ALREADY_STARTED)) {
-        if (FHand) {
-            if (FHand->FreeBuffer) {
-                FreePool (FHand->Source);
+    if (EFI_ERROR(Status) && (Status != EFI_ALREADY_STARTED))
+    {
+        if (FHand)
+        {
+            if (FHand->FreeBuffer)
+            {
+                FreePool(FHand->Source);
             }
 
-            FreePool (FHand);
+            FreePool(FHand);
         }
     }
 
@@ -277,45 +288,48 @@ Done:
 }
 
 EFI_STATUS
-ReadSimpleReadFile (
+ReadSimpleReadFile(
     IN SIMPLE_READ_FILE     UserHandle,
     IN UINTN                Offset,
-    IN OUT UINTN            *ReadSize,
-    OUT VOID                *Buffer
-    )
+    IN OUT UINTN* ReadSize,
+    OUT VOID* Buffer
+)
 {
     UINTN                   EndPos;
-    SIMPLE_READ_HANDLE      *FHand;
+    SIMPLE_READ_HANDLE* FHand;
     EFI_STATUS              Status;
 
     FHand = UserHandle;
-    ASSERT (FHand->Signature == SIMPLE_READ_SIGNATURE);
-    if (FHand->Source) {
-
+    ASSERT(FHand->Signature == SIMPLE_READ_SIGNATURE);
+    if (FHand->Source)
+    {
         //
         // Move data from our local copy of the file
         //
 
         EndPos = Offset + *ReadSize;
-        if (EndPos > FHand->SourceSize) {
+        if (EndPos > FHand->SourceSize)
+        {
             *ReadSize = FHand->SourceSize - Offset;
-            if (Offset >= FHand->SourceSize) {
+            if (Offset >= FHand->SourceSize)
+            {
                 *ReadSize = 0;
             }
         }
 
-        CopyMem (Buffer, (CHAR8 *) FHand->Source + Offset, *ReadSize);
+        CopyMem(Buffer, (CHAR8*)FHand->Source + Offset, *ReadSize);
         Status = EFI_SUCCESS;
-
-    } else {
-
+    }
+    else
+    {
         //
         // Read data from the file
         //
 
         Status = uefi_call_wrapper(FHand->FileHandle->SetPosition, 2, FHand->FileHandle, Offset);
 
-        if (!EFI_ERROR(Status)) {
+        if (!EFI_ERROR(Status))
+        {
             Status = uefi_call_wrapper(FHand->FileHandle->Read, 3, FHand->FileHandle, ReadSize, Buffer);
         }
     }
@@ -323,22 +337,22 @@ ReadSimpleReadFile (
     return Status;
 }
 
-
 VOID
-CloseSimpleReadFile (
+CloseSimpleReadFile(
     IN SIMPLE_READ_FILE     UserHandle
-    )
+)
 {
-    SIMPLE_READ_HANDLE      *FHand;
+    SIMPLE_READ_HANDLE* FHand;
 
     FHand = UserHandle;
-    ASSERT (FHand->Signature == SIMPLE_READ_SIGNATURE);
+    ASSERT(FHand->Signature == SIMPLE_READ_SIGNATURE);
 
     //
     // Free any file handle we opened
     //
 
-    if (FHand->FileHandle) {
+    if (FHand->FileHandle)
+    {
         uefi_call_wrapper(FHand->FileHandle->Close, 1, FHand->FileHandle);
     }
 
@@ -346,13 +360,14 @@ CloseSimpleReadFile (
     // If we allocated the Source buffer, free it
     //
 
-    if (FHand->FreeBuffer) {
-        FreePool (FHand->Source);
+    if (FHand->FreeBuffer)
+    {
+        FreePool(FHand->Source);
     }
 
     //
     // Done with this simple read file handle
     //
 
-    FreePool (FHand);
+    FreePool(FHand);
 }

@@ -25,13 +25,13 @@ static const unsigned char OP2_MODRM[] = { 0x0D, 0xA3, 0xA4, 0xA5, 0xAB, 0xAC, 0
  */
 static int FindByte(const unsigned char* buffer, const unsigned long long maxLength, const unsigned char value)
 {
-	for (unsigned long long i = 0; i < maxLength; i++)
-	{
-		if (buffer[i] == value)
-			return 1;
-	}
+    for (unsigned long long i = 0; i < maxLength; i++)
+    {
+        if (buffer[i] == value)
+            return 1;
+    }
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -41,23 +41,23 @@ static int FindByte(const unsigned char* buffer, const unsigned long long maxLen
  */
 static void ParseModRM(unsigned char** buffer, const int addressPrefix)
 {
-	const unsigned char modRm = *++ * buffer;
+    const unsigned char modRm = *++ * buffer;
 
-	if (!addressPrefix || (addressPrefix && **buffer >= 0x40))
-	{
-		int hasSib = 0;
-		if (**buffer < 0xC0 && (**buffer & 0b111) == 0b100 && !addressPrefix)
-			hasSib = 1, (*buffer)++;
+    if (!addressPrefix || (addressPrefix && **buffer >= 0x40))
+    {
+        int hasSib = 0;
+        if (**buffer < 0xC0 && (**buffer & 0b111) == 0b100 && !addressPrefix)
+            hasSib = 1, (*buffer)++;
 
-		if (modRm >= 0x40 && modRm <= 0x7F)
-			(*buffer)++;
-		else if ((modRm <= 0x3F && (modRm & 0b111) == 0b101) || (modRm >= 0x80 && modRm <= 0xBF))
-			*buffer += (addressPrefix) ? 2 : 4;
-		else if (hasSib && (**buffer & 0b111) == 0b101)
-			*buffer += (modRm & 0b01000000) ? 1 : 4;
-	}
-	else if (addressPrefix && modRm == 0x26)
-		*buffer += 2;
+        if (modRm >= 0x40 && modRm <= 0x7F)
+            (*buffer)++;
+        else if ((modRm <= 0x3F && (modRm & 0b111) == 0b101) || (modRm >= 0x80 && modRm <= 0xBF))
+            *buffer += (addressPrefix) ? 2 : 4;
+        else if (hasSib && (**buffer & 0b111) == 0b101)
+            *buffer += (modRm & 0b01000000) ? 1 : 4;
+    }
+    else if (addressPrefix && modRm == 0x26)
+        *buffer += 2;
 }
 
 /**
@@ -67,66 +67,66 @@ static void ParseModRM(unsigned char** buffer, const int addressPrefix)
  */
 static int GetInstructionSize(const void* address)
 {
-	/*
-	 * Based on length-disassembler by @Nomade040
-	 * https://github.com/Nomade040/length-disassembler
-	 */
+    /*
+     * Based on length-disassembler by @Nomade040
+     * https://github.com/Nomade040/length-disassembler
+     */
 
-	unsigned long long offset = 0;
-	int operandPrefix = 0, addressPrefix = 0, rexW = 0;
-	unsigned char* b = (unsigned char*)address;
+    unsigned long long offset = 0;
+    int operandPrefix = 0, addressPrefix = 0, rexW = 0;
+    unsigned char* b = (unsigned char*)address;
 
-	for (int i = 0; i < 14 && FindByte(PREFIXES, sizeof(PREFIXES), *b) || HOOK_R == 4; i++, b++)
-	{
-		if (*b == 0x66)
-			operandPrefix = 1;
-		else if (*b == 0x67)
-			addressPrefix = 1;
-		else if (HOOK_R == 4 && HOOK_C >= 8)
-			rexW = 1;
-	}
+    for (int i = 0; i < 14 && FindByte(PREFIXES, sizeof(PREFIXES), *b) || HOOK_R == 4; i++, b++)
+    {
+        if (*b == 0x66)
+            operandPrefix = 1;
+        else if (*b == 0x67)
+            addressPrefix = 1;
+        else if (HOOK_R == 4 && HOOK_C >= 8)
+            rexW = 1;
+    }
 
-	if (*b == 0x0F)
-	{
-		b++;
-		if (*b == 0x38 || *b == 0x3A)
-		{
-			if (*b++ == 0x3A)
-				offset++;
+    if (*b == 0x0F)
+    {
+        b++;
+        if (*b == 0x38 || *b == 0x3A)
+        {
+            if (*b++ == 0x3A)
+                offset++;
 
-			ParseModRM(&b, addressPrefix);
-		}
-		else
-		{
-			if (HOOK_R == 8)
-				offset += 4;
-			else if ((HOOK_R == 7 && HOOK_C < 4) || *b == 0xA4 || *b == 0xC2 || (*b > 0xC3 && *b <= 0xC6) || *b == 0xBA || *b == 0xAC)
-				offset++;
+            ParseModRM(&b, addressPrefix);
+        }
+        else
+        {
+            if (HOOK_R == 8)
+                offset += 4;
+            else if ((HOOK_R == 7 && HOOK_C < 4) || *b == 0xA4 || *b == 0xC2 || (*b > 0xC3 && *b <= 0xC6) || *b == 0xBA || *b == 0xAC)
+                offset++;
 
-			if (FindByte(OP2_MODRM, sizeof(OP2_MODRM), *b) || (HOOK_R != 3 && HOOK_R > 0 && HOOK_R < 7) || *b >= 0xD0 || (HOOK_R == 7 && HOOK_C != 7) || HOOK_R == 9 || HOOK_R == 0xB || (HOOK_R == 0xC && HOOK_C < 8) || (HOOK_R == 0 && HOOK_C < 4))
-				ParseModRM(&b, addressPrefix);
-		}
-	}
-	else
-	{
-		if ((HOOK_R == 0xE && HOOK_C < 8) || (HOOK_R == 0xB && HOOK_C < 8) || HOOK_R == 7 || (HOOK_R < 4 && (HOOK_C == 4 || HOOK_C == 0xC)) || (*b == 0xF6 && !(*(b + 1) & 48)) || FindByte(OP1_IMM8, sizeof(OP1_IMM8), *b))
-			offset++;
-		else if (*b == 0xC2 || *b == 0xCA)
-			offset += 2;
-		else if (*b == 0xC8)
-			offset += 3;
-		else if ((HOOK_R < 4 && (HOOK_C == 5 || HOOK_C == 0xD)) || (HOOK_R == 0xB && HOOK_C >= 8) || (*b == 0xF7 && !(*(b + 1) & 48)) || FindByte(OP1_IMM32, sizeof(OP1_IMM32), *b))
-			offset += (rexW) ? 8 : (operandPrefix ? 2 : 4);
-		else if (HOOK_R == 0xA && HOOK_C < 4)
-			offset += (rexW) ? 8 : (addressPrefix ? 2 : 4);
-		else if (*b == 0xEA || *b == 0x9A)
-			offset += operandPrefix ? 4 : 6;
+            if (FindByte(OP2_MODRM, sizeof(OP2_MODRM), *b) || (HOOK_R != 3 && HOOK_R > 0 && HOOK_R < 7) || *b >= 0xD0 || (HOOK_R == 7 && HOOK_C != 7) || HOOK_R == 9 || HOOK_R == 0xB || (HOOK_R == 0xC && HOOK_C < 8) || (HOOK_R == 0 && HOOK_C < 4))
+                ParseModRM(&b, addressPrefix);
+        }
+    }
+    else
+    {
+        if ((HOOK_R == 0xE && HOOK_C < 8) || (HOOK_R == 0xB && HOOK_C < 8) || HOOK_R == 7 || (HOOK_R < 4 && (HOOK_C == 4 || HOOK_C == 0xC)) || (*b == 0xF6 && !(*(b + 1) & 48)) || FindByte(OP1_IMM8, sizeof(OP1_IMM8), *b))
+            offset++;
+        else if (*b == 0xC2 || *b == 0xCA)
+            offset += 2;
+        else if (*b == 0xC8)
+            offset += 3;
+        else if ((HOOK_R < 4 && (HOOK_C == 5 || HOOK_C == 0xD)) || (HOOK_R == 0xB && HOOK_C >= 8) || (*b == 0xF7 && !(*(b + 1) & 48)) || FindByte(OP1_IMM32, sizeof(OP1_IMM32), *b))
+            offset += (rexW) ? 8 : (operandPrefix ? 2 : 4);
+        else if (HOOK_R == 0xA && HOOK_C < 4)
+            offset += (rexW) ? 8 : (addressPrefix ? 2 : 4);
+        else if (*b == 0xEA || *b == 0x9A)
+            offset += operandPrefix ? 4 : 6;
 
-		if (FindByte(OP1_MODRM, sizeof(OP1_MODRM), *b) || (HOOK_R < 4 && (HOOK_C < 4 || (HOOK_C >= 8 && HOOK_C < 0xC))) || HOOK_R == 8 || (HOOK_R == 0xD && HOOK_C >= 8))
-			ParseModRM(&b, addressPrefix);
-	}
+        if (FindByte(OP1_MODRM, sizeof(OP1_MODRM), *b) || (HOOK_R < 4 && (HOOK_C < 4 || (HOOK_C >= 8 && HOOK_C < 0xC))) || HOOK_R == 8 || (HOOK_R == 0xD && HOOK_C >= 8))
+            ParseModRM(&b, addressPrefix);
+    }
 
-	return (int)(++b + offset - (unsigned char*)address);
+    return (int)(++b + offset - (unsigned char*)address);
 }
 
 /**
@@ -135,25 +135,25 @@ static int GetInstructionSize(const void* address)
  * \param source Source address to copy data from
  * \param size Amount of bytes to copy
  */
-static void LHCopyMemory (void* destination, void* source, unsigned long long size)
+static void MemoryCopy(void* destination, void* source, unsigned long long size)
 {
-	unsigned char* dst = (unsigned char*)destination;
-	unsigned char* src = (unsigned char*)source;
-	for (unsigned long long i = 0; i < size; i++)
-		dst[i] = src[i];
+    unsigned char* dst = (unsigned char*)destination;
+    unsigned char* src = (unsigned char*)source;
+    for (unsigned long long i = 0; i < size; i++)
+        dst[i] = src[i];
 }
 
 typedef struct _HookInformation
 {
-	int Enabled;
-	int BytesToCopy;
-	unsigned char OriginalBuffer[32];
-	void* OriginalFunction;
-	void* TargetFunction;
-	void* Trampoline;
+    int Enabled;
+    int BytesToCopy;
+    unsigned char OriginalBuffer[32];
+    void* OriginalFunction;
+    void* TargetFunction;
+    void* Trampoline;
 } HookInformation;
 
-static const unsigned char JUMP_CODE[] = { 0x49, 0xBB, 0xED, 0xEE, 0xEF, 0xED, 0xEF, 0xBE, 0xAD, 0xDE, 0x41, 0xFF, 0xE3 };
+static const unsigned char JUMP_CODE[] = { 0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 /**
  * \brief Prepare hook information structure and backup original function bytes that will be used for the trampoline
@@ -163,20 +163,20 @@ static const unsigned char JUMP_CODE[] = { 0x49, 0xBB, 0xED, 0xEE, 0xEF, 0xED, 0
  */
 static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 {
-	HookInformation information;
-	information.Enabled = 0;
-	information.Trampoline = 0;
-	information.OriginalFunction = originalFunction;
-	information.TargetFunction = targetFunction;
+    HookInformation information;
+    information.Enabled = 0;
+    information.Trampoline = 0;
+    information.OriginalFunction = originalFunction;
+    information.TargetFunction = targetFunction;
 
-	int size = 0;
-	while (size < sizeof(JUMP_CODE))
-		size += GetInstructionSize((unsigned char*)originalFunction + size);
+    int size = 0;
+    while (size < sizeof(JUMP_CODE))
+        size += GetInstructionSize((unsigned char*)originalFunction + size);
 
-	information.BytesToCopy = size;
-	LHCopyMemory (information.OriginalBuffer, originalFunction, size);
+    information.BytesToCopy = size;
+    MemoryCopy(information.OriginalBuffer, originalFunction, size);
 
-	return information;
+    return information;
 }
 
 #ifdef _WIN64
@@ -189,7 +189,7 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #define WIN32_NO_STATUS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#undef LHCopyMemory 
+#undef LHCopyMemory
 #endif
 #endif
 #ifdef __linux__
@@ -211,25 +211,25 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 static void* PlatformAllocate(const unsigned long long size)
 {
 #ifdef _EFI
-	const unsigned long long numberOfPages = 1 + size / 1024;
-	EFI_PHYSICAL_ADDRESS physicalAddress;
-	gBS->AllocatePages(AllocateAnyPages, EfiRuntimeServicesCode, numberOfPages, &physicalAddress);
-	return (void*)physicalAddress;
+    const unsigned long long numberOfPages = 1 + size / 1024;
+    EFI_PHYSICAL_ADDRESS physicalAddress;
+    gBS->AllocatePages(AllocateAnyPages, EfiRuntimeServicesCode, numberOfPages, &physicalAddress);
+    return (void*)physicalAddress;
 #endif
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
 #ifndef _EFI
-	return ExAllocatePool(NonPagedPoolExecute, size);
+    return ExAllocatePool(NonPagedPoolExecute, size);
 #endif
 #else
-	return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    return VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 #endif
 #else
 #ifdef __linux__
-	return mmap(0, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+    return mmap(0, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
 #endif
-	(void)size;
-	return 0;
+    (void)size;
+    return 0;
 #endif
 }
 
@@ -241,21 +241,21 @@ static void* PlatformAllocate(const unsigned long long size)
 static void PlatformFree(void* address, const unsigned long long size)
 {
 #ifdef _EFI
-	const unsigned long long numberOfPages = 1 + size / 1024;
-	gBS->FreePages((EFI_PHYSICAL_ADDRESS)address, numberOfPages);
-	return;
+    const unsigned long long numberOfPages = 1 + size / 1024;
+    gBS->FreePages((EFI_PHYSICAL_ADDRESS)address, numberOfPages);
+    return;
 #endif
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
 #ifndef _EFI
-	(void)size;
-	ExFreePool(address);
+    (void)size;
+    ExFreePool(address);
 #endif
 #else
-	VirtualFree(address, size, MEM_RELEASE);
+    VirtualFree(address, size, MEM_RELEASE);
 #endif
 #ifdef __linux__
-	munmap(address, size);
+    munmap(address, size);
 #endif
 #endif
 }
@@ -273,56 +273,56 @@ static unsigned long long PlatformProtect(void* address, unsigned long long size
 {
 #ifdef _WIN64
 #ifdef _KERNEL_MODE
-	(void)size;
-	(void)address;
-	if (protection == PROTECTION_READ_WRITE_EXECUTE)
-	{
-		_disable();
+    (void)size;
+    (void)address;
+    if (protection == PROTECTION_READ_WRITE_EXECUTE)
+    {
+        _disable();
 
-		unsigned long long cr0 = __readcr0();
-		unsigned long long originalCr0 = cr0;
-		cr0 &= ~(1UL << 16);
-		__writecr0(cr0);
+        unsigned long long cr0 = __readcr0();
+        unsigned long long originalCr0 = cr0;
+        cr0 &= ~(1UL << 16);
+        __writecr0(cr0);
 
-		return originalCr0;
-	}
-	else
-	{
-		__writecr0(protection);
-		_enable();
-		return 0;
-	}
+        return originalCr0;
+    }
+    else
+    {
+        __writecr0(protection);
+        _enable();
+        return 0;
+    }
 #else
-	if (protection == PROTECTION_READ_WRITE_EXECUTE)
-		protection = PAGE_EXECUTE_READWRITE;
+    if (protection == PROTECTION_READ_WRITE_EXECUTE)
+        protection = PAGE_EXECUTE_READWRITE;
 
-	unsigned long original;
-	VirtualProtect(address, size, (unsigned long)protection, &original);
-	return original;
+    unsigned long original;
+    VirtualProtect(address, size, (unsigned long)protection, &original);
+    return original;
 #endif
 #endif
 #ifdef __linux__
-	(void)size;
-	if (protection == PROTECTION_READ_WRITE_EXECUTE)
-		protection = PROT_READ | PROT_WRITE | PROT_EXEC;
-	else
-		protection = PROT_READ | PROT_EXEC; // unfortunately no way to read the original without parsing /proc/self/maps
+    (void)size;
+    if (protection == PROTECTION_READ_WRITE_EXECUTE)
+        protection = PROT_READ | PROT_WRITE | PROT_EXEC;
+    else
+        protection = PROT_READ | PROT_EXEC; // unfortunately no way to read the original without parsing /proc/self/maps
 
-	int pageSize = getpagesize();
-	unsigned long long pageOffset = (unsigned long long)address % pageSize;
-	address -= pageOffset;
+    int pageSize = getpagesize();
+    unsigned long long pageOffset = (unsigned long long)address % pageSize;
+    address -= pageOffset;
 
-	int status = mprotect(address, pageSize, protection);
-	assert(status == 0);
+    int status = mprotect(address, pageSize, protection);
+    assert(status == 0);
 
-	return protection;
+    return protection;
 #endif
 }
 
 #define CREATE_JUMP(name, targetAddress) \
 	unsigned char name[sizeof(JUMP_CODE)]; \
-	LHCopyMemory (name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
-	*(unsigned long long*)((unsigned long long)name + 2) = (unsigned long long)targetAddress
+	MemoryCopy(name, (unsigned char*)JUMP_CODE, sizeof(JUMP_CODE)); \
+	*(unsigned long long*)((unsigned long long)name + 6) = (unsigned long long)targetAddress
 
 /**
  * \brief Actually perform the trampoline hook
@@ -331,27 +331,27 @@ static unsigned long long PlatformProtect(void* address, unsigned long long size
  */
 static int EnableHook(HookInformation* information)
 {
-	if (information->Enabled)
-		return 1;
+    if (information->Enabled)
+        return 1;
 
-	const int bufferSize = sizeof(JUMP_CODE) + information->BytesToCopy;
-	unsigned char* buffer = (unsigned char*)PlatformAllocate(bufferSize);
-	if (!buffer)
-		return 0;
+    const int bufferSize = sizeof(JUMP_CODE) + information->BytesToCopy;
+    unsigned char* buffer = (unsigned char*)PlatformAllocate(bufferSize);
+    if (!buffer)
+        return 0;
 
-	information->Trampoline = buffer;
-	LHCopyMemory (buffer, information->OriginalBuffer, information->BytesToCopy);
+    information->Trampoline = buffer;
+    MemoryCopy(buffer, information->OriginalBuffer, information->BytesToCopy);
 
-	CREATE_JUMP(originalJump, information->OriginalFunction + information->BytesToCopy);
-	LHCopyMemory (buffer + information->BytesToCopy, originalJump, sizeof(JUMP_CODE));
+    CREATE_JUMP(originalJump, information->OriginalFunction + information->BytesToCopy);
+    MemoryCopy(buffer + information->BytesToCopy, originalJump, sizeof(JUMP_CODE));
 
-	CREATE_JUMP(targetJump, information->TargetFunction);
-	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
-	LHCopyMemory (information->OriginalFunction, targetJump, sizeof(JUMP_CODE));
-	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
+    CREATE_JUMP(targetJump, information->TargetFunction);
+    unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
+    MemoryCopy(information->OriginalFunction, targetJump, sizeof(JUMP_CODE));
+    PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
-	information->Enabled = 1;
-	return 1;
+    information->Enabled = 1;
+    return 1;
 }
 
 /**
@@ -361,17 +361,17 @@ static int EnableHook(HookInformation* information)
  */
 static int DisableHook(HookInformation* information)
 {
-	if (!information->Enabled)
-		return 1;
+    if (!information->Enabled)
+        return 1;
 
-	unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
-	LHCopyMemory (information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
-	PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
+    unsigned long long originalProtection = PlatformProtect(information->OriginalFunction, information->BytesToCopy, PROTECTION_READ_WRITE_EXECUTE);
+    MemoryCopy(information->OriginalFunction, information->OriginalBuffer, information->BytesToCopy);
+    PlatformProtect(information->OriginalFunction, information->BytesToCopy, originalProtection);
 
-	PlatformFree(information->Trampoline, sizeof(JUMP_CODE) + information->BytesToCopy);
+    PlatformFree(information->Trampoline, sizeof(JUMP_CODE) + information->BytesToCopy);
 
-	information->Enabled = 0;
-	return 1;
+    information->Enabled = 0;
+    return 1;
 }
 
 #endif

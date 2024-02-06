@@ -8,12 +8,9 @@ Copyright (c) 1999  Intel Corporation
 Module Name:
 
     pci22.h
-    
-Abstract:      
+
+Abstract:
     Support for PCI 2.2 standard.
-
-
-
 
 Revision History
 
@@ -34,7 +31,8 @@ Revision History
 #define PCI_VGA_PALETTE_SNOOP_DISABLED   0x20
 
 #pragma pack(1)
-typedef struct {
+typedef struct
+{
     UINT16      VendorId;
     UINT16      DeviceId;
     UINT16      Command;
@@ -47,7 +45,8 @@ typedef struct {
     UINT8       BIST;
 } PCI_DEVICE_INDEPENDENT_REGION;
 
-typedef struct {
+typedef struct
+{
     UINT32      Bar[6];
     UINT32      CISPtr;
     UINT16      SubsystemVendorID;
@@ -57,15 +56,17 @@ typedef struct {
     UINT8       InterruptLine;
     UINT8       InterruptPin;
     UINT8       MinGnt;
-    UINT8       MaxLat;     
+    UINT8       MaxLat;
 } PCI_DEVICE_HEADER_TYPE_REGION;
 
-typedef struct {
+typedef struct
+{
     PCI_DEVICE_INDEPENDENT_REGION   Hdr;
     PCI_DEVICE_HEADER_TYPE_REGION   Device;
 } PCI_TYPE00;
 
-typedef struct {              
+typedef struct
+{
     UINT32      Bar[2];
     UINT8       PrimaryBus;
     UINT8       SecondaryBus;
@@ -96,23 +97,25 @@ typedef struct {
 #define PCI_CLASS_ISA                   0x01
 #define PCI_CLASS_ISA_POSITIVE_DECODE   0x80
 
-#define PCI_CLASS_NETWORK               0x02 
+#define PCI_CLASS_NETWORK               0x02
 #define PCI_CLASS_ETHERNET              0x00
-        
+
 #define HEADER_TYPE_DEVICE              0x00
 #define HEADER_TYPE_PCI_TO_PCI_BRIDGE   0x01
 #define HEADER_TYPE_MULTI_FUNCTION      0x80
 #define HEADER_LAYOUT_CODE              0x7f
 
-#define IS_PCI_BRIDGE(_p) ((((_p)->Hdr.HeaderType) & HEADER_LAYOUT_CODE) == HEADER_TYPE_PCI_TO_PCI_BRIDGE)        
-#define IS_PCI_MULTI_FUNC(_p)   (((_p)->Hdr.HeaderType) & HEADER_TYPE_MULTI_FUNCTION)         
+#define IS_PCI_BRIDGE(_p) ((((_p)->Hdr.HeaderType) & HEADER_LAYOUT_CODE) == HEADER_TYPE_PCI_TO_PCI_BRIDGE)
+#define IS_PCI_MULTI_FUNC(_p)   (((_p)->Hdr.HeaderType) & HEADER_TYPE_MULTI_FUNCTION)
 
-typedef struct {
+typedef struct
+{
     PCI_DEVICE_INDEPENDENT_REGION   Hdr;
     PCI_BRIDGE_CONTROL_REGISTER     Bridge;
 } PCI_TYPE01;
 
-typedef struct {
+typedef struct
+{
     UINT8   Register;
     UINT8   Function;
     UINT8   Device;
@@ -120,44 +123,46 @@ typedef struct {
     UINT8   Reserved[4];
 } DEFIO_PCI_ADDR;
 
-typedef struct {
-    UINT32  Reg     : 8;
-    UINT32  Func    : 3;
-    UINT32  Dev     : 5;
-    UINT32  Bus     : 8;
-    UINT32  Reserved: 7;
-    UINT32  Enable  : 1;
+typedef struct
+{
+    UINT32  Reg : 8;
+    UINT32  Func : 3;
+    UINT32  Dev : 5;
+    UINT32  Bus : 8;
+    UINT32  Reserved : 7;
+    UINT32  Enable : 1;
 } PCI_CONFIG_ACCESS_CF8;
 
 #pragma pack()
 
 #define EFI_ROOT_BRIDGE_LIST    'eprb'
-typedef struct {
+typedef struct
+{
     UINTN           Signature;
 
     UINT16          BridgeNumber;
     UINT16          PrimaryBus;
     UINT16          SubordinateBus;
 
-    EFI_DEVICE_PATH *DevicePath;
+    EFI_DEVICE_PATH* DevicePath;
 
     LIST_ENTRY      Link;
 } PCI_ROOT_BRIDGE_ENTRY;
-
 
 #define PCI_EXPANSION_ROM_HEADER_SIGNATURE        0xaa55
 #define EFI_PCI_EXPANSION_ROM_HEADER_EFISIGNATURE 0x0EF1
 #define PCI_DATA_STRUCTURE_SIGNATURE              EFI_SIGNATURE_32('P','C','I','R')
 
 #pragma pack(1)
-typedef struct {
+typedef struct
+{
     UINT16          Signature;              // 0xaa55
     UINT8           Reserved[0x16];
     UINT16          PcirOffset;
 } PCI_EXPANSION_ROM_HEADER;
 
-
-typedef struct {
+typedef struct
+{
     UINT16          Signature;              // 0xaa55
     UINT16          InitializationSize;
     UINT16          EfiSignature;           // 0x0EF1
@@ -168,8 +173,9 @@ typedef struct {
     UINT16          PcirOffset;
 } EFI_PCI_EXPANSION_ROM_HEADER;
 
-typedef struct {
-    UINT32          Signature;              // "PCIR" 
+typedef struct
+{
+    UINT32          Signature;              // "PCIR"
     UINT16          VendorId;
     UINT16          DeviceId;
     UINT16          Reserved0;
@@ -185,9 +191,3 @@ typedef struct {
 #pragma pack()
 
 #endif
-    
-
-
-
-
-    

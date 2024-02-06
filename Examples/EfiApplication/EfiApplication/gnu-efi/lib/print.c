@@ -8,9 +8,6 @@ Module Name:
 
 Abstract:
 
-
-
-
 Revision History
 
 --*/
@@ -47,45 +44,46 @@ Revision History
 //
 //
 
-
 #define PRINT_STRING_LEN            200
 #define PRINT_ITEM_BUFFER_LEN       100
 
-typedef struct {
+typedef struct
+{
     BOOLEAN             Ascii;
     UINTN               Index;
-    union {
-        CONST CHAR16    *pw;
-        CONST CHAR8     *pc;
+    union
+    {
+        CONST CHAR16* pw;
+        CONST CHAR8* pc;
     } un;
 } POINTER;
 
 #define pw	un.pw
 #define pc	un.pc
 
-typedef struct _pitem {
-
+typedef struct _pitem
+{
     POINTER     Item;
     CHAR16      Scratch[PRINT_ITEM_BUFFER_LEN];
     UINTN       Width;
     UINTN       FieldWidth;
-    UINTN       *WidthParse;
+    UINTN* WidthParse;
     CHAR16      Pad;
     BOOLEAN     PadBefore;
     BOOLEAN     Comma;
     BOOLEAN     Long;
 } PRINT_ITEM;
 
-
-typedef struct _pstate {
+typedef struct _pstate
+{
     // Input
     POINTER     fmt;
     va_list     args;
 
     // Output
-    CHAR16      *Buffer;
-    CHAR16      *End;
-    CHAR16      *Pos;
+    CHAR16* Buffer;
+    CHAR16* End;
+    CHAR16* Pos;
     UINTN       Len;
 
     UINTN       Attr;
@@ -95,12 +93,12 @@ typedef struct _pstate {
     UINTN       AttrHighlight;
     UINTN       AttrError;
 
-    INTN        (EFIAPI *Output)(VOID *context, CHAR16 *str);
-    INTN        (EFIAPI *SetAttr)(VOID *context, UINTN attr);
-    VOID        *Context;
+    INTN(EFIAPI* Output)(VOID* context, CHAR16* str);
+    INTN(EFIAPI* SetAttr)(VOID* context, UINTN attr);
+    VOID* Context;
 
     // Current item being formatted
-    struct _pitem  *Item;
+    struct _pitem* Item;
 } PRINT_STATE;
 
 //
@@ -109,82 +107,82 @@ typedef struct _pstate {
 
 STATIC
 UINTN
-_Print (
-    IN PRINT_STATE     *ps
-    );
+_Print(
+    IN PRINT_STATE* ps
+);
 
 STATIC
 UINTN
-_IPrint (
+_IPrint(
     IN UINTN                            Column,
     IN UINTN                            Row,
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE     *Out,
-    IN CONST CHAR16                     *fmt,
-    IN CONST CHAR8                      *fmta,
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
+    IN CONST CHAR16* fmt,
+    IN CONST CHAR8* fmta,
     IN va_list                          args
-    );
+);
 
 STATIC
 INTN EFIAPI
-_DbgOut (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    );
+_DbgOut(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+);
 
 STATIC
 VOID
-PFLUSH (
-    IN OUT PRINT_STATE     *ps
-    );
+PFLUSH(
+    IN OUT PRINT_STATE* ps
+);
 
 STATIC
 VOID
-PPUTC (
-    IN OUT PRINT_STATE     *ps,
+PPUTC(
+    IN OUT PRINT_STATE* ps,
     IN CHAR16              c
-    );
+);
 
 STATIC
 VOID
-PITEM (
-    IN OUT PRINT_STATE  *ps
-    );
+PITEM(
+    IN OUT PRINT_STATE* ps
+);
 
 STATIC
 CHAR16
-PGETC (
-    IN POINTER      *p
-    );
+PGETC(
+    IN POINTER* p
+);
 
 STATIC
 VOID
-PSETATTR (
-    IN OUT PRINT_STATE  *ps,
+PSETATTR(
+    IN OUT PRINT_STATE* ps,
     IN UINTN             Attr
-    );
+);
 
 //
 //
 //
 
 INTN EFIAPI
-_SPrint (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    );
+_SPrint(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+);
 
 INTN EFIAPI
-_PoolPrint (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    );
+_PoolPrint(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+);
 
 INTN
-DbgPrint (
+DbgPrint(
     IN INTN         mask,
-    IN CONST CHAR8  *fmt,
+    IN CONST CHAR8* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -205,20 +203,20 @@ Returns:
 
 --*/
 {
-    SIMPLE_TEXT_OUTPUT_INTERFACE    *DbgOut;
+    SIMPLE_TEXT_OUTPUT_INTERFACE* DbgOut;
     PRINT_STATE     ps;
     va_list         args;
     UINTN           back;
     UINTN           attr;
     UINTN           SavedAttribute;
 
-
-    if (!(EFIDebug & mask)) {
+    if (!(EFIDebug & mask))
+    {
         return 0;
     }
 
-    va_start (args, fmt);
-    ZeroMem (&ps, sizeof(ps));
+    va_start(args, fmt);
+    ZeroMem(&ps, sizeof(ps));
 
     ps.Output = _DbgOut;
     ps.fmt.Ascii = TRUE;
@@ -228,14 +226,16 @@ Returns:
 
     DbgOut = LibRuntimeDebugOut;
 
-    if (!DbgOut) {
+    if (!DbgOut)
+    {
         DbgOut = ST->StdErr;
     }
 
-    if (DbgOut) {
+    if (DbgOut)
+    {
         ps.Attr = DbgOut->Mode->Attribute;
         ps.Context = DbgOut;
-        ps.SetAttr = (INTN (EFIAPI *)(VOID *, UINTN))  DbgOut->SetAttribute;
+        ps.SetAttr = (INTN(EFIAPI*)(VOID*, UINTN))  DbgOut->SetAttribute;
     }
 
     SavedAttribute = ps.Attr;
@@ -247,29 +247,33 @@ Returns:
 
     attr = ps.AttrNorm;
 
-    if (mask & D_WARN) {
+    if (mask & D_WARN)
+    {
         attr = ps.AttrHighlight;
     }
 
-    if (mask & D_ERROR) {
+    if (mask & D_ERROR)
+    {
         attr = ps.AttrError;
     }
 
-    if (ps.SetAttr) {
+    if (ps.SetAttr)
+    {
         ps.Attr = attr;
         uefi_call_wrapper(ps.SetAttr, 2, ps.Context, attr);
     }
 
-    _Print (&ps);
+    _Print(&ps);
 
-    va_end (ps.args);
-    va_end (args);
+    va_end(ps.args);
+    va_end(args);
 
     //
     // Restore original attributes
     //
 
-    if (ps.SetAttr) {
+    if (ps.SetAttr)
+    {
         uefi_call_wrapper(ps.SetAttr, 2, ps.Context, SavedAttribute);
     }
 
@@ -278,47 +282,48 @@ Returns:
 
 STATIC
 INTN
-IsLocalPrint(void *func)
+IsLocalPrint(void* func)
 {
-	if (func == _DbgOut || func == _SPrint || func == _PoolPrint)
-		return 1;
-	return 0;
+    if (func == _DbgOut || func == _SPrint || func == _PoolPrint)
+        return 1;
+    return 0;
 }
 
 STATIC
 INTN EFIAPI
-_DbgOut (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    )
+_DbgOut(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+)
 // Append string worker for DbgPrint
 {
-    SIMPLE_TEXT_OUTPUT_INTERFACE    *DbgOut;
+    SIMPLE_TEXT_OUTPUT_INTERFACE* DbgOut;
 
     DbgOut = Context;
-//    if (!DbgOut && ST && ST->ConOut) {
-//        DbgOut = ST->ConOut;
-//    }
+    //    if (!DbgOut && ST && ST->ConOut) {
+    //        DbgOut = ST->ConOut;
+    //    }
 
-    if (DbgOut) {
-	if (IsLocalPrint(DbgOut->OutputString))
-		DbgOut->OutputString(DbgOut, Buffer);
+    if (DbgOut)
+    {
+        if (IsLocalPrint(DbgOut->OutputString))
+            DbgOut->OutputString(DbgOut, Buffer);
         else
-		uefi_call_wrapper(DbgOut->OutputString, 2, DbgOut, Buffer);
+            uefi_call_wrapper(DbgOut->OutputString, 2, DbgOut, Buffer);
     }
 
     return 0;
 }
 
 INTN EFIAPI
-_SPrint (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    )
+_SPrint(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+)
 // Append string worker for UnicodeSPrint, PoolPrint and CatPrint
 {
     UINTN           len;
-    POOL_PRINT      *spc;
+    POOL_PRINT* spc;
 
     spc = Context;
     len = StrLen(Buffer);
@@ -327,7 +332,8 @@ _SPrint (
     // Is the string is over the max truncate it
     //
 
-    if (spc->len + len > spc->maxlen) {
+    if (spc->len + len > spc->maxlen)
+    {
         len = spc->maxlen - spc->len;
     }
 
@@ -335,32 +341,34 @@ _SPrint (
     // Append the new text
     //
 
-    CopyMem (spc->str + spc->len, Buffer, len * sizeof(CHAR16));
+    CopyMem(spc->str + spc->len, Buffer, len * sizeof(CHAR16));
     spc->len += len;
 
     //
     // Null terminate it
     //
 
-    if (spc->len < spc->maxlen) {
+    if (spc->len < spc->maxlen)
+    {
         spc->str[spc->len] = 0;
-    } else if (spc->maxlen) {
+    }
+    else if (spc->maxlen)
+    {
         spc->str[spc->maxlen] = 0;
     }
 
     return 0;
 }
 
-
 INTN EFIAPI
-_PoolPrint (
-    IN VOID     *Context,
-    IN CHAR16   *Buffer
-    )
+_PoolPrint(
+    IN VOID* Context,
+    IN CHAR16* Buffer
+)
 // Append string worker for PoolPrint and CatPrint
 {
     UINTN           newlen;
-    POOL_PRINT      *spc;
+    POOL_PRINT* spc;
 
     spc = Context;
     newlen = spc->len + StrLen(Buffer) + 1;
@@ -369,21 +377,22 @@ _PoolPrint (
     // Is the string is over the max, grow the buffer
     //
 
-    if (newlen > spc->maxlen) {
-
+    if (newlen > spc->maxlen)
+    {
         //
         // Grow the pool buffer
         //
 
         newlen += PRINT_STRING_LEN;
         spc->maxlen = newlen;
-        spc->str = ReallocatePool (
-                        spc->str,
-                        spc->len * sizeof(CHAR16),
-                        spc->maxlen * sizeof(CHAR16)
-                        );
+        spc->str = ReallocatePool(
+            spc->str,
+            spc->len * sizeof(CHAR16),
+            spc->maxlen * sizeof(CHAR16)
+        );
 
-        if (!spc->str) {
+        if (!spc->str)
+        {
             spc->len = 0;
             spc->maxlen = 0;
         }
@@ -393,40 +402,36 @@ _PoolPrint (
     // Append the new text
     //
 
-    return _SPrint (Context, Buffer);
+    return _SPrint(Context, Buffer);
 }
 
-
-
 VOID
-_PoolCatPrint (
-    IN CONST CHAR16     *fmt,
+_PoolCatPrint(
+    IN CONST CHAR16* fmt,
     IN va_list          args,
-    IN OUT POOL_PRINT   *spc,
-    IN INTN             (EFIAPI *Output)(VOID *context, CHAR16 *str)
-    )
+    IN OUT POOL_PRINT* spc,
+    IN INTN(EFIAPI* Output)(VOID* context, CHAR16* str)
+)
 // Dispatch function for UnicodeSPrint, PoolPrint, and CatPrint
 {
     PRINT_STATE         ps;
 
-    ZeroMem (&ps, sizeof(ps));
-    ps.Output  = Output;
+    ZeroMem(&ps, sizeof(ps));
+    ps.Output = Output;
     ps.Context = spc;
     ps.fmt.pw = fmt;
     va_copy(ps.args, args);
-    _Print (&ps);
+    _Print(&ps);
     va_end(ps.args);
 }
 
-
-
 UINTN
-UnicodeVSPrint (
-    OUT CHAR16        *Str,
+UnicodeVSPrint(
+    OUT CHAR16* Str,
     IN UINTN          StrSize,
-    IN CONST CHAR16   *fmt,
+    IN CONST CHAR16* fmt,
     va_list           args
-    )
+)
 /*++
 
 Routine Description:
@@ -444,7 +449,6 @@ Arguments:
 
     args        - va_list
 
-
 Returns:
 
     String length returned in buffer
@@ -453,22 +457,22 @@ Returns:
 {
     POOL_PRINT          spc;
 
-    spc.str    = Str;
+    spc.str = Str;
     spc.maxlen = StrSize / sizeof(CHAR16) - 1;
-    spc.len    = 0;
+    spc.len = 0;
 
-    _PoolCatPrint (fmt, args, &spc, _SPrint);
+    _PoolCatPrint(fmt, args, &spc, _SPrint);
 
     return spc.len;
 }
 
 UINTN
-UnicodeSPrint (
-    OUT CHAR16        *Str,
+UnicodeSPrint(
+    OUT CHAR16* Str,
     IN UINTN          StrSize,
-    IN CONST CHAR16   *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -493,18 +497,18 @@ Returns:
     va_list          args;
     UINTN            len;
 
-    va_start (args, fmt);
+    va_start(args, fmt);
     len = UnicodeVSPrint(Str, StrSize, fmt, args);
-    va_end (args);
+    va_end(args);
 
     return len;
 }
 
-CHAR16 *
-VPoolPrint (
-    IN CONST CHAR16     *fmt,
+CHAR16*
+VPoolPrint(
+    IN CONST CHAR16* fmt,
     va_list             args
-    )
+)
 /*++
 
 Routine Description:
@@ -526,16 +530,16 @@ Returns:
 --*/
 {
     POOL_PRINT          spc;
-    ZeroMem (&spc, sizeof(spc));
-    _PoolCatPrint (fmt, args, &spc, _PoolPrint);
+    ZeroMem(&spc, sizeof(spc));
+    _PoolCatPrint(fmt, args, &spc, _PoolPrint);
     return spc.str;
 }
 
-CHAR16 *
-PoolPrint (
-    IN CONST CHAR16     *fmt,
+CHAR16*
+PoolPrint(
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -556,19 +560,19 @@ Returns:
 --*/
 {
     va_list args;
-    CHAR16 *pool;
-    va_start (args, fmt);
+    CHAR16* pool;
+    va_start(args, fmt);
     pool = VPoolPrint(fmt, args);
-    va_end (args);
+    va_end(args);
     return pool;
 }
 
-CHAR16 *
-CatPrint (
-    IN OUT POOL_PRINT   *Str,
-    IN CONST CHAR16     *fmt,
+CHAR16*
+CatPrint(
+    IN OUT POOL_PRINT* Str,
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -593,19 +597,17 @@ Returns:
 {
     va_list             args;
 
-    va_start (args, fmt);
-    _PoolCatPrint (fmt, args, Str, _PoolPrint);
-    va_end (args);
+    va_start(args, fmt);
+    _PoolCatPrint(fmt, args, Str, _PoolPrint);
+    va_end(args);
     return Str->str;
 }
 
-
-
 UINTN
-Print (
-    IN CONST CHAR16   *fmt,
+Print(
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -625,17 +627,17 @@ Returns:
     va_list     args;
     UINTN       back;
 
-    va_start (args, fmt);
-    back = _IPrint ((UINTN) -1, (UINTN) -1, ST->ConOut, fmt, NULL, args);
-    va_end (args);
+    va_start(args, fmt);
+    back = _IPrint((UINTN)-1, (UINTN)-1, ST->ConOut, fmt, NULL, args);
+    va_end(args);
     return back;
 }
 
 UINTN
-VPrint (
-    IN CONST CHAR16   *fmt,
+VPrint(
+    IN CONST CHAR16* fmt,
     va_list           args
-    )
+)
 /*++
 
 Routine Description:
@@ -652,17 +654,16 @@ Returns:
 
 --*/
 {
-    return _IPrint ((UINTN) -1, (UINTN) -1, ST->ConOut, fmt, NULL, args);
+    return _IPrint((UINTN)-1, (UINTN)-1, ST->ConOut, fmt, NULL, args);
 }
 
-
 UINTN
-PrintAt (
+PrintAt(
     IN UINTN          Column,
     IN UINTN          Row,
-    IN CONST CHAR16   *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -685,19 +686,18 @@ Returns:
     va_list     args;
     UINTN       back;
 
-    va_start (args, fmt);
-    back = _IPrint (Column, Row, ST->ConOut, fmt, NULL, args);
-    va_end (args);
+    va_start(args, fmt);
+    back = _IPrint(Column, Row, ST->ConOut, fmt, NULL, args);
+    va_end(args);
     return back;
 }
 
-
 UINTN
-IPrint (
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE    *Out,
-    IN CONST CHAR16                    *fmt,
+IPrint(
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -719,21 +719,20 @@ Returns:
     va_list     args;
     UINTN       back;
 
-    va_start (args, fmt);
-    back = _IPrint ((UINTN) -1, (UINTN) -1, Out, fmt, NULL, args);
-    va_end (args);
+    va_start(args, fmt);
+    back = _IPrint((UINTN)-1, (UINTN)-1, Out, fmt, NULL, args);
+    va_end(args);
     return back;
 }
 
-
 UINTN
-IPrintAt (
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE     *Out,
+IPrintAt(
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
     IN UINTN                            Column,
     IN UINTN                            Row,
-    IN CONST CHAR16                     *fmt,
+    IN CONST CHAR16* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -758,31 +757,30 @@ Returns:
     va_list     args;
     UINTN       back;
 
-    va_start (args, fmt);
-    back = _IPrint (Column, Row, Out, fmt, NULL, args);
-    va_end (args);
+    va_start(args, fmt);
+    back = _IPrint(Column, Row, Out, fmt, NULL, args);
+    va_end(args);
     return back;
 }
 
-
 UINTN
-_IPrint (
+_IPrint(
     IN UINTN                            Column,
     IN UINTN                            Row,
-    IN SIMPLE_TEXT_OUTPUT_INTERFACE     *Out,
-    IN CONST CHAR16                     *fmt,
-    IN CONST CHAR8                      *fmta,
+    IN SIMPLE_TEXT_OUTPUT_INTERFACE* Out,
+    IN CONST CHAR16* fmt,
+    IN CONST CHAR8* fmta,
     IN va_list                          args
-    )
+)
 // Display string worker for: Print, PrintAt, IPrint, IPrintAt
 {
     PRINT_STATE     ps;
     UINTN            back;
 
-    ZeroMem (&ps, sizeof(ps));
+    ZeroMem(&ps, sizeof(ps));
     ps.Context = Out;
-    ps.Output  = (INTN (EFIAPI *)(VOID *, CHAR16 *)) Out->OutputString;
-    ps.SetAttr = (INTN (EFIAPI *)(VOID *, UINTN))  Out->SetAttribute;
+    ps.Output = (INTN(EFIAPI*)(VOID*, CHAR16*)) Out->OutputString;
+    ps.SetAttr = (INTN(EFIAPI*)(VOID*, UINTN))  Out->SetAttribute;
     ps.Attr = Out->Mode->Attribute;
 
     back = (ps.Attr >> 4) & 0xF;
@@ -790,30 +788,33 @@ _IPrint (
     ps.AttrHighlight = EFI_TEXT_ATTR(EFI_WHITE, back);
     ps.AttrError = EFI_TEXT_ATTR(EFI_YELLOW, back);
 
-    if (fmt) {
+    if (fmt)
+    {
         ps.fmt.pw = fmt;
-    } else {
+    }
+    else
+    {
         ps.fmt.Ascii = TRUE;
         ps.fmt.pc = fmta;
     }
 
     va_copy(ps.args, args);
 
-    if (Column != (UINTN) -1) {
+    if (Column != (UINTN)-1)
+    {
         uefi_call_wrapper(Out->SetCursorPosition, 3, Out, Column, Row);
     }
 
-    back = _Print (&ps);
+    back = _Print(&ps);
     va_end(ps.args);
     return back;
 }
 
-
 UINTN
-AsciiPrint (
-    IN CONST CHAR8    *fmt,
+AsciiPrint(
+    IN CONST CHAR8* fmt,
     ...
-    )
+)
 /*++
 
 Routine Description:
@@ -835,18 +836,17 @@ Returns:
     va_list     args;
     UINTN       back;
 
-    va_start (args, fmt);
-    back = _IPrint ((UINTN) -1, (UINTN) -1, ST->ConOut, NULL, fmt, args);
-    va_end (args);
+    va_start(args, fmt);
+    back = _IPrint((UINTN)-1, (UINTN)-1, ST->ConOut, NULL, fmt, args);
+    va_end(args);
     return back;
 }
 
-
 UINTN
-AsciiVSPrint (
-    OUT CHAR8         *Str,
+AsciiVSPrint(
+    OUT CHAR8* Str,
     IN UINTN          StrSize,
-    IN CONST CHAR8    *fmt,
+    IN CONST CHAR8* fmt,
     va_list           args
 )
 /*++
@@ -866,7 +866,6 @@ Arguments:
 
     args        - va_list
 
-
 Returns:
 
     String length returned in buffer
@@ -874,7 +873,7 @@ Returns:
 --*/
 // Use UnicodeVSPrint() and convert back to ASCII
 {
-    CHAR16 *UnicodeStr, *UnicodeFmt;
+    CHAR16* UnicodeStr, * UnicodeFmt;
     UINTN i, Len;
 
     UnicodeStr = AllocatePool(StrSize * sizeof(CHAR16));
@@ -882,7 +881,8 @@ Returns:
         return 0;
 
     UnicodeFmt = PoolPrint(L"%a", fmt);
-    if (!UnicodeFmt) {
+    if (!UnicodeFmt)
+    {
         FreePool(UnicodeStr);
         return 0;
     }
@@ -899,48 +899,49 @@ Returns:
     return Len;
 }
 
-
 STATIC
 VOID
-PFLUSH (
-    IN OUT PRINT_STATE     *ps
-    )
+PFLUSH(
+    IN OUT PRINT_STATE* ps
+)
 {
     *ps->Pos = 0;
     if (IsLocalPrint(ps->Output))
-	ps->Output(ps->Context, ps->Buffer);
+        ps->Output(ps->Context, ps->Buffer);
     else
-    	uefi_call_wrapper(ps->Output, 2, ps->Context, ps->Buffer);
+        uefi_call_wrapper(ps->Output, 2, ps->Context, ps->Buffer);
     ps->Pos = ps->Buffer;
 }
 
 STATIC
 VOID
-PSETATTR (
-    IN OUT PRINT_STATE  *ps,
+PSETATTR(
+    IN OUT PRINT_STATE* ps,
     IN UINTN             Attr
-    )
+)
 {
-   PFLUSH (ps);
+    PFLUSH(ps);
 
-   ps->RestoreAttr = ps->Attr;
-   if (ps->SetAttr) {
-	uefi_call_wrapper(ps->SetAttr, 2, ps->Context, Attr);
-   }
+    ps->RestoreAttr = ps->Attr;
+    if (ps->SetAttr)
+    {
+        uefi_call_wrapper(ps->SetAttr, 2, ps->Context, Attr);
+    }
 
-   ps->Attr = Attr;
+    ps->Attr = Attr;
 }
 
 STATIC
 VOID
-PPUTC (
-    IN OUT PRINT_STATE     *ps,
+PPUTC(
+    IN OUT PRINT_STATE* ps,
     IN CHAR16              c
-    )
+)
 {
     // if this is a newline, add a carraige return
-    if (c == '\n') {
-        PPUTC (ps, '\r');
+    if (c == '\n')
+    {
+        PPUTC(ps, '\r');
     }
 
     *ps->Pos = c;
@@ -948,17 +949,17 @@ PPUTC (
     ps->Len += 1;
 
     // if at the end of the buffer, flush it
-    if (ps->Pos >= ps->End) {
+    if (ps->Pos >= ps->End)
+    {
         PFLUSH(ps);
     }
 }
 
-
 STATIC
 CHAR16
-PGETC (
-    IN POINTER      *p
-    )
+PGETC(
+    IN POINTER* p
+)
 {
     CHAR16      c;
 
@@ -968,23 +969,24 @@ PGETC (
     return  c;
 }
 
-
 STATIC
 VOID
-PITEM (
-    IN OUT PRINT_STATE  *ps
-    )
+PITEM(
+    IN OUT PRINT_STATE* ps
+)
 {
     UINTN               Len, i;
-    PRINT_ITEM          *Item;
+    PRINT_ITEM* Item;
     CHAR16              c;
 
     // Get the length of the item
     Item = ps->Item;
     Item->Item.Index = 0;
-    while (Item->Item.Index < Item->FieldWidth) {
+    while (Item->Item.Index < Item->FieldWidth)
+    {
         c = PGETC(&Item->Item);
-        if (!c) {
+        if (!c)
+        {
             Item->Item.Index -= 1;
             break;
         }
@@ -992,48 +994,54 @@ PITEM (
     Len = Item->Item.Index;
 
     // if there is no item field width, use the items width
-    if (Item->FieldWidth == (UINTN) -1) {
+    if (Item->FieldWidth == (UINTN)-1)
+    {
         Item->FieldWidth = Len;
     }
 
     // if item is larger then width, update width
-    if (Len > Item->Width) {
+    if (Len > Item->Width)
+    {
         Item->Width = Len;
     }
 
-
     // if pad field before, add pad char
-    if (Item->PadBefore) {
-        for (i=Item->Width; i < Item->FieldWidth; i+=1) {
-            PPUTC (ps, ' ');
+    if (Item->PadBefore)
+    {
+        for (i = Item->Width; i < Item->FieldWidth; i += 1)
+        {
+            PPUTC(ps, ' ');
         }
     }
 
     // pad item
-    for (i=Len; i < Item->Width; i++) {
-        PPUTC (ps, Item->Pad);
+    for (i = Len; i < Item->Width; i++)
+    {
+        PPUTC(ps, Item->Pad);
     }
 
     // add the item
-    Item->Item.Index=0;
-    while (Item->Item.Index < Len) {
-        PPUTC (ps, PGETC(&Item->Item));
+    Item->Item.Index = 0;
+    while (Item->Item.Index < Len)
+    {
+        PPUTC(ps, PGETC(&Item->Item));
     }
 
     // If pad at the end, add pad char
-    if (!Item->PadBefore) {
-        for (i=Item->Width; i < Item->FieldWidth; i+=1) {
-            PPUTC (ps, ' ');
+    if (!Item->PadBefore)
+    {
+        for (i = Item->Width; i < Item->FieldWidth; i += 1)
+        {
+            PPUTC(ps, ' ');
         }
     }
 }
 
-
 STATIC
 UINTN
-_Print (
-    IN PRINT_STATE     *ps
-    )
+_Print(
+    IN PRINT_STATE* ps
+)
 /*++
 
 Routine Description:
@@ -1092,15 +1100,16 @@ Returns:
     ps->Item = &Item;
 
     ps->fmt.Index = 0;
-    while ((c = PGETC(&ps->fmt))) {
-
-        if (c != '%') {
-            PPUTC ( ps, c );
+    while ((c = PGETC(&ps->fmt)))
+    {
+        if (c != '%')
+        {
+            PPUTC(ps, c);
             continue;
         }
 
         // setup for new item
-        Item.FieldWidth = (UINTN) -1;
+        Item.FieldWidth = (UINTN)-1;
         Item.Width = 0;
         Item.WidthParse = &Item.Width;
         Item.Pad = ' ';
@@ -1112,10 +1121,10 @@ Returns:
         ps->RestoreAttr = 0;
         Attr = 0;
 
-        while ((c = PGETC(&ps->fmt))) {
-
-            switch (c) {
-
+        while ((c = PGETC(&ps->fmt)))
+        {
+            switch (c)
+            {
             case '%':
                 //
                 // %% -> %
@@ -1155,30 +1164,33 @@ Returns:
             case '8':
             case '9':
                 *Item.WidthParse = 0;
-                do {
+                do
+                {
                     *Item.WidthParse = *Item.WidthParse * 10 + c - '0';
                     c = PGETC(&ps->fmt);
-                } while (c >= '0'  &&  c <= '9') ;
+                } while (c >= '0' && c <= '9');
                 ps->fmt.Index -= 1;
                 break;
 
             case 'a':
-                Item.Item.pc = va_arg(ps->args, CHAR8 *);
+                Item.Item.pc = va_arg(ps->args, CHAR8*);
                 Item.Item.Ascii = TRUE;
-                if (!Item.Item.pc) {
-                    Item.Item.pc = (CHAR8 *)"(null)";
+                if (!Item.Item.pc)
+                {
+                    Item.Item.pc = (CHAR8*)"(null)";
                 }
                 break;
 
             case 's':
-                Item.Item.pw = va_arg(ps->args, CHAR16 *);
-                if (!Item.Item.pw) {
+                Item.Item.pw = va_arg(ps->args, CHAR16*);
+                if (!Item.Item.pw)
+                {
                     Item.Item.pw = L"(null)";
                 }
                 break;
 
             case 'c':
-                Item.Scratch[0] = (CHAR16) va_arg(ps->args, UINTN);
+                Item.Scratch[0] = (CHAR16)va_arg(ps->args, UINTN);
                 Item.Scratch[1] = 0;
                 Item.Item.pw = Item.Scratch;
                 break;
@@ -1191,47 +1203,46 @@ Returns:
                 Item.Width = Item.Long ? 16 : 8;
                 Item.Pad = '0';
 #if __GNUC__ >= 7
-		__attribute__ ((fallthrough));
+                __attribute__((fallthrough));
 #endif
             case 'x':
-                ValueToHex (
+                ValueToHex(
                     Item.Scratch,
                     Item.Long ? va_arg(ps->args, UINT64) : va_arg(ps->args, UINT32)
-                    );
+                );
                 Item.Item.pw = Item.Scratch;
 
                 break;
 
-
             case 'g':
-                GuidToString (Item.Scratch, va_arg(ps->args, EFI_GUID *));
+                GuidToString(Item.Scratch, va_arg(ps->args, EFI_GUID*));
                 Item.Item.pw = Item.Scratch;
                 break;
 
             case 'u':
-                ValueToString (
+                ValueToString(
                     Item.Scratch,
                     Item.Comma,
                     Item.Long ? va_arg(ps->args, UINT64) : va_arg(ps->args, UINT32)
-                    );
+                );
                 Item.Item.pw = Item.Scratch;
                 break;
 
             case 'd':
-                ValueToString (
+                ValueToString(
                     Item.Scratch,
                     Item.Comma,
                     Item.Long ? va_arg(ps->args, INT64) : va_arg(ps->args, INT32)
-                    );
+                );
                 Item.Item.pw = Item.Scratch;
                 break;
 
             case 'D':
             {
-                EFI_DEVICE_PATH *dp = va_arg(ps->args, EFI_DEVICE_PATH *);
-                CHAR16 *dpstr = DevicePathToStr(dp);
+                EFI_DEVICE_PATH* dp = va_arg(ps->args, EFI_DEVICE_PATH*);
+                CHAR16* dpstr = DevicePathToStr(dp);
                 StrnCpy(Item.Scratch, dpstr, PRINT_ITEM_BUFFER_LEN);
-                Item.Scratch[PRINT_ITEM_BUFFER_LEN-1] = L'\0';
+                Item.Scratch[PRINT_ITEM_BUFFER_LEN - 1] = L'\0';
                 FreePool(dpstr);
 
                 Item.Item.pw = Item.Scratch;
@@ -1239,21 +1250,21 @@ Returns:
             }
 
             case 'f':
-                FloatToString (
+                FloatToString(
                     Item.Scratch,
                     Item.Comma,
                     va_arg(ps->args, double)
-                    );
+                );
                 Item.Item.pw = Item.Scratch;
                 break;
 
             case 't':
-                TimeToString (Item.Scratch, va_arg(ps->args, EFI_TIME *));
+                TimeToString(Item.Scratch, va_arg(ps->args, EFI_TIME*));
                 Item.Item.pw = Item.Scratch;
                 break;
 
             case 'r':
-                StatusToString (Item.Scratch, va_arg(ps->args, EFI_STATUS));
+                StatusToString(Item.Scratch, va_arg(ps->args, EFI_STATUS));
                 Item.Item.pw = Item.Scratch;
                 break;
 
@@ -1289,99 +1300,108 @@ Returns:
             }
 
             // if we have an Item
-            if (Item.Item.pw) {
-                PITEM (ps);
+            if (Item.Item.pw)
+            {
+                PITEM(ps);
                 break;
             }
 
             // if we have an Attr set
-            if (Attr) {
+            if (Attr)
+            {
                 PSETATTR(ps, Attr);
                 ps->RestoreAttr = 0;
                 break;
             }
         }
 
-        if (ps->RestoreAttr) {
+        if (ps->RestoreAttr)
+        {
             PSETATTR(ps, ps->RestoreAttr);
         }
     }
 
     // Flush buffer
-    PFLUSH (ps);
+    PFLUSH(ps);
     return ps->Len;
 }
 
-STATIC CHAR8 Hex[] = {'0','1','2','3','4','5','6','7',
-                      '8','9','A','B','C','D','E','F'};
+STATIC CHAR8 Hex[] = { '0','1','2','3','4','5','6','7',
+                      '8','9','A','B','C','D','E','F' };
 
 VOID
-ValueToHex (
-    IN CHAR16   *Buffer,
+ValueToHex(
+    IN CHAR16* Buffer,
     IN UINT64   v
-    )
+)
 {
-    CHAR8           str[30], *p1;
-    CHAR16          *p2;
+    CHAR8           str[30], * p1;
+    CHAR16* p2;
 
-    if (!v) {
+    if (!v)
+    {
         Buffer[0] = '0';
         Buffer[1] = 0;
-        return ;
+        return;
     }
 
     p1 = str;
     p2 = Buffer;
 
-    while (v) {
+    while (v)
+    {
         // Without the cast, the MSVC compiler may insert a reference to __allmull
         *(p1++) = Hex[(UINTN)(v & 0xf)];
-        v = RShiftU64 (v, 4);
+        v = RShiftU64(v, 4);
     }
 
-    while (p1 != str) {
+    while (p1 != str)
+    {
         *(p2++) = *(--p1);
     }
     *p2 = 0;
 }
 
-
 VOID
-ValueToString (
-    IN CHAR16   *Buffer,
+ValueToString(
+    IN CHAR16* Buffer,
     IN BOOLEAN  Comma,
     IN INT64    v
-    )
+)
 {
-    STATIC CHAR8 ca[] = {  3, 1, 2 };
-    CHAR8        str[40], *p1;
-    CHAR16       *p2;
+    STATIC CHAR8 ca[] = { 3, 1, 2 };
+    CHAR8        str[40], * p1;
+    CHAR16* p2;
     UINTN        c, r;
 
-    if (!v) {
+    if (!v)
+    {
         Buffer[0] = '0';
         Buffer[1] = 0;
-        return ;
+        return;
     }
 
     p1 = str;
     p2 = Buffer;
 
-    if (v < 0) {
+    if (v < 0)
+    {
         *(p2++) = '-';
         v = -v;
     }
 
-    while (v) {
-        v = (INT64)DivU64x32 ((UINT64)v, 10, &r);
+    while (v)
+    {
+        v = (INT64)DivU64x32((UINT64)v, 10, &r);
         *(p1++) = (CHAR8)r + '0';
     }
 
-    c = (UINTN) (Comma ? ca[(p1 - str) % 3] : 999) + 1;
-    while (p1 != str) {
-
+    c = (UINTN)(Comma ? ca[(p1 - str) % 3] : 999) + 1;
+    while (p1 != str)
+    {
         c -= 1;
-        if (!c) {
+        if (!c)
+        {
             *(p2++) = ',';
             c = 3;
         }
@@ -1392,18 +1412,17 @@ ValueToString (
 }
 
 VOID
-FloatToString (
-    IN CHAR16   *Buffer,
+FloatToString(
+    IN CHAR16* Buffer,
     IN BOOLEAN  Comma,
     IN double   v
-    )
+)
 {
     /*
      * Integer part.
      */
     INTN i = (INTN)v;
     ValueToString(Buffer, Comma, i);
-
 
     /*
      * Decimal point.
@@ -1412,54 +1431,55 @@ FloatToString (
     Buffer[x] = L'.';
     x++;
 
-
     /*
      * Keep fractional part.
      */
     float f = (float)(v - i);
     if (f < 0) f = -f;
 
-
     /*
      * Leading fractional zeroes.
      */
     f *= 10.0;
-    while (   (f != 0)
-           && ((INTN)f == 0))
+    while ((f != 0)
+        && ((INTN)f == 0))
     {
-      Buffer[x] = L'0';
-      x++;
-      f *= 10.0;
+        Buffer[x] = L'0';
+        x++;
+        f *= 10.0;
     }
-
 
     /*
      * Fractional digits.
      */
     while ((float)(INTN)f != f)
     {
-      f *= 10;
+        f *= 10;
     }
     ValueToString(Buffer + x, FALSE, (INTN)f);
     return;
 }
 
 VOID
-TimeToString (
-    OUT CHAR16      *Buffer,
-    IN EFI_TIME     *Time
-    )
+TimeToString(
+    OUT CHAR16* Buffer,
+    IN EFI_TIME* Time
+)
 {
     UINTN       Hour, Year;
     CHAR16      AmPm;
 
     AmPm = 'a';
     Hour = Time->Hour;
-    if (Time->Hour == 0) {
+    if (Time->Hour == 0)
+    {
         Hour = 12;
-    } else if (Time->Hour >= 12) {
+    }
+    else if (Time->Hour >= 12)
+    {
         AmPm = 'p';
-        if (Time->Hour >= 13) {
+        if (Time->Hour >= 13)
+        {
             Hour -= 12;
         }
     }
@@ -1467,28 +1487,25 @@ TimeToString (
     Year = Time->Year % 100;
 
     // bugbug: for now just print it any old way
-    UnicodeSPrint (Buffer, 0, L"%02d/%02d/%02d  %02d:%02d%c",
+    UnicodeSPrint(Buffer, 0, L"%02d/%02d/%02d  %02d:%02d%c",
         Time->Month,
         Time->Day,
         Year,
         Hour,
         Time->Minute,
         AmPm
-        );
+    );
 }
 
-
-
-
 VOID
-DumpHex (
+DumpHex(
     IN UINTN        Indent,
     IN UINTN        Offset,
     IN UINTN        DataSize,
-    IN VOID         *UserData
-    )
+    IN VOID* UserData
+)
 {
-    CHAR8           *Data, Val[50], Str[20], c;
+    CHAR8* Data, Val[50], Str[20], c;
     UINTN           Size, Index;
 
     UINTN           ScreenCount;
@@ -1496,45 +1513,47 @@ DumpHex (
     UINTN           ScreenSize;
     CHAR16          ReturnStr[1];
 
-
     uefi_call_wrapper(ST->ConOut->QueryMode, 4, ST->ConOut, ST->ConOut->Mode->Mode, &TempColumn, &ScreenSize);
     ScreenCount = 0;
     ScreenSize -= 2;
 
     Data = UserData;
-    while (DataSize) {
+    while (DataSize)
+    {
         Size = 16;
-        if (Size > DataSize) {
+        if (Size > DataSize)
+        {
             Size = DataSize;
         }
 
-        for (Index=0; Index < Size; Index += 1) {
+        for (Index = 0; Index < Size; Index += 1)
+        {
             c = Data[Index];
-            Val[Index*3+0] = Hex[c>>4];
-            Val[Index*3+1] = Hex[c&0xF];
-            Val[Index*3+2] = (Index == 7)?'-':' ';
+            Val[Index * 3 + 0] = Hex[c >> 4];
+            Val[Index * 3 + 1] = Hex[c & 0xF];
+            Val[Index * 3 + 2] = (Index == 7) ? '-' : ' ';
             Str[Index] = (c < ' ' || c > 'z') ? '.' : c;
         }
 
-        Val[Index*3] = 0;
+        Val[Index * 3] = 0;
         Str[Index] = 0;
-        Print (L"%*a%X: %-.48a *%a*\n", Indent, "", Offset, Val, Str);
+        Print(L"%*a%X: %-.48a *%a*\n", Indent, "", Offset, Val, Str);
 
         Data += Size;
         Offset += Size;
         DataSize -= Size;
 
         ScreenCount++;
-        if (ScreenCount >= ScreenSize && ScreenSize != 0) {
+        if (ScreenCount >= ScreenSize && ScreenSize != 0)
+        {
             //
             // If ScreenSize == 0 we have the console redirected so don't
             //  block updates
             //
             ScreenCount = 0;
-            Print (L"Press Enter to continue :");
-            Input (L"", ReturnStr, sizeof(ReturnStr)/sizeof(CHAR16));
-            Print (L"\n");
+            Print(L"Press Enter to continue :");
+            Input(L"", ReturnStr, sizeof(ReturnStr) / sizeof(CHAR16));
+            Print(L"\n");
         }
-
     }
 }

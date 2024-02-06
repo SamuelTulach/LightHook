@@ -12,8 +12,6 @@ Abstract:
 
     EFI Runtime library functions
 
-
-
 Revision History
 
 --*/
@@ -36,128 +34,126 @@ Revision History
 #include "riscv64/efilibplat.h"
 #endif
 
-
 VOID
 RUNTIMEFUNCTION
-RtZeroMem (
-    IN VOID     *Buffer,
+RtZeroMem(
+    IN VOID* Buffer,
     IN UINTN     Size
-    );
+);
 
 VOID
 RUNTIMEFUNCTION
-RtSetMem (
-    IN VOID     *Buffer,
+RtSetMem(
+    IN VOID* Buffer,
     IN UINTN    Size,
-    IN UINT8    Value    
-    );
+    IN UINT8    Value
+);
 
 VOID
 RUNTIMEFUNCTION
-RtCopyMem (
-    IN VOID     *Dest,
-    IN CONST VOID     *Src,
+RtCopyMem(
+    IN VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN    len
-    );
+);
 
 INTN
 RUNTIMEFUNCTION
-RtCompareMem (
-    IN CONST VOID     *Dest,
-    IN CONST VOID     *Src,
+RtCompareMem(
+    IN CONST VOID* Dest,
+    IN CONST VOID* Src,
     IN UINTN    len
-    );
+);
 
 INTN
 RUNTIMEFUNCTION
-RtStrCmp (
-    IN CONST CHAR16   *s1,
-    IN CONST CHAR16   *s2
-    );
-
-
-VOID
-RUNTIMEFUNCTION
-RtStrCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src
-    );
+RtStrCmp(
+    IN CONST CHAR16* s1,
+    IN CONST CHAR16* s2
+);
 
 VOID
 RUNTIMEFUNCTION
-RtStrnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src,
+RtStrCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
+
+VOID
+RUNTIMEFUNCTION
+RtStrnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
-CHAR16 *
+CHAR16*
 RUNTIMEFUNCTION
-RtStpCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src
-    );
+RtStpCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
 
-CHAR16 *
+CHAR16*
 RUNTIMEFUNCTION
-RtStpnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16    *Src,
+RtStpnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
 VOID
 RUNTIMEFUNCTION
-RtStrCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src
-    );
+RtStrCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+);
 
 VOID
 RUNTIMEFUNCTION
-RtStrnCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src,
+RtStrnCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    );
+);
 
 UINTN
 RUNTIMEFUNCTION
-RtStrLen (
-    IN CONST CHAR16   *s1
-    );
+RtStrLen(
+    IN CONST CHAR16* s1
+);
 
 UINTN
 RUNTIMEFUNCTION
-RtStrnLen (
-    IN CONST CHAR16   *s1,
+RtStrnLen(
+    IN CONST CHAR16* s1,
     IN UINTN           Len
-    );
+);
 
 UINTN
 RUNTIMEFUNCTION
-RtStrSize (
-    IN CONST CHAR16   *s1
-    );
+RtStrSize(
+    IN CONST CHAR16* s1
+);
 
 INTN
 RUNTIMEFUNCTION
-RtCompareGuid (
-    IN EFI_GUID     *Guid1,
-    IN EFI_GUID     *Guid2
-    );
+RtCompareGuid(
+    IN EFI_GUID* Guid1,
+    IN EFI_GUID* Guid2
+);
 
 UINT8
 RUNTIMEFUNCTION
 RtDecimaltoBCD(
     IN  UINT8 BcdValue
-    );
+);
 
 UINT8
 RUNTIMEFUNCTION
 RtBCDtoDecimal(
     IN  UINT8 BcdValue
-    );
+);
 
 //
 // Virtual mapping transition support.  (Only used during
@@ -166,28 +162,27 @@ RtBCDtoDecimal(
 
 VOID
 RUNTIMEFUNCTION
-RtLibEnableVirtualMappings (
+RtLibEnableVirtualMappings(
     VOID
-    );
+);
 
 VOID
 RUNTIMEFUNCTION
-RtConvertList (
+RtConvertList(
     IN UINTN            DebugDisposition,
-    IN OUT LIST_ENTRY   *ListHead
-    );
+    IN OUT LIST_ENTRY* ListHead
+);
 
 VOID
 RUNTIMEFUNCTION
-RtAcquireLock (
-    IN FLOCK    *Lock
-    );
+RtAcquireLock(
+    IN FLOCK* Lock
+);
 
 VOID
 RUNTIMEFUNCTION
-RtReleaseLock (
-    IN FLOCK    *Lock
-    );
-
+RtReleaseLock(
+    IN FLOCK* Lock
+);
 
 #endif

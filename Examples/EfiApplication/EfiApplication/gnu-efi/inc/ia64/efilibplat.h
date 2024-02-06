@@ -12,50 +12,46 @@ Abstract:
 
     EFI to compile bindings
 
-
-
 Revision History
 
 --*/
 
 #include "salproc.h"
 
-
 VOID
-InitializeLibPlatform (
+InitializeLibPlatform(
     IN EFI_HANDLE           ImageHandle,
-    IN EFI_SYSTEM_TABLE     *SystemTable
-    );
+    IN EFI_SYSTEM_TABLE* SystemTable
+);
 
 VOID
 LibInitSalAndPalProc(
-    OUT PLABEL  *SalPlabel,
-    OUT UINT64  *PalEntry
-    );
+    OUT PLABEL* SalPlabel,
+    OUT UINT64* PalEntry
+);
 
 EFI_STATUS
-LibGetSalIoPortMapping (
-    OUT UINT64  *IoPortMapping
-    );
+LibGetSalIoPortMapping(
+    OUT UINT64* IoPortMapping
+);
 
 EFI_STATUS
-LibGetSalIpiBlock (
-    OUT UINT64  *IpiBlock
-    );
+LibGetSalIpiBlock(
+    OUT UINT64* IpiBlock
+);
 
 EFI_STATUS
-LibGetSalWakeupVector (
-    OUT UINT64  *WakeVector
-    );
+LibGetSalWakeupVector(
+    OUT UINT64* WakeVector
+);
 
-VOID *
-LibSearchSalSystemTable (
-    IN  UINT8   EntryType  
-    );
-
+VOID*
+LibSearchSalSystemTable(
+    IN  UINT8   EntryType
+);
 
 VOID
-LibSalProc (
+LibSalProc(
     IN  UINT64    Arg1,
     IN  UINT64    Arg2,
     IN  UINT64    Arg3,
@@ -64,17 +60,16 @@ LibSalProc (
     IN  UINT64    Arg6,
     IN  UINT64    Arg7,
     IN  UINT64    Arg8,
-    OUT rArg      *Results  OPTIONAL
-    );
+    OUT rArg* Results  OPTIONAL
+);
 
 VOID
-LibPalProc (
+LibPalProc(
     IN  UINT64    Arg1,
     IN  UINT64    Arg2,
     IN  UINT64    Arg3,
     IN  UINT64    Arg4,
-    OUT rArg      *Results  OPTIONAL
-    );
+    OUT rArg* Results  OPTIONAL
+);
 
 #endif
-

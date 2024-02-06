@@ -10,7 +10,6 @@ Abstract:
 
     String runtime functions
 
-
 Revision History
 
 --*/
@@ -22,14 +21,16 @@ Revision History
 #endif
 INTN
 RUNTIMEFUNCTION
-RtStrCmp (
-    IN CONST CHAR16   *s1,
-    IN CONST CHAR16   *s2
-    )
+RtStrCmp(
+    IN CONST CHAR16* s1,
+    IN CONST CHAR16* s2
+)
 // compare strings
 {
-    while (*s1) {
-        if (*s1 != *s2) {
+    while (*s1)
+    {
+        if (*s1 != *s2)
+        {
             break;
         }
 
@@ -45,13 +46,14 @@ RtStrCmp (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtStrCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src
-    )
+RtStrCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+)
 // copy strings
 {
-    while (*Src) {
+    while (*Src)
+    {
         *(Dest++) = *(Src++);
     }
     *Dest = 0;
@@ -62,11 +64,11 @@ RtStrCpy (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtStrnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src,
+RtStrnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    )
+)
 // copy strings
 {
     UINTN Size = RtStrnLen(Src, Len);
@@ -78,15 +80,16 @@ RtStrnCpy (
 #ifndef __GNUC__
 #pragma RUNTIME_CODE(RtStpCpy)
 #endif
-CHAR16 *
+CHAR16*
 RUNTIMEFUNCTION
-RtStpCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src
-    )
+RtStpCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+)
 // copy strings
 {
-    while (*Src) {
+    while (*Src)
+    {
         *(Dest++) = *(Src++);
     }
     *Dest = 0;
@@ -96,13 +99,13 @@ RtStpCpy (
 #ifndef __GNUC__
 #pragma RUNTIME_CODE(RtStpnCpy)
 #endif
-CHAR16 *
+CHAR16*
 RUNTIMEFUNCTION
-RtStpnCpy (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src,
+RtStpnCpy(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN     Len
-    )
+)
 // copy strings
 {
     UINTN Size = RtStrnLen(Src, Len);
@@ -117,12 +120,12 @@ RtStpnCpy (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtStrCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src
-    )
+RtStrCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src
+)
 {
-    RtStrCpy(Dest+RtStrLen(Dest), Src);
+    RtStrCpy(Dest + RtStrLen(Dest), Src);
 }
 
 #ifndef __GNUC__
@@ -130,11 +133,11 @@ RtStrCat (
 #endif
 VOID
 RUNTIMEFUNCTION
-RtStrnCat (
-    IN CHAR16   *Dest,
-    IN CONST CHAR16   *Src,
+RtStrnCat(
+    IN CHAR16* Dest,
+    IN CONST CHAR16* Src,
     IN UINTN    Len
-    )
+)
 {
     UINTN DestSize, Size;
 
@@ -149,14 +152,14 @@ RtStrnCat (
 #endif
 UINTN
 RUNTIMEFUNCTION
-RtStrLen (
-    IN CONST CHAR16   *s1
-    )
+RtStrLen(
+    IN CONST CHAR16* s1
+)
 // string length
 {
     UINTN        len;
 
-    for (len=0; *s1; s1+=1, len+=1) ;
+    for (len = 0; *s1; s1 += 1, len += 1);
     return len;
 }
 
@@ -165,10 +168,10 @@ RtStrLen (
 #endif
 UINTN
 RUNTIMEFUNCTION
-RtStrnLen (
-    IN CONST CHAR16   *s1,
+RtStrnLen(
+    IN CONST CHAR16* s1,
     IN UINTN           Len
-    )
+)
 // string length
 {
     UINTN i;
@@ -182,14 +185,14 @@ RtStrnLen (
 #endif
 UINTN
 RUNTIMEFUNCTION
-RtStrSize (
-    IN CONST CHAR16   *s1
-    )
+RtStrSize(
+    IN CONST CHAR16* s1
+)
 // string size
 {
     UINTN        len;
 
-    for (len=0; *s1; s1+=1, len+=1) ;
+    for (len = 0; *s1; s1 += 1, len += 1);
     return (len + 1) * sizeof(CHAR16);
 }
 
@@ -200,32 +203,29 @@ UINT8
 RUNTIMEFUNCTION
 RtBCDtoDecimal(
     IN  UINT8 BcdValue
-    )
+)
 {
     UINTN   High, Low;
 
-    High    = BcdValue >> 4;
-    Low     = BcdValue - (High << 4);
+    High = BcdValue >> 4;
+    Low = BcdValue - (High << 4);
 
     return ((UINT8)(Low + (High * 10)));
 }
-
 
 #ifndef __GNUC__
 #pragma RUNTIME_CODE(RtDecimaltoBCD)
 #endif
 UINT8
 RUNTIMEFUNCTION
-RtDecimaltoBCD (
+RtDecimaltoBCD(
     IN  UINT8 DecValue
-    )
+)
 {
     UINTN   High, Low;
 
-    High    = DecValue / 10;
-    Low     = DecValue - (High * 10);
+    High = DecValue / 10;
+    Low = DecValue - (High * 10);
 
     return ((UINT8)(Low + (High << 4)));
 }
-
-

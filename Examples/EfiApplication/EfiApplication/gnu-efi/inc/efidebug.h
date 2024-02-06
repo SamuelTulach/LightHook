@@ -13,8 +13,6 @@ Abstract:
 
     EFI library debug functions
 
-
-
 Revision History
 
 --*/
@@ -23,23 +21,23 @@ extern UINTN     EFIDebug;
 
 #if EFI_DEBUG
 
-    #define DBGASSERT(a)        DbgAssert(__FILE__, __LINE__, #a)
-    #define DEBUG(a)            DbgPrint a
-    
+#define DBGASSERT(a)        DbgAssert(__FILE__, __LINE__, #a)
+#define DEBUG(a)            DbgPrint a
+
 #else
 
-    #define DBGASSERT(a)
-    #define DEBUG(a)
-    
+#define DBGASSERT(a)
+#define DEBUG(a)
+
 #endif
 
 #if EFI_DEBUG_CLEAR_MEMORY
 
-    #define DBGSETMEM(a,l)      SetMem(a,l,(CHAR8)BAD_POINTER)
+#define DBGSETMEM(a,l)      SetMem(a,l,(CHAR8)BAD_POINTER)
 
 #else
 
-    #define DBGSETMEM(a,l)
+#define DBGSETMEM(a,l)
 
 #endif
 
@@ -59,7 +57,7 @@ extern UINTN     EFIDebug;
 #define D_NET_ULTRA   0x00008000          // SNI Driver
 #define D_TXTIN       0x00010000          // Simple Input Driver
 #define D_TXTOUT      0x00020000          // Simple Text Output Driver
-#define D_ERROR_ATA	  0x00040000		  		// ATA error messages 
+#define D_ERROR_ATA	  0x00040000		  		// ATA error messages
 #define D_ERROR       0x80000000          // Error
 
 #define D_RESERVED    0x7fffC880          // Bits not reserved above
@@ -76,15 +74,15 @@ extern UINTN     EFIDebug;
 
 #if EFI_DEBUG
 
-    #define ASSERT(a)               if(!(a))       DBGASSERT(a)
-    #define ASSERT_LOCKED(l)        if(!(l)->Lock) DBGASSERT(l not locked)
-    #define ASSERT_STRUCT(p,t)      DBGASSERT(t not structure), p
+#define ASSERT(a)               if(!(a))       DBGASSERT(a)
+#define ASSERT_LOCKED(l)        if(!(l)->Lock) DBGASSERT(l not locked)
+#define ASSERT_STRUCT(p,t)      DBGASSERT(t not structure), p
 
 #else
 
-    #define ASSERT(a)               
-    #define ASSERT_LOCKED(l)        
-    #define ASSERT_STRUCT(p,t)      
+#define ASSERT(a)
+#define ASSERT_LOCKED(l)
+#define ASSERT_STRUCT(p,t)
 
 #endif
 
@@ -93,18 +91,18 @@ extern UINTN     EFIDebug;
 //
 
 INTN
-DbgAssert (
-    CONST CHAR8   *file,
+DbgAssert(
+    CONST CHAR8* file,
     INTN          lineno,
-    CONST CHAR8   *string
-    );
+    CONST CHAR8* string
+);
 
 INTN
-DbgPrint (
+DbgPrint(
     INTN          mask,
-    CONST CHAR8   *format,
+    CONST CHAR8* format,
     ...
-    );
+);
 
 //
 // Instruction Set Architectures definitions for debuggers
@@ -131,7 +129,8 @@ typedef INTN EFI_EXCEPTION_TYPE;
 #define EXCEPT_IA32_MACHINE_CHECK   18
 #define EXCEPT_IA32_SIMD            19
 
-typedef struct {
+typedef struct
+{
     UINT16  Fcw;
     UINT16  Fsw;
     UINT16  Ftw;
@@ -161,7 +160,8 @@ typedef struct {
     UINT8   Reserved11[14 * 16];
 } EFI_FX_SAVE_STATE_IA32;
 
-typedef struct {
+typedef struct
+{
     UINT32                 ExceptionData;
     EFI_FX_SAVE_STATE_IA32 FxSaveState;
     UINT32                 Dr0;
@@ -216,7 +216,8 @@ typedef struct {
 #define EXCEPT_X64_MACHINE_CHECK   18
 #define EXCEPT_X64_SIMD            19
 
-typedef struct {
+typedef struct
+{
     UINT16  Fcw;
     UINT16  Fsw;
     UINT16  Ftw;
@@ -243,7 +244,8 @@ typedef struct {
     UINT8   Reserved11[14 * 16];
 } EFI_FX_SAVE_STATE_X64;
 
-typedef struct {
+typedef struct
+{
     UINT64                ExceptionData;
     EFI_FX_SAVE_STATE_X64 FxSaveState;
     UINT64                Dr0;
@@ -322,7 +324,8 @@ typedef struct {
 #define EXCEPT_IPF_IA32_INTERCEPT                 46
 #define EXCEPT_IPF_IA32_INTERRUPT                 47
 
-typedef struct {
+typedef struct
+{
     UINT64  Reserved;
     UINT64  R1;
     UINT64  R2;
@@ -458,7 +461,8 @@ typedef struct {
 #define EXCEPT_EBC_STEP                 10
 #define MAX_EBC_EXCEPTION               EXCEPT_EBC_STEP
 
-typedef struct {
+typedef struct
+{
     UINT64  R0;
     UINT64  R1;
     UINT64  R2;
@@ -483,7 +487,8 @@ typedef struct {
 #define EXCEPT_ARM_FIQ                      7
 #define MAX_ARM_EXCEPTION                   EXCEPT_ARM_FIQ
 
-typedef struct {
+typedef struct
+{
     UINT32  R0;
     UINT32  R1;
     UINT32  R2;
@@ -507,33 +512,34 @@ typedef struct {
     UINT32  IFAR;
 } EFI_SYSTEM_CONTEXT_ARM;
 
-
-typedef union {
-    EFI_SYSTEM_CONTEXT_EBC  *SystemContextEbc;
-    EFI_SYSTEM_CONTEXT_IA32 *SystemContextIa32;
-    EFI_SYSTEM_CONTEXT_X64  *SystemContextX64;
-    EFI_SYSTEM_CONTEXT_IPF  *SystemContextIpf;
-    EFI_SYSTEM_CONTEXT_ARM  *SystemContextArm;
+typedef union
+{
+    EFI_SYSTEM_CONTEXT_EBC* SystemContextEbc;
+    EFI_SYSTEM_CONTEXT_IA32* SystemContextIa32;
+    EFI_SYSTEM_CONTEXT_X64* SystemContextX64;
+    EFI_SYSTEM_CONTEXT_IPF* SystemContextIpf;
+    EFI_SYSTEM_CONTEXT_ARM* SystemContextArm;
 } EFI_SYSTEM_CONTEXT;
 
 typedef
 VOID
-(EFIAPI *EFI_EXCEPTION_CALLBACK)(
+(EFIAPI* EFI_EXCEPTION_CALLBACK)(
     IN     EFI_EXCEPTION_TYPE               ExceptionType,
     IN OUT EFI_SYSTEM_CONTEXT               SystemContext);
 
 typedef
 VOID
-(EFIAPI *EFI_PERIODIC_CALLBACK)(
+(EFIAPI* EFI_PERIODIC_CALLBACK)(
     IN OUT EFI_SYSTEM_CONTEXT               SystemContext);
 
-typedef enum {
+typedef enum
+{
     IsaIa32 = EFI_IMAGE_MACHINE_IA32,
     IsaX64 = EFI_IMAGE_MACHINE_X64,
     IsaIpf = EFI_IMAGE_MACHINE_IA64,
     IsaEbc = EFI_IMAGE_MACHINE_EBC,
     IsaArm = EFI_IMAGE_MACHINE_ARMTHUMB_MIXED,
-//	IsaArm64 = EFI_IMAGE_MACHINE_AARCH64
+    //	IsaArm64 = EFI_IMAGE_MACHINE_AARCH64
 } EFI_INSTRUCTION_SET_ARCHITECTURE;
 
 //
@@ -548,27 +554,31 @@ typedef enum {
 #define EFI_DEBUG_IMAGE_INFO_INITIAL_SIZE       (EFI_PAGE_SIZE / sizeof (UINTN))
 #define EFI_DEBUG_IMAGE_INFO_TYPE_NORMAL        0x01
 
-typedef struct {
-UINT64                Signature;
-EFI_PHYSICAL_ADDRESS  EfiSystemTableBase;
-UINT32                Crc32;
+typedef struct
+{
+    UINT64                Signature;
+    EFI_PHYSICAL_ADDRESS  EfiSystemTableBase;
+    UINT32                Crc32;
 } EFI_SYSTEM_TABLE_POINTER;
 
-typedef struct {
-UINT32                    ImageInfoType;
-EFI_LOADED_IMAGE_PROTOCOL *LoadedImageProtocolInstance;
-EFI_HANDLE                *ImageHandle;
+typedef struct
+{
+    UINT32                    ImageInfoType;
+    EFI_LOADED_IMAGE_PROTOCOL* LoadedImageProtocolInstance;
+    EFI_HANDLE* ImageHandle;
 } EFI_DEBUG_IMAGE_INFO_NORMAL;
 
-typedef union {
-UINT32                      *ImageInfoType;
-EFI_DEBUG_IMAGE_INFO_NORMAL *NormalImage;
+typedef union
+{
+    UINT32* ImageInfoType;
+    EFI_DEBUG_IMAGE_INFO_NORMAL* NormalImage;
 } EFI_DEBUG_IMAGE_INFO;
 
-typedef struct {
-volatile UINT32       UpdateStatus;
-UINT32                TableSize;
-EFI_DEBUG_IMAGE_INFO  *EfiDebugImageInfoTable;
+typedef struct
+{
+    volatile UINT32       UpdateStatus;
+    UINT32                TableSize;
+    EFI_DEBUG_IMAGE_INFO* EfiDebugImageInfoTable;
 } EFI_DEBUG_IMAGE_INFO_TABLE_HEADER;
 
 //
@@ -582,34 +592,35 @@ INTERFACE_DECL(_EFI_DEBUG_SUPPORT_PROTOCOL);
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_GET_MAXIMUM_PROCESSOR_INDEX)(
-    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL  *This,
-    OUT UINTN                              *MaxProcessorIndex);
+(EFIAPI* EFI_GET_MAXIMUM_PROCESSOR_INDEX)(
+    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL* This,
+    OUT UINTN* MaxProcessorIndex);
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_REGISTER_PERIODIC_CALLBACK)(
-    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL  *This,
+(EFIAPI* EFI_REGISTER_PERIODIC_CALLBACK)(
+    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL* This,
     IN UINTN                               ProcessorIndex,
     IN EFI_PERIODIC_CALLBACK               PeriodicCallback);
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_REGISTER_EXCEPTION_CALLBACK)(
-    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL  *This,
+(EFIAPI* EFI_REGISTER_EXCEPTION_CALLBACK)(
+    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL* This,
     IN UINTN                               ProcessorIndex,
     IN EFI_EXCEPTION_CALLBACK              ExceptionCallback,
     IN EFI_EXCEPTION_TYPE                  ExceptionType);
 
 typedef
 EFI_STATUS
-(EFIAPI *EFI_INVALIDATE_INSTRUCTION_CACHE)(
-    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL  *This,
+(EFIAPI* EFI_INVALIDATE_INSTRUCTION_CACHE)(
+    IN struct _EFI_DEBUG_SUPPORT_PROTOCOL* This,
     IN UINTN                               ProcessorIndex,
-    IN VOID                                *Start,
+    IN VOID* Start,
     IN UINT64                              Length);
 
-typedef struct _EFI_DEBUG_SUPPORT_PROTOCOL {
+typedef struct _EFI_DEBUG_SUPPORT_PROTOCOL
+{
     EFI_INSTRUCTION_SET_ARCHITECTURE  Isa;
     EFI_GET_MAXIMUM_PROCESSOR_INDEX   GetMaximumProcessorIndex;
     EFI_REGISTER_PERIODIC_CALLBACK    RegisterPeriodicCallback;

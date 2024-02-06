@@ -1,4 +1,4 @@
-/* 
+/*
     PE32+ header file
  */
 #ifndef _PE_H
@@ -7,11 +7,11 @@
 #define IMAGE_DOS_SIGNATURE                 0x5A4D      // MZ
 #define IMAGE_OS2_SIGNATURE                 0x454E      // NE
 #define IMAGE_OS2_SIGNATURE_LE              0x454C      // LE
-#define IMAGE_NT_SIGNATURE                  0x00004550  // PE00  
+#define IMAGE_NT_SIGNATURE                  0x00004550  // PE00
 #define IMAGE_EDOS_SIGNATURE                0x44454550  // PEED
 
-
-typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
+typedef struct _IMAGE_DOS_HEADER
+{      // DOS .EXE header
     UINT16   e_magic;                     // Magic number
     UINT16   e_cblp;                      // Bytes on last page of file
     UINT16   e_cp;                        // Pages in file
@@ -31,9 +31,10 @@ typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
     UINT16   e_oeminfo;                   // OEM information; e_oemid specific
     UINT16   e_res2[10];                  // Reserved words
     UINT32   e_lfanew;                    // File address of new exe header
-  } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
+} IMAGE_DOS_HEADER, * PIMAGE_DOS_HEADER;
 
-typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
+typedef struct _IMAGE_OS2_HEADER
+{      // OS/2 .EXE header
     UINT16   ne_magic;                    // Magic number
     UINT8    ne_ver;                      // Version number
     UINT8    ne_rev;                      // Revision number
@@ -64,13 +65,14 @@ typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
     UINT16   ne_psegrefbytes;             // offset to segment ref. bytes
     UINT16   ne_swaparea;                 // Minimum code swap area size
     UINT16   ne_expver;                   // Expected Windows version number
-  } IMAGE_OS2_HEADER, *PIMAGE_OS2_HEADER;
+} IMAGE_OS2_HEADER, * PIMAGE_OS2_HEADER;
 
 //
 // File header format.
 //
 
-typedef struct _IMAGE_FILE_HEADER {
+typedef struct _IMAGE_FILE_HEADER
+{
     UINT16   Machine;
     UINT16   NumberOfSections;
     UINT32   TimeDateStamp;
@@ -78,7 +80,7 @@ typedef struct _IMAGE_FILE_HEADER {
     UINT32   NumberOfSymbols;
     UINT16   SizeOfOptionalHeader;
     UINT16   Characteristics;
-} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
+} IMAGE_FILE_HEADER, * PIMAGE_FILE_HEADER;
 
 #define IMAGE_SIZEOF_FILE_HEADER             20
 
@@ -108,10 +110,11 @@ typedef struct _IMAGE_FILE_HEADER {
 // Directory format.
 //
 
-typedef struct _IMAGE_DATA_DIRECTORY {
+typedef struct _IMAGE_DATA_DIRECTORY
+{
     UINT32   VirtualAddress;
     UINT32   Size;
-} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+} IMAGE_DATA_DIRECTORY, * PIMAGE_DATA_DIRECTORY;
 
 #define IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16
 
@@ -119,7 +122,8 @@ typedef struct _IMAGE_DATA_DIRECTORY {
 // Optional header format.
 //
 
-typedef struct _IMAGE_OPTIONAL_HEADER {
+typedef struct _IMAGE_OPTIONAL_HEADER
+{
     //
     // Standard fields.
     //
@@ -133,7 +137,7 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     UINT32    AddressOfEntryPoint;
     UINT32    BaseOfCode;
     UINT32    BaseOfData;
-                
+
     //
     // NT additional fields.
     //
@@ -160,9 +164,10 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     UINT32   LoaderFlags;
     UINT32   NumberOfRvaAndSizes;
     IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
-} IMAGE_OPTIONAL_HEADER, *PIMAGE_OPTIONAL_HEADER;
+} IMAGE_OPTIONAL_HEADER, * PIMAGE_OPTIONAL_HEADER;
 
-typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
+typedef struct _IMAGE_ROM_OPTIONAL_HEADER
+{
     UINT16  Magic;
     UINT8   MajorLinkerVersion;
     UINT8   MinorLinkerVersion;
@@ -176,7 +181,7 @@ typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
     UINT32  GprMask;
     UINT32  CprMask[4];
     UINT32  GpValue;
-} IMAGE_ROM_OPTIONAL_HEADER, *PIMAGE_ROM_OPTIONAL_HEADER;
+} IMAGE_ROM_OPTIONAL_HEADER, * PIMAGE_ROM_OPTIONAL_HEADER;
 
 #define IMAGE_SIZEOF_ROM_OPTIONAL_HEADER      56
 #define IMAGE_SIZEOF_STD_OPTIONAL_HEADER      28
@@ -185,23 +190,24 @@ typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
 #define IMAGE_NT_OPTIONAL_HDR_MAGIC        0x10b
 #define IMAGE_ROM_OPTIONAL_HDR_MAGIC       0x107
 
-typedef struct _IMAGE_NT_HEADERS {
+typedef struct _IMAGE_NT_HEADERS
+{
     UINT32 Signature;
     IMAGE_FILE_HEADER FileHeader;
     IMAGE_OPTIONAL_HEADER OptionalHeader;
-} IMAGE_NT_HEADERS, *PIMAGE_NT_HEADERS;
+} IMAGE_NT_HEADERS, * PIMAGE_NT_HEADERS;
 
-typedef struct _IMAGE_ROM_HEADERS {
+typedef struct _IMAGE_ROM_HEADERS
+{
     IMAGE_FILE_HEADER FileHeader;
     IMAGE_ROM_OPTIONAL_HEADER OptionalHeader;
-} IMAGE_ROM_HEADERS, *PIMAGE_ROM_HEADERS;
+} IMAGE_ROM_HEADERS, * PIMAGE_ROM_HEADERS;
 
 #define IMAGE_FIRST_SECTION( ntheader ) ((PIMAGE_SECTION_HEADER)        \
     ((UINT32)ntheader +                                                  \
      FIELD_OFFSET( IMAGE_NT_HEADERS, OptionalHeader ) +                 \
      ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader   \
     ))
-
 
 // Subsystem Values
 
@@ -211,7 +217,6 @@ typedef struct _IMAGE_ROM_HEADERS {
 #define IMAGE_SUBSYSTEM_WINDOWS_CUI          3   // Image runs in the Windows character subsystem.
 #define IMAGE_SUBSYSTEM_OS2_CUI              5   // image runs in the OS/2 character subsystem.
 #define IMAGE_SUBSYSTEM_POSIX_CUI            7   // image run  in the Posix character subsystem.
-
 
 // Directory Entries
 
@@ -233,11 +238,13 @@ typedef struct _IMAGE_ROM_HEADERS {
 
 #define IMAGE_SIZEOF_SHORT_NAME              8
 
-typedef struct _IMAGE_SECTION_HEADER {
+typedef struct _IMAGE_SECTION_HEADER
+{
     UINT8   Name[IMAGE_SIZEOF_SHORT_NAME];
-    union {
-            UINT32   PhysicalAddress;
-            UINT32   VirtualSize;
+    union
+    {
+        UINT32   PhysicalAddress;
+        UINT32   VirtualSize;
     } Misc;
     UINT32   VirtualAddress;
     UINT32   SizeOfRawData;
@@ -247,7 +254,7 @@ typedef struct _IMAGE_SECTION_HEADER {
     UINT16   NumberOfRelocations;
     UINT16   NumberOfLinenumbers;
     UINT32   Characteristics;
-} IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
+} IMAGE_SECTION_HEADER, * PIMAGE_SECTION_HEADER;
 
 #define IMAGE_SIZEOF_SECTION_HEADER          40
 
@@ -281,7 +288,6 @@ typedef struct _IMAGE_SECTION_HEADER {
 //
 // Symbol format.
 //
-
 
 #define IMAGE_SIZEOF_SYMBOL                  18
 
@@ -383,12 +389,12 @@ typedef struct _IMAGE_SECTION_HEADER {
 #define IMAGE_WEAK_EXTERN_SEARCH_LIBRARY   2
 #define IMAGE_WEAK_EXTERN_SEARCH_ALIAS     3
 
-
 //
 // Relocation format.
 //
 
-typedef struct _IMAGE_RELOCATION {
+typedef struct _IMAGE_RELOCATION
+{
     UINT32   VirtualAddress;
     UINT32   SymbolTableIndex;
     UINT16    Type;
@@ -483,11 +489,12 @@ typedef struct _IMAGE_RELOCATION {
 // Based relocation format.
 //
 
-typedef struct _IMAGE_BASE_RELOCATION {
+typedef struct _IMAGE_BASE_RELOCATION
+{
     UINT32   VirtualAddress;
     UINT32   SizeOfBlock;
-//  UINT16    TypeOffset[1];
-} IMAGE_BASE_RELOCATION, *PIMAGE_BASE_RELOCATION;
+    //  UINT16    TypeOffset[1];
+} IMAGE_BASE_RELOCATION, * PIMAGE_BASE_RELOCATION;
 
 #define IMAGE_SIZEOF_BASE_RELOCATION         8
 
@@ -508,8 +515,10 @@ typedef struct _IMAGE_BASE_RELOCATION {
 // Line number format.
 //
 
-typedef struct _IMAGE_LINENUMBER {
-    union {
+typedef struct _IMAGE_LINENUMBER
+{
+    union
+    {
         UINT32   SymbolTableIndex;               // Symbol table index of function name if Linenumber is 0.
         UINT32   VirtualAddress;                 // Virtual address of line number.
     } Type;
@@ -529,7 +538,8 @@ typedef struct _IMAGE_LINENUMBER {
 #define IMAGE_ARCHIVE_LINKER_MEMBER          "/               "
 #define IMAGE_ARCHIVE_LONGNAMES_MEMBER       "//              "
 
-typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER {
+typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER
+{
     UINT8     Name[16];                          // File member name - `/' terminated.
     UINT8     Date[12];                          // File member date - decimal.
     UINT8     UserID[6];                         // File member user id - decimal.
@@ -537,7 +547,7 @@ typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER {
     UINT8     Mode[8];                           // File member mode - octal.
     UINT8     Size[10];                          // File member size - decimal.
     UINT8     EndHeader[2];                      // String to end header.
-} IMAGE_ARCHIVE_MEMBER_HEADER, *PIMAGE_ARCHIVE_MEMBER_HEADER;
+} IMAGE_ARCHIVE_MEMBER_HEADER, * PIMAGE_ARCHIVE_MEMBER_HEADER;
 
 #define IMAGE_SIZEOF_ARCHIVE_MEMBER_HDR      60
 
@@ -549,7 +559,8 @@ typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER {
 // Export Format
 //
 
-typedef struct _IMAGE_EXPORT_DIRECTORY {
+typedef struct _IMAGE_EXPORT_DIRECTORY
+{
     UINT32   Characteristics;
     UINT32   TimeDateStamp;
     UINT16   MajorVersion;
@@ -558,38 +569,42 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
     UINT32   Base;
     UINT32   NumberOfFunctions;
     UINT32   NumberOfNames;
-    UINT32   *AddressOfFunctions;
-    UINT32   *AddressOfNames;
-    UINT32   *AddressOfNameOrdinals;
-} IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;
+    UINT32* AddressOfFunctions;
+    UINT32* AddressOfNames;
+    UINT32* AddressOfNameOrdinals;
+} IMAGE_EXPORT_DIRECTORY, * PIMAGE_EXPORT_DIRECTORY;
 
 //
 // Import Format
 //
 
-typedef struct _IMAGE_IMPORT_BY_NAME {
+typedef struct _IMAGE_IMPORT_BY_NAME
+{
     UINT16    Hint;
     UINT8     Name[1];
-} IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
+} IMAGE_IMPORT_BY_NAME, * PIMAGE_IMPORT_BY_NAME;
 
-typedef struct _IMAGE_THUNK_DATA {
-    union {
+typedef struct _IMAGE_THUNK_DATA
+{
+    union
+    {
         UINT32 Function;
         UINT32 Ordinal;
         PIMAGE_IMPORT_BY_NAME AddressOfData;
     } u1;
-} IMAGE_THUNK_DATA, *PIMAGE_THUNK_DATA;
+} IMAGE_THUNK_DATA, * PIMAGE_THUNK_DATA;
 
 #define IMAGE_ORDINAL_FLAG 0x80000000
 #define IMAGE_SNAP_BY_ORDINAL(Ordinal) ((Ordinal & IMAGE_ORDINAL_FLAG) != 0)
 #define IMAGE_ORDINAL(Ordinal) (Ordinal & 0xffff)
 
-typedef struct _IMAGE_IMPORT_DESCRIPTOR {
+typedef struct _IMAGE_IMPORT_DESCRIPTOR
+{
     UINT32   Characteristics;
     UINT32   TimeDateStamp;
     UINT32   ForwarderChain;
     UINT32   Name;
     PIMAGE_THUNK_DATA FirstThunk;
-} IMAGE_IMPORT_DESCRIPTOR, *PIMAGE_IMPORT_DESCRIPTOR;
+} IMAGE_IMPORT_DESCRIPTOR, * PIMAGE_IMPORT_DESCRIPTOR;
 
 #endif

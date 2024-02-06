@@ -1,7 +1,6 @@
 #ifndef _EFI_PXE_H
 #define _EFI_PXE_H
 
-
 /*++
 Copyright (c) Intel  1999
 
@@ -326,7 +325,7 @@ typedef PXE_UINT16 PXE_OPFLAGS;
 #define PXE_OPFLAGS_RECEIVE_FILTER_UNICAST          0x0001
 
 //
-// Enable broadcast packet receiving.  Packets sent to the broadcast 
+// Enable broadcast packet receiving.  Packets sent to the broadcast
 // MAC address will be received.
 //
 #define PXE_OPFLAGS_RECEIVE_FILTER_BROADCAST        0x0002
@@ -485,7 +484,6 @@ typedef PXE_UINT16 PXE_STATFLAGS;
 #define PXE_STATFLAGS_CABLE_DETECT_NOT_SUPPORTED 0x0000
 #define PXE_STATFLAGS_CABLE_DETECT_SUPPORTED     0x0001
 
-
 ////////////////////////////////////////
 // UNDI Initialize
 //
@@ -522,7 +520,6 @@ typedef PXE_UINT16 PXE_STATFLAGS;
 // If set, command interrupts are enabled.
 //
 #define PXE_STATFLAGS_INTERRUPT_COMMAND         0x0004
-
 
 ////////////////////////////////////////
 // UNDI Receive Filters
@@ -577,7 +574,6 @@ typedef PXE_UINT16 PXE_STATFLAGS;
 //
 
 // No additional StatFlags
-
 
 ////////////////////////////////////////
 // UNDI Get Status
@@ -670,7 +666,6 @@ typedef PXE_UINT16 PXE_STATCODE;
 #define PXE_STATCODE_NOT_ENOUGH_MEMORY		0x0012
 #define PXE_STATCODE_NO_DATA			0x0013
 
-
 typedef PXE_UINT16 PXE_IFNUM;
 
 //
@@ -690,7 +685,7 @@ typedef PXE_UINT16 PXE_CONTROL;
 // Setting this flag directs the UNDI to queue this command for later
 // execution if the UNDI is busy and it supports command queuing.
 // If queuing is not supported, a PXE_STATCODE_INVALID_CONTROL error
-// is returned.  If the queue is full, a PXE_STATCODE_CDB_QUEUE_FULL 
+// is returned.  If the queue is full, a PXE_STATCODE_CDB_QUEUE_FULL
 // error is returned.
 //
 #define PXE_CONTROL_QUEUE_IF_BUSY               0x0002
@@ -753,20 +748,21 @@ typedef PXE_UINT16 PXE_MEDIA_PROTOCOL;
 #define PXE_IFTYPE_TOKENRING                    0x04
 #define PXE_IFTYPE_FIBRE_CHANNEL                0x12
 
-typedef struct s_pxe_hw_undi {
-PXE_UINT32 Signature;       // PXE_ROMID_SIGNATURE
-PXE_UINT8 Len;          // sizeof(PXE_HW_UNDI)
-PXE_UINT8 Fudge;            // makes 8-bit cksum equal zero
-PXE_UINT8 Rev;          // PXE_ROMID_REV
-PXE_UINT8 IFcnt;            // physical connector count
-PXE_UINT8 MajorVer;         // PXE_ROMID_MAJORVER
-PXE_UINT8 MinorVer;         // PXE_ROMID_MINORVER
-PXE_UINT16 reserved;        // zero, not used
-PXE_UINT32 Implementation;      // implementation flags
-// reserved             // vendor use
-// PXE_UINT32 Status;       // status port
-// PXE_UINT32 Command;      // command port
-// PXE_UINT64 CDBaddr;      // CDB address port
+typedef struct s_pxe_hw_undi
+{
+    PXE_UINT32 Signature;       // PXE_ROMID_SIGNATURE
+    PXE_UINT8 Len;          // sizeof(PXE_HW_UNDI)
+    PXE_UINT8 Fudge;            // makes 8-bit cksum equal zero
+    PXE_UINT8 Rev;          // PXE_ROMID_REV
+    PXE_UINT8 IFcnt;            // physical connector count
+    PXE_UINT8 MajorVer;         // PXE_ROMID_MAJORVER
+    PXE_UINT8 MinorVer;         // PXE_ROMID_MINORVER
+    PXE_UINT16 reserved;        // zero, not used
+    PXE_UINT32 Implementation;      // implementation flags
+    // reserved             // vendor use
+    // PXE_UINT32 Status;       // status port
+    // PXE_UINT32 Command;      // command port
+    // PXE_UINT64 CDBaddr;      // CDB address port
 } PXE_HW_UNDI;
 
 //
@@ -848,25 +844,27 @@ PXE_UINT32 Implementation;      // implementation flags
 #define PXE_HWCMD_CLEAR_PACKET_RX_INT           0x00000002
 #define PXE_HWCMD_CLEAR_CMD_COMPLETE_INT            0x00000001
 
-typedef struct s_pxe_sw_undi {
-PXE_UINT32 Signature;       // PXE_ROMID_SIGNATURE
-PXE_UINT8 Len;          // sizeof(PXE_SW_UNDI)
-PXE_UINT8 Fudge;            // makes 8-bit cksum zero
-PXE_UINT8 Rev;          // PXE_ROMID_REV
-PXE_UINT8 IFcnt;            // physical connector count
-PXE_UINT8 MajorVer;         // PXE_ROMID_MAJORVER
-PXE_UINT8 MinorVer;         // PXE_ROMID_MINORVER
-PXE_UINT16 reserved1;       // zero, not used
-PXE_UINT32 Implementation;      // Implementation flags
-PXE_UINT64 EntryPoint;      // API entry point
-PXE_UINT8 reserved2[3];     // zero, not used
-PXE_UINT8 BusCnt;           // number of bustypes supported
-PXE_UINT32 BusType[1];      // list of supported bustypes
+typedef struct s_pxe_sw_undi
+{
+    PXE_UINT32 Signature;       // PXE_ROMID_SIGNATURE
+    PXE_UINT8 Len;          // sizeof(PXE_SW_UNDI)
+    PXE_UINT8 Fudge;            // makes 8-bit cksum zero
+    PXE_UINT8 Rev;          // PXE_ROMID_REV
+    PXE_UINT8 IFcnt;            // physical connector count
+    PXE_UINT8 MajorVer;         // PXE_ROMID_MAJORVER
+    PXE_UINT8 MinorVer;         // PXE_ROMID_MINORVER
+    PXE_UINT16 reserved1;       // zero, not used
+    PXE_UINT32 Implementation;      // Implementation flags
+    PXE_UINT64 EntryPoint;      // API entry point
+    PXE_UINT8 reserved2[3];     // zero, not used
+    PXE_UINT8 BusCnt;           // number of bustypes supported
+    PXE_UINT32 BusType[1];      // list of supported bustypes
 } PXE_SW_UNDI;
 
-typedef union u_pxe_undi {
-PXE_HW_UNDI hw;
-PXE_SW_UNDI sw;
+typedef union u_pxe_undi
+{
+    PXE_HW_UNDI hw;
+    PXE_SW_UNDI sw;
 } PXE_UNDI;
 
 //
@@ -913,56 +911,59 @@ PXE_SW_UNDI sw;
 #define PXE_ROMID_IMP_PACKET_RX_INT_SUPPORTED       0x00000002
 #define PXE_ROMID_IMP_CMD_COMPLETE_INT_SUPPORTED        0x00000001
 
- 
-typedef struct s_pxe_cdb {
-PXE_OPCODE OpCode;
-PXE_OPFLAGS OpFlags;
-PXE_UINT16 CPBsize;
-PXE_UINT16 DBsize;
-UINT64 CPBaddr;
-UINT64 DBaddr;
-PXE_STATCODE StatCode;
-PXE_STATFLAGS StatFlags;
-PXE_UINT16 IFnum;
-PXE_CONTROL Control;
+typedef struct s_pxe_cdb
+{
+    PXE_OPCODE OpCode;
+    PXE_OPFLAGS OpFlags;
+    PXE_UINT16 CPBsize;
+    PXE_UINT16 DBsize;
+    UINT64 CPBaddr;
+    UINT64 DBaddr;
+    PXE_STATCODE StatCode;
+    PXE_STATFLAGS StatFlags;
+    PXE_UINT16 IFnum;
+    PXE_CONTROL Control;
 } PXE_CDB;
 
-
-typedef union u_pxe_ip_addr {
-PXE_IPV6 IPv6;
-PXE_IPV4 IPv4;
+typedef union u_pxe_ip_addr
+{
+    PXE_IPV6 IPv6;
+    PXE_IPV4 IPv4;
 } PXE_IP_ADDR;
 
-typedef union pxe_device {
-//
-// PCI and PC Card NICs are both identified using bus, device
-// and function numbers.  For PC Card, this may require PC
-// Card services to be loaded in the BIOS or preboot
-// environment.
-//
-struct {
-//
-// See S/W UNDI ROMID structure definition for PCI and
-// PCC BusType definitions.
-//
-PXE_UINT32 BusType;
+typedef union pxe_device
+{
+    //
+    // PCI and PC Card NICs are both identified using bus, device
+    // and function numbers.  For PC Card, this may require PC
+    // Card services to be loaded in the BIOS or preboot
+    // environment.
+    //
+    struct
+    {
+        //
+        // See S/W UNDI ROMID structure definition for PCI and
+        // PCC BusType definitions.
+        //
+        PXE_UINT32 BusType;
 
-//
-// Bus, device & function numbers that locate this device.
-//
-PXE_UINT16 Bus;
-PXE_UINT8 Device;
-PXE_UINT8 Function;
-} PCI, PCC;
+        //
+        // Bus, device & function numbers that locate this device.
+        //
+        PXE_UINT16 Bus;
+        PXE_UINT8 Device;
+        PXE_UINT8 Function;
+    } PCI, PCC;
 
-//
-// %%TBD - More information is needed about enumerating
-// USB and 1394 devices.
-//
-struct {
-PXE_UINT32 BusType;
-PXE_UINT32 tdb;
-} USB, _1394;
+    //
+    // %%TBD - More information is needed about enumerating
+    // USB and 1394 devices.
+    //
+    struct
+    {
+        PXE_UINT32 BusType;
+        PXE_UINT32 tdb;
+    } USB, _1394;
 } PXE_DEVICE;
 
 // cpb and db definitions
@@ -972,13 +973,14 @@ PXE_UINT32 tdb;
 #define MAX_XMIT_BUFFERS    32  // recycling Q length for xmit_done
 #define MAX_MCAST_ADDRESS_CNT 8
 
-typedef struct s_pxe_cpb_start {
+typedef struct s_pxe_cpb_start
+{
     //
     // PXE_VOID Delay(PXE_UINT64 microseconds);
     //
     // UNDI will never request a delay smaller than 10 microseconds
     // and will always request delays in increments of 10 microseconds.
-    // The Delay() CallBack routine must delay between n and n + 10 
+    // The Delay() CallBack routine must delay between n and n + 10
     // microseconds before returning control to the UNDI.
     //
     // This field cannot be set to zero.
@@ -1010,16 +1012,16 @@ typedef struct s_pxe_cpb_start {
     // buffer.  If virtual and physical addresses are the same, just
     // copy the virtual address to the physical address buffer.
     //
-    // This field can be set to zero if virtual and physical addresses 
+    // This field can be set to zero if virtual and physical addresses
     // are equal.
     //
     PXE_UINT64 Virt2Phys;
     //
-    // PXE_VOID Mem_IO(PXE_UINT8 read_write, PXE_UINT8 len, PXE_UINT64 port, 
+    // PXE_VOID Mem_IO(PXE_UINT8 read_write, PXE_UINT8 len, PXE_UINT64 port,
     //              PXE_UINT64 buf_addr);
     //
-    // UNDI will read or write the device io space using this call back 
-    // function. It passes the number of bytes as the len parameter and it 
+    // UNDI will read or write the device io space using this call back
+    // function. It passes the number of bytes as the len parameter and it
     // will be either 1,2,4 or 8.
     //
     // This field can not be set to zero.
@@ -1034,8 +1036,8 @@ typedef struct s_pxe_cpb_start {
 #define PXE_MEM_READ                        2
 #define PXE_MEM_WRITE                       4
 
-
-typedef struct s_pxe_db_get_init_info {
+typedef struct s_pxe_db_get_init_info
+{
     //
     // Minimum length of locked memory buffer that must be given to
     // the Initialize command. Giving UNDI more memory will generally
@@ -1087,10 +1089,10 @@ typedef struct s_pxe_db_get_init_info {
     PXE_UINT16 MCastFilterCnt;
 
     //
-    // Default number and size of transmit and receive buffers that will 
-    // be allocated by the UNDI.  If MemoryRequired is non-zero, this 
-    // allocation will come out of the memory buffer given to the Initialize 
-    // command.  If MemoryRequired is zero, this allocation will come out of 
+    // Default number and size of transmit and receive buffers that will
+    // be allocated by the UNDI.  If MemoryRequired is non-zero, this
+    // allocation will come out of the memory buffer given to the Initialize
+    // command.  If MemoryRequired is zero, this allocation will come out of
     // memory on the NIC.
     //
     PXE_UINT16 TxBufCnt;
@@ -1127,8 +1129,8 @@ typedef struct s_pxe_db_get_init_info {
 #define PXE_LOOPBACK_INTERNAL_SUPPORTED         1
 #define PXE_LOOPBACK_EXTERNAL_SUPPORTED         2
 
-
-typedef struct s_pxe_pci_config_info {
+typedef struct s_pxe_pci_config_info
+{
     //
     // This is the flag field for the PXE_DB_GET_CONFIG_INFO union.
     // For PCI bus devices, this field is set to PXE_BUSTYPE_PCI.
@@ -1144,24 +1146,25 @@ typedef struct s_pxe_pci_config_info {
     PXE_UINT8 Function;
 
     //
-    // This is a copy of the PCI configuration space for this 
+    // This is a copy of the PCI configuration space for this
     // network device.
     //
-    union {
+    union
+    {
         PXE_UINT8 Byte[256];
         PXE_UINT16 Word[128];
         PXE_UINT32 Dword[64];
     } Config;
 } PXE_PCI_CONFIG_INFO;
 
-
-typedef struct s_pxe_pcc_config_info {
+typedef struct s_pxe_pcc_config_info
+{
     //
     // This is the flag field for the PXE_DB_GET_CONFIG_INFO union.
     // For PCC bus devices, this field is set to PXE_BUSTYPE_PCC.
     //
     PXE_UINT32 BusType;
-    
+
     //
     // This identifies the PCC network device that this UNDI interface
     // is bound to.
@@ -1171,38 +1174,39 @@ typedef struct s_pxe_pcc_config_info {
     PXE_UINT8 Function;
 
     //
-    // This is a copy of the PCC configuration space for this 
+    // This is a copy of the PCC configuration space for this
     // network device.
     //
-    union {
+    union
+    {
         PXE_UINT8 Byte[256];
         PXE_UINT16 Word[128];
         PXE_UINT32 Dword[64];
     } Config;
 } PXE_PCC_CONFIG_INFO;
 
-
-typedef struct s_pxe_usb_config_info {
+typedef struct s_pxe_usb_config_info
+{
     PXE_UINT32 BusType;
     // %%TBD What should we return here...
 } PXE_USB_CONFIG_INFO;
 
-
-typedef struct s_pxe_1394_config_info {
+typedef struct s_pxe_1394_config_info
+{
     PXE_UINT32 BusType;
     // %%TBD What should we return here...
 } PXE_1394_CONFIG_INFO;
 
-
-typedef union u_pxe_db_get_config_info {
+typedef union u_pxe_db_get_config_info
+{
     PXE_PCI_CONFIG_INFO pci;
     PXE_PCC_CONFIG_INFO pcc;
     PXE_USB_CONFIG_INFO usb;
     PXE_1394_CONFIG_INFO _1394;
 } PXE_DB_GET_CONFIG_INFO;
 
-
-typedef struct s_pxe_cpb_initialize {
+typedef struct s_pxe_cpb_initialize
+{
     //
     // Address of first (lowest) byte of the memory buffer.  This buffer must
     // be in contiguous physical memory and cannot be swapped out.  The UNDI
@@ -1226,7 +1230,7 @@ typedef struct s_pxe_cpb_initialize {
     //
     // Suggested number and size of receive and transmit buffers to
     // allocate.  If MemoryAddr and MemoryLength are non-zero, this
-    // allocation comes out of the supplied memory buffer.  If MemoryAddr 
+    // allocation comes out of the supplied memory buffer.  If MemoryAddr
     // and MemoryLength are zero, this allocation comes out of memory
     // on the NIC.
     //
@@ -1239,14 +1243,13 @@ typedef struct s_pxe_cpb_initialize {
     PXE_UINT16 RxBufSize;
 
     //
-    // The following configuration parameters are optional and must be zero 
+    // The following configuration parameters are optional and must be zero
     // to use the default values.
     //
-    PXE_UINT8 Duplex; 
+    PXE_UINT8 Duplex;
 
     PXE_UINT8 LoopBack;
 } PXE_CPB_INITIALIZE;
-
 
 #define PXE_DUPLEX_DEFAULT                  0x00
 #define PXE_FORCE_FULL_DUPLEX                   0x01
@@ -1256,14 +1259,14 @@ typedef struct s_pxe_cpb_initialize {
 #define LOOPBACK_INTERNAL 1
 #define LOOPBACK_EXTERNAL 2
 
-
-typedef struct s_pxe_db_initialize {
+typedef struct s_pxe_db_initialize
+{
     //
     // Actual amount of memory used from the supplied memory buffer.  This
     // may be less that the amount of memory suppllied and may be zero if
     // the UNDI and network device do not use external memory buffers.
     //
-    // Memory used by the UNDI and network device is allocated from the 
+    // Memory used by the UNDI and network device is allocated from the
     // lowest memory buffer address.
     //
     PXE_UINT32 MemoryUsed;
@@ -1278,8 +1281,8 @@ typedef struct s_pxe_db_initialize {
     PXE_UINT16 RxBufSize;
 } PXE_DB_INITIALIZE;
 
-
-typedef struct s_pxe_cpb_receive_filters {
+typedef struct s_pxe_cpb_receive_filters
+{
     //
     // List of multicast MAC addresses.  This list, if present, will
     // replace the existing multicast MAC address filter list.
@@ -1287,16 +1290,16 @@ typedef struct s_pxe_cpb_receive_filters {
     PXE_MAC_ADDR MCastList[MAX_MCAST_ADDRESS_CNT];
 } PXE_CPB_RECEIVE_FILTERS;
 
-
-typedef struct s_pxe_db_receive_filters {
+typedef struct s_pxe_db_receive_filters
+{
     //
     // Filtered multicast MAC address list.
     //
     PXE_MAC_ADDR MCastList[MAX_MCAST_ADDRESS_CNT];
 } PXE_DB_RECEIVE_FILTERS;
 
-
-typedef struct s_pxe_cpb_station_address {
+typedef struct s_pxe_cpb_station_address
+{
     //
     // If supplied and supported, the current station MAC address
     // will be changed.
@@ -1304,8 +1307,8 @@ typedef struct s_pxe_cpb_station_address {
     PXE_MAC_ADDR StationAddr;
 } PXE_CPB_STATION_ADDRESS;
 
-
-typedef struct s_pxe_dpb_station_address {
+typedef struct s_pxe_dpb_station_address
+{
     //
     // Current station MAC address.
     //
@@ -1322,10 +1325,10 @@ typedef struct s_pxe_dpb_station_address {
     PXE_MAC_ADDR PermanentAddr;
 } PXE_DB_STATION_ADDRESS;
 
-
-typedef struct s_pxe_db_statistics {
+typedef struct s_pxe_db_statistics
+{
     //
-    // Bit field identifying what statistic data is collected by the 
+    // Bit field identifying what statistic data is collected by the
     // UNDI/NIC.
     // If bit 0x00 is set, Data[0x00] is collected.
     // If bit 0x01 is set, Data[0x01] is collected.
@@ -1419,34 +1422,36 @@ typedef struct s_pxe_db_statistics {
 //
 #define PXE_STATISTICS_UNSUPPORTED_PROTOCOL         0x15
 
-
-typedef struct s_pxe_cpb_mcast_ip_to_mac {
+typedef struct s_pxe_cpb_mcast_ip_to_mac
+{
     //
     // Multicast IP address to be converted to multicast MAC address.
     //
     PXE_IP_ADDR IP;
 } PXE_CPB_MCAST_IP_TO_MAC;
 
-
-typedef struct s_pxe_db_mcast_ip_to_mac {
+typedef struct s_pxe_db_mcast_ip_to_mac
+{
     //
     // Multicast MAC address.
     //
     PXE_MAC_ADDR MAC;
 } PXE_DB_MCAST_IP_TO_MAC;
 
-
-typedef struct s_pxe_cpb_nvdata_sparse {
+typedef struct s_pxe_cpb_nvdata_sparse
+{
     //
     // NvData item list.  Only items in this list will be updated.
     //
-    struct {
+    struct
+    {
         //  Non-volatile storage address to be changed.
         PXE_UINT32 Addr;
 
         // Data item to write into above storage address.
-    
-        union {
+
+        union
+        {
             PXE_UINT8 Byte;
             PXE_UINT16 Word;
             PXE_UINT32 Dword;
@@ -1454,12 +1459,12 @@ typedef struct s_pxe_cpb_nvdata_sparse {
     } Item[MAX_EEPROM_LEN];
 } PXE_CPB_NVDATA_SPARSE;
 
-
 //
 // When using bulk update, the size of the CPB structure must be
 // the same size as the non-volatile NIC storage.
 //
-typedef union u_pxe_cpb_nvdata_bulk {
+typedef union u_pxe_cpb_nvdata_bulk
+{
     //
     // Array of byte-wide data items.
     //
@@ -1476,11 +1481,12 @@ typedef union u_pxe_cpb_nvdata_bulk {
     PXE_UINT32 Dword[MAX_EEPROM_LEN];
 } PXE_CPB_NVDATA_BULK;
 
-typedef struct s_pxe_db_nvdata {
-
+typedef struct s_pxe_db_nvdata
+{
     // Arrays of data items from non-volatile storage.
 
-    union {
+    union
+    {
         //
         // Array of byte-wide data items.
         //
@@ -1497,8 +1503,8 @@ typedef struct s_pxe_db_nvdata {
     } Data;
 } PXE_DB_NVDATA;
 
-
-typedef struct s_pxe_db_get_status {
+typedef struct s_pxe_db_get_status
+{
     //
     // Length of next receive frame (header + data).  If this is zero,
     // there is no next receive frame available.
@@ -1516,9 +1522,8 @@ typedef struct s_pxe_db_get_status {
     PXE_UINT64 TxBuffer[MAX_XMIT_BUFFERS];
 } PXE_DB_GET_STATUS;
 
-
-
-typedef struct s_pxe_cpb_fill_header {
+typedef struct s_pxe_cpb_fill_header
+{
     //
     // Source and destination MAC addresses.  These will be copied into
     // the media header without doing byte swapping.
@@ -1550,12 +1555,12 @@ typedef struct s_pxe_cpb_fill_header {
     PXE_UINT16 MediaHeaderLen;
 } PXE_CPB_FILL_HEADER;
 
-
 #define PXE_PROTOCOL_ETHERNET_IP                0x0800
 #define PXE_PROTOCOL_ETHERNET_ARP               0x0806
 #define MAX_XMIT_FRAGMENTS 16
 
-typedef struct s_pxe_cpb_fill_header_fragmented {
+typedef struct s_pxe_cpb_fill_header_fragmented
+{
     //
     // Source and destination MAC addresses.  These will be copied into
     // the media header without doing byte swapping.
@@ -1594,7 +1599,8 @@ typedef struct s_pxe_cpb_fill_header_fragmented {
     // Array of packet fragment descriptors.  The first byte of the media
     // header is the first byte of the first fragment.
     //
-    struct {
+    struct
+    {
         //
         // Address of this packet fragment.
         //
@@ -1612,9 +1618,8 @@ typedef struct s_pxe_cpb_fill_header_fragmented {
     } FragDesc[MAX_XMIT_FRAGMENTS];
 } PXE_CPB_FILL_HEADER_FRAGMENTED;
 
-
-
-typedef struct s_pxe_cpb_transmit {
+typedef struct s_pxe_cpb_transmit
+{
     //
     // Address of first byte of frame buffer.  This is also the first byte
     // of the media header.
@@ -1638,9 +1643,8 @@ typedef struct s_pxe_cpb_transmit {
     PXE_UINT16 reserved;
 } PXE_CPB_TRANSMIT;
 
-
-
-typedef struct s_pxe_cpb_transmit_fragments {
+typedef struct s_pxe_cpb_transmit_fragments
+{
     //
     // Length of packet data in bytes (not including the media header).
     //
@@ -1660,7 +1664,8 @@ typedef struct s_pxe_cpb_transmit_fragments {
     // Array of frame fragment descriptors.  The first byte of the first
     // fragment is also the first byte of the media header.
     //
-    struct {
+    struct
+    {
         //
         // Address of this frame fragment.
         //
@@ -1678,8 +1683,8 @@ typedef struct s_pxe_cpb_transmit_fragments {
     } FragDesc[MAX_XMIT_FRAGMENTS];
 } PXE_CPB_TRANSMIT_FRAGMENTS;
 
-
-typedef struct s_pxe_cpb_receive {
+typedef struct s_pxe_cpb_receive
+{
     //
     // Address of first byte of receive buffer.  This is also the first byte
     // of the frame header.
@@ -1699,8 +1704,8 @@ typedef struct s_pxe_cpb_receive {
     PXE_UINT32 reserved;
 } PXE_CPB_RECEIVE;
 
-
-typedef struct s_pxe_db_receive {
+typedef struct s_pxe_db_receive
+{
     //
     // Source and destination MAC addresses from media header.
     //
@@ -1733,11 +1738,9 @@ typedef struct s_pxe_db_receive {
     // Reserved, must be zero.
     //
     PXE_UINT8 reserved[7];
-
 } PXE_DB_RECEIVE;
 
 #pragma pack()
 
 /* EOF - efi_pxe.h */
 #endif /* _EFI_PXE_H */
-
