@@ -1,6 +1,6 @@
 ![logo](Assets/logo_small.png)
 
-Single-header, minimalistic, cross-platform hook library written in pure C.
+Single-header, minimalistic, cross-platform hook library written in pure C for x86-64 based systems.
 
 ## But... why?
 While other well-written libraries that do exactly the same already exist, I wanted to have something simple that would not use an entire disassembler engine which can sometimes be painful to include in a project. 
