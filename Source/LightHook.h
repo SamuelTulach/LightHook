@@ -195,6 +195,7 @@ static HookInformation CreateHook(void* originalFunction, void* targetFunction)
 #ifdef __linux__
 #include <stdio.h>
 #include <sys/mman.h>
+#include <unistd.h>
 #include <assert.h>
 #include <errno.h>
 #endif
