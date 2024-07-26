@@ -116,7 +116,16 @@ static int GetInstructionSize(const void* address)
         else if (*b == 0xC8)
             offset += 3;
         else if ((HOOK_R < 4 && (HOOK_C == 5 || HOOK_C == 0xD)) || (HOOK_R == 0xB && HOOK_C >= 8) || (*b == 0xF7 && !(*(b + 1) & 48)) || FindByte(OP1_IMM32, sizeof(OP1_IMM32), *b))
-            offset += (rexW) ? 8 : (operandPrefix ? 2 : 4);
+        {
+            if (*b == 0xB8 || (*b >= 0xB8 && *b <= 0xBF)) // mov r64, imm64
+                offset += rexW ? 8 : 4;
+            else if (*b == 0xC7) // mov r/m64, imm32 (sign-extended to 64-bits)
+                offset += 4;
+            else if (*b == 0x69) // imul r64, r/m64, imm32
+                offset += 4;
+            else
+                offset += (operandPrefix) ? 2 : 4;
+        }
         else if (HOOK_R == 0xA && HOOK_C < 4)
             offset += (rexW) ? 8 : (addressPrefix ? 2 : 4);
         else if (*b == 0xEA || *b == 0x9A)
