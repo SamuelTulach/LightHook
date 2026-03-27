@@ -261,6 +261,7 @@ static void PlatformFree(void* address, const unsigned long long size)
     ExFreePool(address);
 #endif
 #else
+	(void)size;
     VirtualFree(address, 0, MEM_RELEASE);
 #endif
 #ifdef __linux__
